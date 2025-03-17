@@ -1,10 +1,9 @@
-
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { Button } from '../components/ui/button';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import { Sparkles, Rocket, Star, Zap, Award, CheckCircle } from 'lucide-react';
+import { Sparkles, Rocket, Star, Zap, Award, CheckCircle, ArrowRight } from 'lucide-react';
 import { Badge } from '../components/ui/badge';
 
 const Index = () => {
@@ -13,50 +12,43 @@ const Index = () => {
   const resumeRef = useRef(null);
   const trustRef = useRef(null);
   const featuresRef = useRef(null);
+  const ctaSectionRef = useRef(null);
+  const reviewsSectionRef = useRef(null);
   const isResumeInView = useInView(resumeRef, { once: true, amount: 0.3 });
   const isTrustInView = useInView(trustRef, { once: true, amount: 0.3 });
   const isFeaturesInView = useInView(featuresRef, { once: true, amount: 0.3 });
-  
-  // Parallax effect
+  const isCtaSectionInView = useInView(ctaSectionRef, { once: true, amount: 0.3 });
+  const isReviewsSectionInView = useInView(reviewsSectionRef, { once: true, amount: 0.3 });
+
   const y = useTransform(scrollY, [0, 800], [0, -200]);
   const rotate = useTransform(scrollY, [0, 800], [0, 10]);
   const scale = useTransform(scrollY, [0, 800], [1, 1.1]);
-  
+
   useEffect(() => {
     setIsLoaded(true);
     
-    // Add particle effect to background
     const createParticle = () => {
       const particle = document.createElement('div');
       particle.classList.add('particle');
       
-      // Random position
       const x = Math.random() * window.innerWidth;
       const y = Math.random() * window.innerHeight;
-      
-      // Random size
       const size = Math.random() * 5 + 1;
-      
-      // Random opacity
       const opacity = Math.random() * 0.5 + 0.1;
       
-      // Apply styles
       particle.style.left = `${x}px`;
       particle.style.top = `${y}px`;
       particle.style.width = `${size}px`;
       particle.style.height = `${size}px`;
       particle.style.opacity = `${opacity}`;
       
-      // Add to body
       document.body.appendChild(particle);
       
-      // Remove after animation
       setTimeout(() => {
         particle.remove();
       }, 10000);
     };
     
-    // Create particles periodically
     const interval = setInterval(() => {
       createParticle();
     }, 1000);
@@ -68,9 +60,7 @@ const Index = () => {
     <div className="relative min-h-screen w-full overflow-hidden">
       <Navbar />
       
-      {/* Hero Section */}
       <main className="container mx-auto py-6 px-4 md:py-12 flex flex-col-reverse md:flex-row justify-between items-center gap-12">
-        {/* Resume Preview with Enhanced Animation */}
         <motion.div 
           ref={resumeRef}
           className="w-full md:w-1/2 max-w-xl"
@@ -89,7 +79,6 @@ const Index = () => {
               className="relative w-full shadow-lg rounded-md z-10"
             />
             
-            {/* Floating details */}
             <motion.div 
               className="absolute -top-6 -right-6 glassmorphism py-2 px-4 z-20"
               initial={{ opacity: 0, scale: 0 }}
@@ -128,7 +117,6 @@ const Index = () => {
           </motion.div>
         </motion.div>
         
-        {/* Call to Action with Enhanced Animation */}
         <div className="w-full md:w-1/2 flex flex-col items-center md:items-start">
           <div className="text-left">
             <motion.div
@@ -219,7 +207,6 @@ const Index = () => {
         </div>
       </main>
 
-      {/* Trusted By Section with Enhanced Animation */}
       <section ref={trustRef} className="container mx-auto py-16 px-4">
         <motion.h3 
           className="text-center text-xl text-resumify-off-white mb-8"
@@ -252,7 +239,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features Section */}
       <section ref={featuresRef} className="container mx-auto py-16 px-4">
         <motion.h2 
           className="text-3xl font-bold text-resumify-off-white mb-12 text-center flex items-center justify-center gap-2"
@@ -321,65 +307,145 @@ const Index = () => {
         </motion.div>
       </section>
 
-      {/* Customer Reviews with Enhanced Animation */}
-      <section className="container mx-auto py-16 px-4">
-        <motion.h2 
-          className="text-3xl font-bold text-resumify-off-white mb-12 text-center"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          What our customers say
-        </motion.h2>
+      <section 
+        ref={ctaSectionRef}
+        className="py-20 px-4 bg-resumify-background relative"
+      >
+        <div className="absolute top-10 left-10 opacity-50 text-gray-500">
+          <span className="text-sm">page3</span>
+        </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[
-            { name: 'Sarah Johnson', text: "The templates are professionally designed and easy to customize. I landed my dream job within weeks of using this resume!" },
-            { name: 'Tony Gonzalez', text: "Seeking a resume makeover, I turned to this site. The process was intuitive and the final result exceeded my expectations." },
-            { name: 'Emily R', text: "These resumes helped me stand out in a competitive job market. The designs are modern and professional." },
-            { name: 'Rahul Sharma', text: "I received more interview calls after using a template from this site. It really helps in showcasing your skills clearly." }
-          ].map((review, index) => (
-            <motion.div 
-              key={review.name}
-              className="glassmorphism p-6 h-full"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 * index, duration: 0.5 }}
-              whileHover={{ 
-                scale: 1.03, 
-                boxShadow: "0 10px 30px rgba(0, 0, 0, 0.2)",
-                transition: { duration: 0.3 }
-              }}
-            >
-              <div className="flex items-center mb-4">
-                <div className="relative">
-                  <img 
-                    src={`https://via.placeholder.com/50?text=${review.name.charAt(0)}`}
-                    alt={review.name} 
-                    className="w-12 h-12 rounded-full border-2 border-resumify-beige"
-                  />
-                  <div className="absolute -top-1 -right-1 bg-green-500 w-4 h-4 rounded-full border-2 border-white"></div>
-                </div>
-                <div className="ml-4">
-                  <h4 className="text-lg font-medium text-resumify-white">{review.name}</h4>
-                  <div className="flex text-yellow-400">
-                    <Star size={14} fill="currentColor" />
-                    <Star size={14} fill="currentColor" />
-                    <Star size={14} fill="currentColor" />
-                    <Star size={14} fill="currentColor" />
-                    <Star size={14} fill="currentColor" />
-                  </div>
-                </div>
+        <div className="container mx-auto max-w-5xl">
+          <motion.div 
+            className="text-center mb-8"
+            initial={{ opacity: 0, y: 30 }}
+            animate={isCtaSectionInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="flex justify-center items-center gap-2 mb-4">
+              <span className="text-white text-sm">Trusted by professionals</span>
+              <div className="flex">
+                {[1, 2, 3, 4, 5].map((_, index) => (
+                  <Star key={index} fill="#FFD700" className="text-yellow-400" size={16} />
+                ))}
               </div>
-              <p className="text-resumify-off-white">
-                "{review.text}"
-              </p>
-            </motion.div>
-          ))}
+            </div>
+            
+            <p className="text-white text-sm">To get started with...</p>
+            
+            <h2 className="text-4xl font-bold text-resumify-beige mt-4">
+              Try out our ready to use templates
+            </h2>
+          </motion.div>
+          
+          <motion.div 
+            className="glassmorphism p-8 rounded-xl mb-16"
+            initial={{ opacity: 0, y: 30 }}
+            animate={isCtaSectionInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <p className="text-white text-lg mb-6">
+              Kickstart your career journey with ease! Our expertly designed, ready-to-use templates
+              help you craft professional resumes in minutes.
+            </p>
+            <p className="text-white text-lg mb-8">
+              Showcase your skills, qualifications, and work experiences, and get one step closer to
+              landing your dream job!
+            </p>
+            
+            <div className="flex justify-center">
+              <Link to="/templates">
+                <Button className="bg-resumify-brown hover:bg-resumify-beige text-white px-6 py-6 rounded-full flex items-center gap-2 transition-all duration-300 transform hover:scale-105">
+                  <span>Select your ready-to-use template</span>
+                  <ArrowRight size={18} />
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
+          
+          <div className="absolute bottom-10 right-10 opacity-50 text-gray-500">
+            <span className="text-sm">page4</span>
+          </div>
+          
+          <motion.div 
+            className="absolute bottom-40 right-20"
+            initial={{ opacity: 0, rotate: 0 }}
+            animate={isCtaSectionInView ? { opacity: 0.7, rotate: 15 } : {}}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          >
+            <div 
+              className="w-24 h-24 bg-resumify-brown"
+              style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }}
+            ></div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Animated decorative triangles */}
+      <section 
+        ref={reviewsSectionRef}
+        className="py-20 px-4 bg-resumify-background"
+      >
+        <div className="container mx-auto max-w-5xl">
+          <motion.h2 
+            className="text-3xl font-bold text-white mb-4 text-center"
+            initial={{ opacity: 0, y: 30 }}
+            animate={isReviewsSectionInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5 }}
+          >
+            Customer reviews
+          </motion.h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+            {[
+              { 
+                name: 'Jane Jill', 
+                image: 'public/lovable-uploads/27dfb48f-326a-46b1-a85f-67c50df23e26.png',
+                text: 'Incredible resume builder! The templates are modern and professional. I received three interview calls within a week of submitting my resume.' 
+              },
+              { 
+                name: 'Tom Doodle', 
+                image: 'public/lovable-uploads/27dfb48f-326a-46b1-a85f-67c50df23e26.png',
+                text: 'Seeking a career change, I was unsure where to start. This tool guided me step by step, allowing me to showcase my transferable skills effectively.' 
+              },
+              { 
+                name: 'Sophia K.', 
+                image: 'public/lovable-uploads/27dfb48f-326a-46b1-a85f-67c50df23e26.png',
+                text: 'As a recent graduate with no experience, I found it hard to create a good resume. This platform helped me highlight my education and skills in a professional way.' 
+              },
+              { 
+                name: 'Rahul Sharma', 
+                image: 'public/lovable-uploads/27dfb48f-326a-46b1-a85f-67c50df23e26.png',
+                text: 'The ATS optimization feature is a game-changer! My resume now gets past screening systems, and I\'ve had more interview opportunities than ever before.' 
+              }
+            ].map((review, index) => (
+              <motion.div 
+                key={review.name}
+                className="bg-white rounded-3xl p-6 shadow-xl h-full"
+                initial={{ opacity: 0, y: 30 }}
+                animate={isReviewsSectionInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ delay: 0.1 * index, duration: 0.5 }}
+                whileHover={{ 
+                  y: -10,
+                  transition: { duration: 0.3 }
+                }}
+              >
+                <div className="flex justify-center mb-4">
+                  <img 
+                    src={`https://via.placeholder.com/60x60?text=${review.name.charAt(0)}`}
+                    alt={review.name} 
+                    className="w-16 h-16 rounded-full border-2 border-resumify-brown object-cover"
+                  />
+                </div>
+                <h4 className="text-center font-bold text-lg text-gray-800 mb-2">{review.name}</h4>
+                <p className="text-gray-600 text-center text-sm">
+                  "{review.text}"
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <motion.div 
         className="triangle triangle-1"
         initial={{ opacity: 0, rotate: 0 }}
@@ -399,8 +465,7 @@ const Index = () => {
         transition={{ delay: 0.9, duration: 1.5, type: "spring" }}
       ></motion.div>
       
-      {/* Floating particles CSS */}
-      <style jsx="true">{`
+      <style jsx>{`
         .particle {
           position: absolute;
           border-radius: 50%;
@@ -432,3 +497,4 @@ const Index = () => {
 };
 
 export default Index;
+
