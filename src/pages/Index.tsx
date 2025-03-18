@@ -465,7 +465,8 @@ const Index = () => {
         transition={{ delay: 0.9, duration: 1.5, type: "spring" }}
       ></motion.div>
       
-      <style jsx>{`
+      <style>
+        {`
         .particle {
           position: absolute;
           border-radius: 50%;
@@ -491,10 +492,10 @@ const Index = () => {
             opacity: 0;
           }
         }
-      `}</style>
+        `}
+      </style>
     </div>
   );
 };
 
 export default Index;
-
