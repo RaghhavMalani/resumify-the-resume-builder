@@ -44,15 +44,15 @@
 
 /* Modern UI Styles */
 .glassmorphism {
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(51, 195, 240, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .gradient-text {
-  background: linear-gradient(90deg, #c0a595 0%, #a67360 100%);
+  background: linear-gradient(90deg, #a67360 0%, #c0a595 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -61,9 +61,9 @@
 
 .gradient-border {
   position: relative;
-  border-radius: 20px;
+  border-radius: 16px;
   padding: 4px;
-  background: linear-gradient(60deg, #c0a595, #a67360, #e0e0e0);
+  background: linear-gradient(60deg, #0EA5E9, #33C3F0, #0FA0CE);
   background-size: 300% 300%;
   animation: gradient-animation 5s ease infinite;
 }
@@ -97,12 +97,12 @@
   overflow: hidden;
   padding: 18px 36px;
   border-radius: 30px;
-  background: linear-gradient(45deg, #a67360, #c0a595);
+  background: linear-gradient(45deg, #0EA5E9, #33C3F0);
   color: white;
   font-weight: bold;
   letter-spacing: 1px;
   text-transform: uppercase;
-  box-shadow: 0 10px 25px rgba(166, 115, 96, 0.3);
+  box-shadow: 0 10px 25px rgba(14, 165, 233, 0.3);
   transition: all 0.3s ease;
 }
 
@@ -119,9 +119,37 @@
 
 .modern-button:hover {
   transform: translateY(-5px);
-  box-shadow: 0 15px 25px rgba(166, 115, 96, 0.4);
+  box-shadow: 0 15px 25px rgba(14, 165, 233, 0.4);
 }
 
 .modern-button:hover::before {
   left: 100%;
+}
+
+/* Form input styling */
+.modern-input {
+  background: rgba(14, 165, 233, 0.1);
+  border: 1px solid rgba(14, 165, 233, 0.3);
+  backdrop-filter: blur(4px);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.modern-input:focus {
+  background: rgba(14, 165, 233, 0.15);
+  border: 1px solid rgba(14, 165, 233, 0.5);
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+}
+
+/* Social login buttons */
+.social-login {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.social-login:hover {
+  background: rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
 }
