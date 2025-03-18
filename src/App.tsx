@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Templates from "./pages/Templates";
 import ResumeEditor from "./pages/ResumeEditor";
 import NotFound from "./pages/NotFound";
+import LoginSignup from "./pages/LoginSignup";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/templates" element={<Templates />} />
             <Route path="/editor/:templateId" element={<ResumeEditor />} />
+            <Route path="/login" element={<LoginSignup />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
