@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -63,14 +62,16 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Custom Resumify colors
 				resumify: {
 					background: '#1f2b32',
 					beige: '#c0a595',
 					brown: '#a67360',
 					'brown-dark': '#8e6352',
+					'brown-darker': '#70483b',
+					'brown-darkest': '#5a3a2f',
 					white: '#ffffff',
 					'off-white': '#e0e0e0',
+					'dark-blue': '#192228'
 				}
 			},
 			borderRadius: {
