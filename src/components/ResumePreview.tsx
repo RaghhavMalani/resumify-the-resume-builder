@@ -93,53 +93,53 @@ const ResumePreview: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Controls */}
-      <div className="bg-gray-100 px-4 py-2 flex justify-between items-center border-b">
+      {/* Controls - Darkened background and controls for better visibility */}
+      <div className="bg-gray-800 px-4 py-2 flex justify-between items-center border-b border-gray-700 text-white">
         <div className="flex items-center space-x-2">
           <button 
             onClick={handleZoomIn}
-            className="p-2 rounded-full hover:bg-gray-200 transition-colors flex items-center justify-center"
+            className="p-2 rounded-full hover:bg-gray-700 transition-colors flex items-center justify-center"
             aria-label="Zoom in"
             onMouseEnter={() => setShowTooltip('zoomIn')}
             onMouseLeave={() => setShowTooltip('')}
           >
-            <ZoomIn size={18} />
+            <ZoomIn size={18} className="text-white" />
             {showTooltip === 'zoomIn' && (
-              <div className="absolute top-full mt-2 px-2 py-1 bg-gray-800 text-white text-xs rounded">
+              <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded">
                 Zoom In
               </div>
             )}
           </button>
           <button 
             onClick={handleZoomOut}
-            className="p-2 rounded-full hover:bg-gray-200 transition-colors flex items-center justify-center"
+            className="p-2 rounded-full hover:bg-gray-700 transition-colors flex items-center justify-center"
             aria-label="Zoom out"
             onMouseEnter={() => setShowTooltip('zoomOut')}
             onMouseLeave={() => setShowTooltip('')}
           >
-            <ZoomOut size={18} />
+            <ZoomOut size={18} className="text-white" />
             {showTooltip === 'zoomOut' && (
-              <div className="absolute top-full mt-2 px-2 py-1 bg-gray-800 text-white text-xs rounded">
+              <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded">
                 Zoom Out
               </div>
             )}
           </button>
-          <span className="text-sm text-gray-600">{Math.round(scale * 100)}%</span>
+          <span className="text-sm text-white">{Math.round(scale * 100)}%</span>
         </div>
         
         <div className="flex items-center space-x-2">
           <motion.button 
             onClick={handleRotate}
-            className="p-2 rounded-full hover:bg-gray-200 transition-colors relative"
+            className="p-2 rounded-full hover:bg-gray-700 transition-colors relative"
             aria-label="Refresh template"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onMouseEnter={() => setShowTooltip('refresh')}
             onMouseLeave={() => setShowTooltip('')}
           >
-            <RefreshCw size={18} className={isRotating ? 'animate-spin' : ''} />
+            <RefreshCw size={18} className={`text-white ${isRotating ? 'animate-spin' : ''}`} />
             {showTooltip === 'refresh' && (
-              <div className="absolute top-full mt-2 px-2 py-1 bg-gray-800 text-white text-xs rounded">
+              <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded">
                 Refresh
               </div>
             )}
@@ -147,16 +147,16 @@ const ResumePreview: React.FC = () => {
           
           <motion.button 
             onClick={handleDownload}
-            className="p-2 rounded-full hover:bg-gray-200 transition-colors relative"
+            className="p-2 rounded-full hover:bg-gray-700 transition-colors relative"
             aria-label="Download resume"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onMouseEnter={() => setShowTooltip('download')}
             onMouseLeave={() => setShowTooltip('')}
           >
-            <Download size={18} />
+            <Download size={18} className="text-white" />
             {showTooltip === 'download' && (
-              <div className="absolute top-full mt-2 px-2 py-1 bg-gray-800 text-white text-xs rounded">
+              <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded">
                 Download
               </div>
             )}
@@ -164,16 +164,16 @@ const ResumePreview: React.FC = () => {
           
           <motion.button 
             onClick={handleShare}
-            className="p-2 rounded-full hover:bg-gray-200 transition-colors relative"
+            className="p-2 rounded-full hover:bg-gray-700 transition-colors relative"
             aria-label="Share resume"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onMouseEnter={() => setShowTooltip('share')}
             onMouseLeave={() => setShowTooltip('')}
           >
-            <Share2 size={18} />
+            <Share2 size={18} className="text-white" />
             {showTooltip === 'share' && (
-              <div className="absolute top-full mt-2 px-2 py-1 bg-gray-800 text-white text-xs rounded">
+              <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded">
                 Share
               </div>
             )}
@@ -181,16 +181,16 @@ const ResumePreview: React.FC = () => {
           
           <motion.button 
             onClick={handlePrint}
-            className="p-2 rounded-full hover:bg-gray-200 transition-colors relative"
+            className="p-2 rounded-full hover:bg-gray-700 transition-colors relative"
             aria-label="Print resume"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onMouseEnter={() => setShowTooltip('print')}
             onMouseLeave={() => setShowTooltip('')}
           >
-            <Printer size={18} />
+            <Printer size={18} className="text-white" />
             {showTooltip === 'print' && (
-              <div className="absolute top-full mt-2 px-2 py-1 bg-gray-800 text-white text-xs rounded">
+              <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded">
                 Print
               </div>
             )}
@@ -198,7 +198,7 @@ const ResumePreview: React.FC = () => {
           
           <motion.button 
             onClick={handleLike}
-            className={`p-2 rounded-full hover:bg-gray-200 transition-colors relative ${liked ? 'text-red-500' : ''}`}
+            className={`p-2 rounded-full hover:bg-gray-700 transition-colors relative ${liked ? 'text-red-500' : 'text-white'}`}
             aria-label="Like resume"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
@@ -207,7 +207,7 @@ const ResumePreview: React.FC = () => {
           >
             <Heart size={18} fill={liked ? "currentColor" : "none"} />
             {showTooltip === 'like' && (
-              <div className="absolute top-full mt-2 px-2 py-1 bg-gray-800 text-white text-xs rounded">
+              <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded">
                 {liked ? 'Unlike' : 'Like'}
               </div>
             )}
@@ -259,10 +259,10 @@ const ResumePreview: React.FC = () => {
           )}
         </AnimatePresence>
         
-        {/* Quick tips that appear at the bottom */}
+        {/* Quick tips that appear at the bottom - Darkened background for better visibility */}
         {!isLoading && (
           <motion.div 
-            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white px-4 py-2 rounded-full shadow-lg text-sm text-gray-600"
+            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-full shadow-lg text-sm"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, duration: 0.5 }}
