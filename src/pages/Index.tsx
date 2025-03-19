@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -27,6 +28,7 @@ const Index = () => {
   useEffect(() => {
     setIsLoaded(true);
     
+    // Create animated particles
     const createParticle = () => {
       const particle = document.createElement('div');
       particle.classList.add('particle');
@@ -309,13 +311,21 @@ const Index = () => {
 
       <section 
         ref={ctaSectionRef}
-        className="py-20 px-4 bg-resumify-background relative"
+        className="py-20 px-4 bg-resumify-background relative overflow-hidden"
       >
-        <div className="absolute top-10 left-10 opacity-50 text-gray-500">
-          <span className="text-sm">page3</span>
-        </div>
+        <motion.div 
+          className="absolute -bottom-20 -right-20 w-60 h-60 bg-resumify-brown-dark/30 rounded-full blur-3xl"
+          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
         
-        <div className="container mx-auto max-w-5xl">
+        <motion.div 
+          className="absolute -top-10 -left-10 w-40 h-40 bg-resumify-beige/20 rounded-full blur-3xl"
+          animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+        />
+        
+        <div className="container mx-auto max-w-5xl relative z-10">
           <motion.div 
             className="text-center mb-8"
             initial={{ opacity: 0, y: 30 }}
@@ -339,36 +349,44 @@ const Index = () => {
           </motion.div>
           
           <motion.div 
-            className="glassmorphism p-8 rounded-xl mb-16"
+            className="glassmorphism p-8 rounded-xl mb-16 relative overflow-hidden"
             initial={{ opacity: 0, y: 30 }}
             animate={isCtaSectionInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.2 }}
+            whileHover={{ boxShadow: "0 25px 50px rgba(0, 0, 0, 0.5)" }}
           >
-            <p className="text-white text-lg mb-6">
+            <motion.div 
+              className="absolute -top-10 -right-10 w-40 h-40 bg-resumify-brown/20 rounded-full blur-3xl"
+              animate={{ scale: [1, 1.5, 1], opacity: [0.1, 0.3, 0.1] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            />
+            
+            <p className="text-white text-lg mb-6 relative z-10">
               Kickstart your career journey with ease! Our expertly designed, ready-to-use templates
               help you craft professional resumes in minutes.
             </p>
-            <p className="text-white text-lg mb-8">
+            <p className="text-white text-lg mb-8 relative z-10">
               Showcase your skills, qualifications, and work experiences, and get one step closer to
               landing your dream job!
             </p>
             
-            <div className="flex justify-center">
+            <div className="flex justify-center relative z-10">
               <Link to="/templates">
-                <Button className="bg-resumify-brown hover:bg-resumify-beige text-white px-6 py-6 rounded-full flex items-center gap-2 transition-all duration-300 transform hover:scale-105">
+                <Button className="bg-resumify-brown hover:bg-resumify-beige text-white px-6 py-6 rounded-full flex items-center gap-2 transition-all duration-300 transform hover:scale-105 hover:shadow-[0_0_30px_rgba(166,115,96,0.5)]">
                   <span>Select your ready-to-use template</span>
-                  <ArrowRight size={18} />
+                  <motion.div
+                    animate={{ x: [0, 5, 0] }}
+                    transition={{ repeat: Infinity, duration: 1.5 }}
+                  >
+                    <ArrowRight size={18} />
+                  </motion.div>
                 </Button>
               </Link>
             </div>
           </motion.div>
           
-          <div className="absolute bottom-10 right-10 opacity-50 text-gray-500">
-            <span className="text-sm">page4</span>
-          </div>
-          
           <motion.div 
-            className="absolute bottom-40 right-20"
+            className="absolute top-1/2 right-20 transform -translate-y-1/2"
             initial={{ opacity: 0, rotate: 0 }}
             animate={isCtaSectionInView ? { opacity: 0.7, rotate: 15 } : {}}
             transition={{ duration: 0.8, delay: 0.5 }}
@@ -426,15 +444,20 @@ const Index = () => {
                 transition={{ delay: 0.1 * index, duration: 0.5 }}
                 whileHover={{ 
                   y: -10,
+                  boxShadow: "0 20px 30px rgba(0, 0, 0, 0.2)",
                   transition: { duration: 0.3 }
                 }}
               >
                 <div className="flex justify-center mb-4">
-                  <img 
-                    src={`https://via.placeholder.com/60x60?text=${review.name.charAt(0)}`}
-                    alt={review.name} 
-                    className="w-16 h-16 rounded-full border-2 border-resumify-brown object-cover"
-                  />
+                  <div className="w-16 h-16 rounded-full border-2 border-resumify-brown-dark overflow-hidden bg-resumify-beige/20 flex items-center justify-center">
+                    <motion.span 
+                      className="text-2xl font-bold text-resumify-brown-dark"
+                      whileHover={{ scale: 1.2 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      {review.name.charAt(0)}
+                    </motion.span>
+                  </div>
                 </div>
                 <h4 className="text-center font-bold text-lg text-gray-800 mb-2">{review.name}</h4>
                 <p className="text-gray-600 text-center text-sm">
