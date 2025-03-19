@@ -14,11 +14,8 @@ const Navbar: React.FC = () => {
         
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
-          <Link to="/templates" className="text-resumify-white hover:text-resumify-beige transition-colors">
-            Templates
-          </Link>
           <Link to="/hiring-templates" className="text-resumify-white hover:text-resumify-beige transition-colors">
-            Company Hiring Templates
+            Resume Templates
           </Link>
           <Link to="/login" className="text-resumify-white hover:text-resumify-beige transition-colors">
             Login/SignUp
@@ -41,18 +38,11 @@ const Navbar: React.FC = () => {
       {isMenuOpen && (
         <nav className="md:hidden mt-4 flex flex-col gap-4 pb-4">
           <Link 
-            to="/templates" 
-            className="text-resumify-white hover:text-resumify-beige transition-colors"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Templates
-          </Link>
-          <Link 
             to="/hiring-templates" 
             className="text-resumify-white hover:text-resumify-beige transition-colors"
             onClick={() => setIsMenuOpen(false)}
           >
-            Company Hiring Templates
+            Resume Templates
           </Link>
           <Link 
             to="/login" 

@@ -86,6 +86,34 @@ const ResumePreview: React.FC = () => {
     }
   };
 
+  // Helper function to determine which template to render
+  const renderTemplate = () => {
+    switch(templateId) {
+      case 'professional':
+        return <ProfessionalTemplate />;
+      case 'creative':
+        return <CreativeTemplate />;
+      case 'minimal':
+        return <MinimalTemplate />;
+      case 'executive':
+        return <ExecutiveTemplate />;
+      // Handle all new template IDs
+      case 'tech-startup':
+      case 'corporate-finance':
+      case 'healthcare-professional':
+      case 'marketing-creative':
+      case 'education-academic':
+      case 'engineering-professional':
+      case 'legal-services':
+      case 'data-science':
+      case 'hospitality':
+        // Default to professional for new templates until they're implemented
+        return <ProfessionalTemplate />;
+      default:
+        return <ProfessionalTemplate />;
+    }
+  };
+
   return (
     <motion.div 
       className="relative flex flex-col bg-white shadow-lg rounded-lg w-full overflow-hidden"
@@ -250,10 +278,7 @@ const ResumePreview: React.FC = () => {
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
               <div className="w-full max-w-3xl h-[800px] overflow-hidden transition-shadow duration-300 hover:shadow-xl relative">
-                {templateId === 'professional' && <ProfessionalTemplate />}
-                {templateId === 'creative' && <CreativeTemplate />}
-                {templateId === 'minimal' && <MinimalTemplate />}
-                {templateId === 'executive' && <ExecutiveTemplate />}
+                {renderTemplate()}
               </div>
             </motion.div>
           )}
