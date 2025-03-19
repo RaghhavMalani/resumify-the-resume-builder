@@ -1,8 +1,9 @@
 
+import { ObjectId } from 'mongodb';
 import { getCollection } from '../lib/mongodb';
 
 export interface Resume {
-  _id?: string;
+  _id?: string | ObjectId;
   userId: string;
   title: string;
   templateId: string;
@@ -12,10 +13,15 @@ export interface Resume {
 }
 
 export interface User {
-  _id?: string;
+  _id?: string | ObjectId;
   email: string;
   name: string;
   createdAt: Date;
+}
+
+// Helper function to convert string ID to ObjectId
+function toObjectId(id: string): ObjectId {
+  return new ObjectId(id);
 }
 
 // Resume related functions
@@ -37,7 +43,7 @@ export async function updateResume(id: string, updates: Partial<Omit<Resume, '_i
   const resumesCollection = await getCollection('resumes');
   
   const result = await resumesCollection.updateOne(
-    { _id: id },
+    { _id: toObjectId(id) },
     { 
       $set: {
         ...updates,
@@ -56,12 +62,12 @@ export async function getResumesByUser(userId: string) {
 
 export async function getResumeById(id: string) {
   const resumesCollection = await getCollection('resumes');
-  return resumesCollection.findOne({ _id: id });
+  return resumesCollection.findOne({ _id: toObjectId(id) });
 }
 
 export async function deleteResume(id: string) {
   const resumesCollection = await getCollection('resumes');
-  const result = await resumesCollection.deleteOne({ _id: id });
+  const result = await resumesCollection.deleteOne({ _id: toObjectId(id) });
   return result.deletedCount > 0;
 }
 
@@ -91,5 +97,5 @@ export async function getUserByEmail(email: string) {
 
 export async function getUserById(id: string) {
   const usersCollection = await getCollection('users');
-  return usersCollection.findOne({ _id: id });
+  return usersCollection.findOne({ _id: toObjectId(id) });
 }
