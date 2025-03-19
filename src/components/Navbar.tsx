@@ -17,11 +17,8 @@ const Navbar: React.FC = () => {
           <Link to="/templates" className="text-resumify-white hover:text-resumify-beige transition-colors">
             Templates
           </Link>
-          <Link to="/faq" className="text-resumify-white hover:text-resumify-beige transition-colors">
-            FAQ
-          </Link>
-          <Link to="/pre-made" className="text-resumify-white hover:text-resumify-beige transition-colors">
-            Pre-made templates
+          <Link to="/hiring-templates" className="text-resumify-white hover:text-resumify-beige transition-colors">
+            Company Hiring Templates
           </Link>
           <Link to="/login" className="text-resumify-white hover:text-resumify-beige transition-colors">
             Login/SignUp
@@ -51,18 +48,11 @@ const Navbar: React.FC = () => {
             Templates
           </Link>
           <Link 
-            to="/faq" 
+            to="/hiring-templates" 
             className="text-resumify-white hover:text-resumify-beige transition-colors"
             onClick={() => setIsMenuOpen(false)}
           >
-            FAQ
-          </Link>
-          <Link 
-            to="/pre-made" 
-            className="text-resumify-white hover:text-resumify-beige transition-colors"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Pre-made templates
+            Company Hiring Templates
           </Link>
           <Link 
             to="/login" 

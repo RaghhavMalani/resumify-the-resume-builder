@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ResumeProvider } from "./context/ResumeContext";
 import Index from "./pages/Index";
 import Templates from "./pages/Templates";
+import HiringTemplates from "./pages/HiringTemplates";
 import ResumeEditor from "./pages/ResumeEditor";
 import NotFound from "./pages/NotFound";
 import LoginSignup from "./pages/LoginSignup";
@@ -23,6 +24,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/templates" element={<Templates />} />
+            <Route path="/hiring-templates" element={<HiringTemplates />} />
             <Route path="/editor/:templateId" element={<ResumeEditor />} />
             <Route path="/login" element={<LoginSignup />} />
             <Route path="*" element={<NotFound />} />

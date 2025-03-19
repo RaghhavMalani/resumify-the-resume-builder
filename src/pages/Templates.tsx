@@ -30,6 +30,30 @@ const Templates = () => {
       image: 'public/lovable-uploads/5d3aa923-9f92-4888-92c8-e4569d43a69f.png',
       description: 'Sophisticated design for senior professionals and executives.',
     },
+    {
+      id: 'modern',
+      name: 'Modern',
+      image: 'public/lovable-uploads/31edf4ea-9433-4832-8c24-dd526f74eb4c.png',
+      description: 'Contemporary layout with a perfect balance of style and professionalism.',
+    },
+    {
+      id: 'tech',
+      name: 'Tech Focused',
+      image: 'public/lovable-uploads/c6552aa9-8ed4-4cac-8580-8d009d8eab1c.png',
+      description: 'Designed specifically for tech professionals and developers.',
+    },
+    {
+      id: 'graduate',
+      name: 'Graduate',
+      image: 'public/lovable-uploads/5d3aa923-9f92-4888-92c8-e4569d43a69f.png',
+      description: 'Perfect for recent graduates with limited professional experience.',
+    },
+    {
+      id: 'compact',
+      name: 'Compact',
+      image: 'public/lovable-uploads/31edf4ea-9433-4832-8c24-dd526f74eb4c.png',
+      description: 'Fits more information on a single page without looking cluttered.',
+    },
   ];
 
   return (
@@ -44,7 +68,7 @@ const Templates = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {templates.map((template) => (
-            <div key={template.id} className="bg-white bg-opacity-5 rounded-lg overflow-hidden transition-transform hover:scale-105">
+            <div key={template.id} className="bg-gray-900 bg-opacity-60 rounded-lg overflow-hidden transition-transform hover:scale-105 border border-resumify-brown/30">
               <div className="h-56 overflow-hidden">
                 <img 
                   src={template.image} 
@@ -57,7 +81,7 @@ const Templates = () => {
                 <p className="text-resumify-off-white mb-6">{template.description}</p>
                 <Link
                   to={`/editor/${template.id}`}
-                  className="inline-flex items-center gap-2 text-resumify-beige hover:text-resumify-brown-dark font-medium"
+                  className="inline-flex items-center gap-2 text-resumify-beige bg-gray-800 px-4 py-2 rounded-md hover:bg-gray-700 transition-colors"
                 >
                   Use this template <ArrowRight size={16} />
                 </Link>
