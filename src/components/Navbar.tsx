@@ -1,11 +1,22 @@
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
-import { Search, Menu, X } from 'lucide-react';
+import { Search, Menu, X, User, LogOut } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <header className="w-full py-4 px-4 md:px-8 lg:px-12">
@@ -15,11 +26,45 @@ const Navbar: React.FC = () => {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
           <Link to="/hiring-templates" className="text-resumify-white hover:text-resumify-beige transition-colors">
-            Resume Templates
+            Hiring Templates
           </Link>
-          <Link to="/login" className="text-resumify-white hover:text-resumify-beige transition-colors">
-            Login/SignUp
-          </Link>
+          
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full bg-gray-700 text-resumify-beige">
+                  <span className="sr-only">Open user menu</span>
+                  <User size={16} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56 bg-gray-800 border-gray-700 text-resumify-white" align="end" forceMount>
+                <div className="flex flex-col space-y-1 p-2">
+                  <p className="text-sm font-medium text-resumify-beige">{user.name}</p>
+                  <p className="text-xs text-gray-400 truncate">{user.email}</p>
+                </div>
+                <DropdownMenuSeparator className="bg-gray-700" />
+                <DropdownMenuItem 
+                  className="cursor-pointer hover:bg-gray-700"
+                  onClick={() => navigate('/dashboard')}
+                >
+                  Dashboard
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="bg-gray-700" />
+                <DropdownMenuItem 
+                  className="cursor-pointer text-red-400 hover:bg-gray-700"
+                  onClick={logout}
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Link to="/login" className="text-resumify-white hover:text-resumify-beige transition-colors">
+              Login/SignUp
+            </Link>
+          )}
+          
           <button className="text-resumify-white hover:text-resumify-beige transition-colors">
             <Search size={20} />
           </button>
@@ -42,15 +87,38 @@ const Navbar: React.FC = () => {
             className="text-resumify-white hover:text-resumify-beige transition-colors"
             onClick={() => setIsMenuOpen(false)}
           >
-            Resume Templates
+            Hiring Templates
           </Link>
-          <Link 
-            to="/login" 
-            className="text-resumify-white hover:text-resumify-beige transition-colors"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Login/SignUp
-          </Link>
+          
+          {user ? (
+            <>
+              <Link 
+                to="/dashboard" 
+                className="text-resumify-white hover:text-resumify-beige transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Dashboard
+              </Link>
+              <button 
+                onClick={() => {
+                  logout();
+                  setIsMenuOpen(false);
+                }}
+                className="text-red-400 hover:text-red-300 transition-colors text-left flex items-center gap-2"
+              >
+                <LogOut size={18} /> Logout
+              </button>
+            </>
+          ) : (
+            <Link 
+              to="/login" 
+              className="text-resumify-white hover:text-resumify-beige transition-colors"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Login/SignUp
+            </Link>
+          )}
+          
           <button className="text-resumify-white hover:text-resumify-beige transition-colors text-left">
             <Search size={20} />
           </button>

@@ -17,11 +17,61 @@ export interface User {
   email: string;
   name: string;
   createdAt: Date;
+  password?: string; // Only used during creation, never returned
 }
 
 // Helper function to convert string ID to ObjectId
 function toObjectId(id: string): ObjectId {
   return new ObjectId(id);
+}
+
+// Auth related functions
+export async function registerUser(name: string, email: string, password: string) {
+  const usersCollection = await getCollection('users');
+  
+  // Check if user already exists
+  const existingUser = await usersCollection.findOne({ email });
+  if (existingUser) {
+    throw new Error('User with this email already exists');
+  }
+  
+  // In a real app, you would hash the password here
+  const hashedPassword = password; // This should be hashed in production!
+  
+  const newUser = {
+    name,
+    email,
+    password: hashedPassword,
+    createdAt: new Date()
+  };
+  
+  const result = await usersCollection.insertOne(newUser);
+  
+  // Don't return the password
+  const { password: _, ...userWithoutPassword } = newUser;
+  return { ...userWithoutPassword, _id: result.insertedId };
+}
+
+export async function loginUser(email: string, password: string) {
+  const usersCollection = await getCollection('users');
+  
+  const user = await usersCollection.findOne({ email });
+  if (!user) {
+    throw new Error('No user found with this email');
+  }
+  
+  // In a real app, you would compare hashed passwords
+  if (user.password !== password) {
+    throw new Error('Invalid password');
+  }
+  
+  // Don't return the password
+  const { password: _, ...userWithoutPassword } = user;
+  
+  // In a real app, you would generate a JWT token here
+  const token = 'mock-token';
+  
+  return { user: userWithoutPassword, token };
 }
 
 // Resume related functions
@@ -98,4 +148,15 @@ export async function getUserByEmail(email: string) {
 export async function getUserById(id: string) {
   const usersCollection = await getCollection('users');
   return usersCollection.findOne({ _id: toObjectId(id) });
+}
+
+export async function updateUser(id: string, updates: Partial<Omit<User, '_id' | 'createdAt' | 'password'>>) {
+  const usersCollection = await getCollection('users');
+  
+  const result = await usersCollection.updateOne(
+    { _id: toObjectId(id) },
+    { $set: updates }
+  );
+  
+  return result.modifiedCount > 0;
 }
