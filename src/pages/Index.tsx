@@ -222,31 +222,26 @@ const Index = () => {
         
         <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
           {[
-            { name: 'Microsoft', logo: '/microsoft-logo.png' },
-            { name: 'Apple', logo: '/apple-logo.png' },
-            { name: 'Amazon', logo: '/amazon-logo.png' },
-            { name: 'Pinterest', logo: '/pinterest-logo.png' },
-            { name: 'YouTube', logo: '/youtube-logo.png' },
-            { name: 'LinkedIn', logo: '/linkedin-logo.png' },
-            { name: 'Twitter', logo: '/twitter-logo.png' }
+            { name: 'Microsoft' },
+            { name: 'Apple' },
+            { name: 'Amazon' },
+            { name: 'Pinterest' },
+            { name: 'YouTube' },
+            { name: 'LinkedIn' },
+            { name: 'Twitter' }
           ].map((company, index) => (
             <motion.div 
               key={company.name}
-              className="h-12 glassmorphism p-2 opacity-70 hover:opacity-100 transition-opacity duration-300"
+              className="h-12 glassmorphism p-2 px-4 opacity-70 hover:opacity-100 transition-opacity duration-300"
               initial={{ y: 50, opacity: 0 }}
               animate={isTrustInView ? { y: 0, opacity: 0.7 } : {}}
               transition={{ delay: 0.1 * index, duration: 0.5 }}
               whileHover={{ scale: 1.1, y: -5 }}
             >
               <div className="flex items-center gap-2">
-                <img 
-                  src={company.logo} 
-                  alt={company.name} 
-                  className="h-8 w-auto object-contain" 
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
+                <div className="bg-white/10 rounded-full h-8 w-8 flex items-center justify-center text-white font-bold">
+                  {company.name.charAt(0)}
+                </div>
                 <span className="text-white">{company.name}</span>
               </div>
             </motion.div>
@@ -535,3 +530,4 @@ const Index = () => {
 };
 
 export default Index;
+
