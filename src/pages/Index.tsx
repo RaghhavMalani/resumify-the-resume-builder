@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -222,8 +223,11 @@ const Index = () => {
         
         <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
           {[
+            { 
+              name: 'Apple', 
+              logo: 'public/lovable-uploads/5853ed99-b2f4-4eab-98ab-137f929790d4.png' 
+            },
             { name: 'Microsoft' },
-            { name: 'Apple' },
             { name: 'Amazon' },
             { name: 'Pinterest' },
             { name: 'YouTube' },
@@ -239,7 +243,22 @@ const Index = () => {
               whileHover={{ scale: 1.1, y: -5 }}
             >
               <div className="flex items-center gap-2">
-                <div className="bg-white/10 rounded-full h-8 w-8 flex items-center justify-center text-white font-bold">
+                {company.logo ? (
+                  <img 
+                    src={company.logo} 
+                    alt={`${company.name} logo`}
+                    className="h-8 w-auto object-contain" 
+                    onError={(e) => {
+                      // Fallback to initial if image fails to load
+                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.nextSibling.style.display = 'flex';
+                    }}
+                  />
+                ) : null}
+                <div 
+                  className="bg-white/10 rounded-full h-8 w-8 flex items-center justify-center text-white font-bold"
+                  style={{ display: company.logo ? 'none' : 'flex' }}
+                >
                   {company.name.charAt(0)}
                 </div>
                 <span className="text-white">{company.name}</span>
@@ -530,4 +549,3 @@ const Index = () => {
 };
 
 export default Index;
-
