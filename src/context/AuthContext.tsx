@@ -2,12 +2,14 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-
-interface User {
-  _id: string;
-  email: string;
-  name: string;
-}
+import { 
+  loginUser, 
+  registerUser, 
+  User, 
+  getCurrentUser, 
+  isAuthenticated, 
+  logout as apiLogout 
+} from '../services/api';
 
 interface AuthContextType {
   user: User | null;
@@ -26,24 +28,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   useEffect(() => {
     // Check for logged in user on initial load
-    const checkLoggedInUser = async () => {
+    const checkLoggedInUser = () => {
       try {
-        const token = localStorage.getItem('resumify-token');
-        if (token) {
-          // This would be a call to validate the token with your backend
-          const response = await fetch('/api/auth/me', {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          });
-          
-          if (response.ok) {
-            const userData = await response.json();
-            setUser(userData);
-          } else {
-            // Token is invalid, remove it
-            localStorage.removeItem('resumify-token');
-          }
+        if (isAuthenticated()) {
+          const userData = getCurrentUser();
+          setUser(userData);
         }
       } catch (error) {
         console.error('Auth check failed:', error);
@@ -58,14 +47,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      // In a real implementation, this would call your backend
-      // For now, we'll simulate a successful login
-      const mockUser = { _id: '12345', email, name: email.split('@')[0] };
-      
-      // Store token in localStorage (would come from your backend)
-      localStorage.setItem('resumify-token', 'mock-token');
-      
-      setUser(mockUser);
+      const result = await loginUser(email, password);
+      setUser(result.user);
       toast.success('Login successful');
       navigate('/dashboard');
     } catch (error) {
@@ -80,14 +63,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const signup = async (name: string, email: string, password: string) => {
     setIsLoading(true);
     try {
-      // In a real implementation, this would call your backend
-      // For now, we'll simulate a successful signup
-      const mockUser = { _id: '12345', email, name };
-      
-      // Store token in localStorage (would come from your backend)
-      localStorage.setItem('resumify-token', 'mock-token');
-      
-      setUser(mockUser);
+      const user = await registerUser(name, email, password);
+      // Login after successful registration
+      await login(email, password);
       toast.success('Account created successfully');
       navigate('/dashboard');
     } catch (error) {
@@ -100,7 +78,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const logout = () => {
-    localStorage.removeItem('resumify-token');
+    apiLogout();
     setUser(null);
     navigate('/');
     toast.info('You have been logged out');

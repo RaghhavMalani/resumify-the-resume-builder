@@ -1,9 +1,11 @@
 
-import { ObjectId } from 'mongodb';
-import { getCollection } from '../lib/mongodb';
+// Mock data for our frontend application
+// In a real application, these would be API calls to a backend server
+
+import { v4 as uuidv4 } from 'uuid';
 
 export interface Resume {
-  _id?: string | ObjectId;
+  _id?: string;
   userId: string;
   title: string;
   templateId: string;
@@ -13,68 +15,55 @@ export interface Resume {
 }
 
 export interface User {
-  _id?: string | ObjectId;
+  _id?: string;
   email: string;
   name: string;
   createdAt: Date;
   password?: string; // Only used during creation, never returned
 }
 
-// Helper function to convert string ID to ObjectId
-function toObjectId(id: string): ObjectId {
-  return new ObjectId(id);
-}
+// Mock storage using localStorage
+const getLocalStorage = <T>(key: string): T[] => {
+  const data = localStorage.getItem(key);
+  return data ? JSON.parse(data) : [];
+};
 
-// Helper function to transform MongoDB documents to our interfaces
-function transformDocument<T>(doc: any): T {
-  // Convert _id from ObjectId to string if it exists
-  if (doc._id && typeof doc._id !== 'string') {
-    doc._id = doc._id.toString();
-  }
-  
-  // Convert date strings to Date objects if needed
-  if (doc.createdAt && !(doc.createdAt instanceof Date)) {
-    doc.createdAt = new Date(doc.createdAt);
-  }
-  
-  if (doc.updatedAt && !(doc.updatedAt instanceof Date)) {
-    doc.updatedAt = new Date(doc.updatedAt);
-  }
-  
-  return doc as T;
-}
+const setLocalStorage = <T>(key: string, data: T[]) => {
+  localStorage.setItem(key, JSON.stringify(data));
+};
 
 // Auth related functions
 export async function registerUser(name: string, email: string, password: string) {
-  const usersCollection = await getCollection('users');
-  
   // Check if user already exists
-  const existingUser = await usersCollection.findOne({ email });
+  const users = getLocalStorage<User>('users');
+  const existingUser = users.find(u => u.email === email);
+  
   if (existingUser) {
     throw new Error('User with this email already exists');
   }
   
-  // In a real app, you would hash the password here
-  const hashedPassword = password; // This should be hashed in production!
-  
-  const newUser = {
+  // In a real app, you would hash the password
+  const newUser: User = {
+    _id: uuidv4(),
     name,
     email,
-    password: hashedPassword,
+    password, // This should be hashed in production!
     createdAt: new Date()
   };
   
-  const result = await usersCollection.insertOne(newUser);
+  // Save the user
+  users.push(newUser);
+  setLocalStorage<User>('users', users);
   
   // Don't return the password
   const { password: _, ...userWithoutPassword } = newUser;
-  return { ...userWithoutPassword, _id: result.insertedId };
+  return { ...userWithoutPassword };
 }
 
 export async function loginUser(email: string, password: string) {
-  const usersCollection = await getCollection('users');
+  const users = getLocalStorage<User>('users');
+  const user = users.find(u => u.email === email);
   
-  const user = await usersCollection.findOne({ email });
   if (!user) {
     throw new Error('No user found with this email');
   }
@@ -88,109 +77,136 @@ export async function loginUser(email: string, password: string) {
   const { password: _, ...userWithoutPassword } = user;
   
   // In a real app, you would generate a JWT token here
-  const token = 'mock-token';
+  const token = uuidv4();
+  
+  // Store the token in localStorage for subsequent API calls
+  localStorage.setItem('resumify-token', token);
+  localStorage.setItem('resumify-user', JSON.stringify(userWithoutPassword));
   
   return { user: userWithoutPassword, token };
 }
 
 // Resume related functions
 export async function saveResume(resume: Omit<Resume, '_id' | 'createdAt' | 'updatedAt'>) {
-  const resumesCollection = await getCollection('resumes');
+  const resumes = getLocalStorage<Resume>('resumes');
   const now = new Date();
   
-  const newResume = {
+  const newResume: Resume = {
     ...resume,
+    _id: uuidv4(),
     createdAt: now,
     updatedAt: now
   };
   
-  const result = await resumesCollection.insertOne(newResume);
-  return { ...newResume, _id: result.insertedId.toString() };
+  resumes.push(newResume);
+  setLocalStorage<Resume>('resumes', resumes);
+  
+  return newResume;
 }
 
 export async function updateResume(id: string, updates: Partial<Omit<Resume, '_id' | 'createdAt'>>) {
-  const resumesCollection = await getCollection('resumes');
+  const resumes = getLocalStorage<Resume>('resumes');
+  const resumeIndex = resumes.findIndex(r => r._id === id);
   
-  const result = await resumesCollection.updateOne(
-    { _id: toObjectId(id) },
-    { 
-      $set: {
-        ...updates,
-        updatedAt: new Date()
-      } 
-    }
-  );
+  if (resumeIndex === -1) {
+    return false;
+  }
   
-  return result.modifiedCount > 0;
+  resumes[resumeIndex] = {
+    ...resumes[resumeIndex],
+    ...updates,
+    updatedAt: new Date()
+  };
+  
+  setLocalStorage<Resume>('resumes', resumes);
+  return true;
 }
 
 export async function getResumesByUser(userId: string): Promise<Resume[]> {
-  const resumesCollection = await getCollection('resumes');
-  const docs = await resumesCollection.find({ userId }).toArray();
-  
-  // Transform MongoDB documents to Resume objects
-  return docs.map(doc => transformDocument<Resume>(doc));
+  const resumes = getLocalStorage<Resume>('resumes');
+  return resumes.filter(r => r.userId === userId);
 }
 
 export async function getResumeById(id: string): Promise<Resume | null> {
-  const resumesCollection = await getCollection('resumes');
-  const doc = await resumesCollection.findOne({ _id: toObjectId(id) });
-  
-  if (!doc) return null;
-  
-  return transformDocument<Resume>(doc);
+  const resumes = getLocalStorage<Resume>('resumes');
+  const resume = resumes.find(r => r._id === id);
+  return resume || null;
 }
 
-export async function deleteResume(id: string) {
-  const resumesCollection = await getCollection('resumes');
-  const result = await resumesCollection.deleteOne({ _id: toObjectId(id) });
-  return result.deletedCount > 0;
+export async function deleteResume(id: string): Promise<boolean> {
+  const resumes = getLocalStorage<Resume>('resumes');
+  const newResumes = resumes.filter(r => r._id !== id);
+  
+  if (newResumes.length === resumes.length) {
+    return false;
+  }
+  
+  setLocalStorage<Resume>('resumes', newResumes);
+  return true;
 }
 
 // User related functions
 export async function createUser(user: Omit<User, '_id' | 'createdAt'>) {
-  const usersCollection = await getCollection('users');
+  const users = getLocalStorage<User>('users');
   
   // Check if user already exists
-  const existingUser = await usersCollection.findOne({ email: user.email });
+  const existingUser = users.find(u => u.email === user.email);
   if (existingUser) {
-    return transformDocument<User>(existingUser);
+    return existingUser;
   }
   
-  const newUser = {
+  const newUser: User = {
     ...user,
+    _id: uuidv4(),
     createdAt: new Date()
   };
   
-  const result = await usersCollection.insertOne(newUser);
-  return transformDocument<User>({ ...newUser, _id: result.insertedId });
+  users.push(newUser);
+  setLocalStorage<User>('users', users);
+  
+  return newUser;
 }
 
 export async function getUserByEmail(email: string): Promise<User | null> {
-  const usersCollection = await getCollection('users');
-  const doc = await usersCollection.findOne({ email });
-  
-  if (!doc) return null;
-  
-  return transformDocument<User>(doc);
+  const users = getLocalStorage<User>('users');
+  const user = users.find(u => u.email === email);
+  return user || null;
 }
 
 export async function getUserById(id: string): Promise<User | null> {
-  const usersCollection = await getCollection('users');
-  const doc = await usersCollection.findOne({ _id: toObjectId(id) });
-  
-  if (!doc) return null;
-  
-  return transformDocument<User>(doc);
+  const users = getLocalStorage<User>('users');
+  const user = users.find(u => u._id === id);
+  return user || null;
 }
 
-export async function updateUser(id: string, updates: Partial<Omit<User, '_id' | 'createdAt' | 'password'>>) {
-  const usersCollection = await getCollection('users');
+export async function updateUser(id: string, updates: Partial<Omit<User, '_id' | 'createdAt' | 'password'>>): Promise<boolean> {
+  const users = getLocalStorage<User>('users');
+  const userIndex = users.findIndex(u => u._id === id);
   
-  const result = await usersCollection.updateOne(
-    { _id: toObjectId(id) },
-    { $set: updates }
-  );
+  if (userIndex === -1) {
+    return false;
+  }
   
-  return result.modifiedCount > 0;
+  users[userIndex] = {
+    ...users[userIndex],
+    ...updates
+  };
+  
+  setLocalStorage<User>('users', users);
+  return true;
+}
+
+// Helper for checking authentication
+export function getCurrentUser(): User | null {
+  const userJson = localStorage.getItem('resumify-user');
+  return userJson ? JSON.parse(userJson) : null;
+}
+
+export function isAuthenticated(): boolean {
+  return !!localStorage.getItem('resumify-token');
+}
+
+export function logout(): void {
+  localStorage.removeItem('resumify-token');
+  localStorage.removeItem('resumify-user');
 }
