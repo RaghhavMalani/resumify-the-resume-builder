@@ -6,10 +6,12 @@ import { Button } from '../components/ui/button';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Sparkles, Rocket, Star, Zap, Award, CheckCircle, ArrowRight } from 'lucide-react';
 import { Badge } from '../components/ui/badge';
+import { useToast } from '../hooks/use-toast';
 
 const Index = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const { scrollY } = useScroll();
+  const { toast } = useToast();
   const resumeRef = useRef(null);
   const trustRef = useRef(null);
   const featuresRef = useRef(null);
@@ -28,6 +30,7 @@ const Index = () => {
   useEffect(() => {
     setIsLoaded(true);
     
+    // Particle animation effect
     const createParticle = () => {
       const particle = document.createElement('div');
       particle.classList.add('particle');
@@ -57,6 +60,65 @@ const Index = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Function to check if backend is available
+  const checkBackendStatus = async () => {
+    try {
+      // Attempt to connect to backend
+      const user = await getCurrentUser();
+      if (user) {
+        toast({
+          title: "Connected!",
+          description: "Successfully connected to backend services",
+          variant: "default",
+        });
+      }
+    } catch (error) {
+      console.error("Backend connection error:", error);
+      toast({
+        title: "Connection Issue",
+        description: "Unable to connect to backend services",
+        variant: "destructive",
+      });
+    }
+  };
+
+  useEffect(() => {
+    // Check backend connection when component loads
+    checkBackendStatus();
+  }, []);
+
+  // Company logos data with proper paths
+  const companyLogos = [
+    { 
+      name: 'Apple', 
+      logo: '/lovable-uploads/5853ed99-b2f4-4eab-98ab-137f929790d4.png'
+    },
+    { 
+      name: 'Microsoft', 
+      logo: '/lovable-uploads/27dfb48f-326a-46b1-a85f-67c50df23e26.png'
+    },
+    { 
+      name: 'Amazon', 
+      logo: null
+    },
+    { 
+      name: 'Pinterest', 
+      logo: null
+    },
+    { 
+      name: 'YouTube', 
+      logo: null
+    },
+    { 
+      name: 'LinkedIn', 
+      logo: null
+    },
+    { 
+      name: 'Twitter', 
+      logo: null
+    }
+  ];
+
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
       <Navbar />
@@ -75,7 +137,7 @@ const Index = () => {
           >
             <div className="absolute -inset-0.5 bg-gradient-to-r from-resumify-brown to-resumify-beige rounded-lg blur opacity-30 group-hover:opacity-70 transition duration-1000"></div>
             <img 
-              src="public/lovable-uploads/3657219f-7c45-408b-9819-751d9b931f2e.png" 
+              src="/lovable-uploads/3657219f-7c45-408b-9819-751d9b931f2e.png" 
               alt="Resume Preview" 
               className="relative w-full shadow-lg rounded-md z-10"
             />
@@ -222,18 +284,7 @@ const Index = () => {
         </motion.h3>
         
         <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
-          {[
-            { 
-              name: 'Apple', 
-              logo: '/lovable-uploads/5853ed99-b2f4-4eab-98ab-137f929790d4.png' 
-            },
-            { name: 'Microsoft' },
-            { name: 'Amazon' },
-            { name: 'Pinterest' },
-            { name: 'YouTube' },
-            { name: 'LinkedIn' },
-            { name: 'Twitter' }
-          ].map((company, index) => (
+          {companyLogos.map((company, index) => (
             <motion.div 
               key={company.name}
               className="h-12 glassmorphism p-2 px-4 opacity-70 hover:opacity-100 transition-opacity duration-300"
@@ -249,11 +300,10 @@ const Index = () => {
                     alt={`${company.name} logo`}
                     className="h-8 w-auto object-contain" 
                     onError={(e) => {
-                      // Fallback to initial if image fails to load
                       e.currentTarget.style.display = 'none';
-                      // Type assertion to HTMLElement to fix the TypeScript error
-                      if (e.currentTarget.nextSibling) {
-                        (e.currentTarget.nextSibling as HTMLElement).style.display = 'flex';
+                      const nextSibling = e.currentTarget.nextSibling;
+                      if (nextSibling) {
+                        (nextSibling as HTMLElement).style.display = 'flex';
                       }
                     }}
                   />
@@ -544,6 +594,73 @@ const Index = () => {
             transform: translateY(-100vh) rotate(360deg);
             opacity: 0;
           }
+        }
+        
+        .triangle {
+          position: absolute;
+          width: 150px;
+          height: 150px;
+          background: linear-gradient(to right bottom, rgba(198, 165, 149, 0.2), rgba(166, 115, 96, 0.1));
+          border-radius: 15px;
+          z-index: -1;
+        }
+        
+        .triangle-1 {
+          top: 20%;
+          left: -50px;
+        }
+        
+        .triangle-2 {
+          bottom: 20%;
+          right: -50px;
+        }
+        
+        .triangle-3 {
+          top: 60%;
+          left: 50%;
+        }
+        
+        .glassmorphism {
+          background: rgba(31, 31, 35, 0.6);
+          backdrop-filter: blur(12px);
+          border-radius: 10px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .gradient-text {
+          background: linear-gradient(to right, #c0a595, #a67360);
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+        }
+        
+        .gradient-border {
+          position: relative;
+          border-radius: 0.5rem;
+          padding: 0.1rem;
+        }
+        
+        .modern-button {
+          background: linear-gradient(to right, #a67360, #c0a595);
+          color: white;
+          padding: 0.75rem 1.5rem;
+          border-radius: 0.5rem;
+          font-weight: 600;
+          transition: all 0.3s ease;
+        }
+        
+        .modern-button:hover {
+          box-shadow: 0 10px 20px rgba(166, 115, 96, 0.4);
+          transform: translateY(-2px);
+        }
+        
+        .hoverable-card {
+          transition: all 0.3s ease;
+        }
+        
+        .hoverable-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
         }
         `}
       </style>

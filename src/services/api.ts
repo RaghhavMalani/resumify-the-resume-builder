@@ -1,4 +1,3 @@
-
 // Mock data for our frontend application
 // In a real application, these would be API calls to a backend server
 
@@ -22,18 +21,52 @@ export interface User {
   password?: string; // Only used during creation, never returned
 }
 
-// Mock storage using localStorage
+// Improved local storage handling with better error handling
 const getLocalStorage = <T>(key: string): T[] => {
-  const data = localStorage.getItem(key);
-  return data ? JSON.parse(data) : [];
+  try {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : [];
+  } catch (error) {
+    console.error(`Error retrieving data from localStorage (${key}):`, error);
+    return [];
+  }
 };
 
 const setLocalStorage = <T>(key: string, data: T[]) => {
-  localStorage.setItem(key, JSON.stringify(data));
+  try {
+    localStorage.setItem(key, JSON.stringify(data));
+    return true;
+  } catch (error) {
+    console.error(`Error saving data to localStorage (${key}):`, error);
+    return false;
+  }
 };
+
+// Initialize default data if not present
+const initializeData = () => {
+  if (!localStorage.getItem('users')) {
+    setLocalStorage<User>('users', []);
+  }
+  
+  if (!localStorage.getItem('resumes')) {
+    setLocalStorage<Resume>('resumes', []);
+  }
+};
+
+// Call initialization
+initializeData();
 
 // Auth related functions
 export async function registerUser(name: string, email: string, password: string) {
+  // Input validation
+  if (!name || !email || !password) {
+    throw new Error('Name, email and password are required');
+  }
+  
+  if (password.length < 6) {
+    throw new Error('Password must be at least 6 characters');
+  }
+  
   // Check if user already exists
   const users = getLocalStorage<User>('users');
   const existingUser = users.find(u => u.email === email);
@@ -61,6 +94,10 @@ export async function registerUser(name: string, email: string, password: string
 }
 
 export async function loginUser(email: string, password: string) {
+  if (!email || !password) {
+    throw new Error('Email and password are required');
+  }
+
   const users = getLocalStorage<User>('users');
   const user = users.find(u => u.email === email);
   
@@ -88,6 +125,10 @@ export async function loginUser(email: string, password: string) {
 
 // Resume related functions
 export async function saveResume(resume: Omit<Resume, '_id' | 'createdAt' | 'updatedAt'>) {
+  if (!resume.userId || !resume.templateId) {
+    throw new Error('User ID and template ID are required');
+  }
+
   const resumes = getLocalStorage<Resume>('resumes');
   const now = new Date();
   
@@ -99,12 +140,20 @@ export async function saveResume(resume: Omit<Resume, '_id' | 'createdAt' | 'upd
   };
   
   resumes.push(newResume);
-  setLocalStorage<Resume>('resumes', resumes);
+  const success = setLocalStorage<Resume>('resumes', resumes);
+  
+  if (!success) {
+    throw new Error('Failed to save resume');
+  }
   
   return newResume;
 }
 
 export async function updateResume(id: string, updates: Partial<Omit<Resume, '_id' | 'createdAt'>>) {
+  if (!id) {
+    throw new Error('Resume ID is required');
+  }
+
   const resumes = getLocalStorage<Resume>('resumes');
   const resumeIndex = resumes.findIndex(r => r._id === id);
   
@@ -118,22 +167,33 @@ export async function updateResume(id: string, updates: Partial<Omit<Resume, '_i
     updatedAt: new Date()
   };
   
-  setLocalStorage<Resume>('resumes', resumes);
-  return true;
+  return setLocalStorage<Resume>('resumes', resumes);
 }
 
 export async function getResumesByUser(userId: string): Promise<Resume[]> {
+  if (!userId) {
+    throw new Error('User ID is required');
+  }
+
   const resumes = getLocalStorage<Resume>('resumes');
   return resumes.filter(r => r.userId === userId);
 }
 
 export async function getResumeById(id: string): Promise<Resume | null> {
+  if (!id) {
+    throw new Error('Resume ID is required');
+  }
+
   const resumes = getLocalStorage<Resume>('resumes');
   const resume = resumes.find(r => r._id === id);
   return resume || null;
 }
 
 export async function deleteResume(id: string): Promise<boolean> {
+  if (!id) {
+    throw new Error('Resume ID is required');
+  }
+
   const resumes = getLocalStorage<Resume>('resumes');
   const newResumes = resumes.filter(r => r._id !== id);
   
@@ -141,11 +201,51 @@ export async function deleteResume(id: string): Promise<boolean> {
     return false;
   }
   
-  setLocalStorage<Resume>('resumes', newResumes);
-  return true;
+  return setLocalStorage<Resume>('resumes', newResumes);
 }
 
 // User related functions
+export async function updateUser(id: string, updates: Partial<Omit<User, '_id' | 'createdAt' | 'password'>>): Promise<boolean> {
+  if (!id) {
+    throw new Error('User ID is required');
+  }
+
+  const users = getLocalStorage<User>('users');
+  const userIndex = users.findIndex(u => u._id === id);
+  
+  if (userIndex === -1) {
+    return false;
+  }
+  
+  users[userIndex] = {
+    ...users[userIndex],
+    ...updates
+  };
+  
+  return setLocalStorage<User>('users', users);
+}
+
+// Helper for checking authentication
+export function getCurrentUser(): User | null {
+  try {
+    const userJson = localStorage.getItem('resumify-user');
+    return userJson ? JSON.parse(userJson) : null;
+  } catch (error) {
+    console.error('Error getting current user:', error);
+    return null;
+  }
+}
+
+export function isAuthenticated(): boolean {
+  return !!localStorage.getItem('resumify-token');
+}
+
+export function logout(): void {
+  localStorage.removeItem('resumify-token');
+  localStorage.removeItem('resumify-user');
+}
+
+// Export other functions that were in the original file
 export async function createUser(user: Omit<User, '_id' | 'createdAt'>) {
   const users = getLocalStorage<User>('users');
   
@@ -177,36 +277,4 @@ export async function getUserById(id: string): Promise<User | null> {
   const users = getLocalStorage<User>('users');
   const user = users.find(u => u._id === id);
   return user || null;
-}
-
-export async function updateUser(id: string, updates: Partial<Omit<User, '_id' | 'createdAt' | 'password'>>): Promise<boolean> {
-  const users = getLocalStorage<User>('users');
-  const userIndex = users.findIndex(u => u._id === id);
-  
-  if (userIndex === -1) {
-    return false;
-  }
-  
-  users[userIndex] = {
-    ...users[userIndex],
-    ...updates
-  };
-  
-  setLocalStorage<User>('users', users);
-  return true;
-}
-
-// Helper for checking authentication
-export function getCurrentUser(): User | null {
-  const userJson = localStorage.getItem('resumify-user');
-  return userJson ? JSON.parse(userJson) : null;
-}
-
-export function isAuthenticated(): boolean {
-  return !!localStorage.getItem('resumify-token');
-}
-
-export function logout(): void {
-  localStorage.removeItem('resumify-token');
-  localStorage.removeItem('resumify-user');
 }
