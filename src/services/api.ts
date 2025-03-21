@@ -25,6 +25,25 @@ function toObjectId(id: string): ObjectId {
   return new ObjectId(id);
 }
 
+// Helper function to transform MongoDB documents to our interfaces
+function transformDocument<T>(doc: any): T {
+  // Convert _id from ObjectId to string if it exists
+  if (doc._id && typeof doc._id !== 'string') {
+    doc._id = doc._id.toString();
+  }
+  
+  // Convert date strings to Date objects if needed
+  if (doc.createdAt && !(doc.createdAt instanceof Date)) {
+    doc.createdAt = new Date(doc.createdAt);
+  }
+  
+  if (doc.updatedAt && !(doc.updatedAt instanceof Date)) {
+    doc.updatedAt = new Date(doc.updatedAt);
+  }
+  
+  return doc as T;
+}
+
 // Auth related functions
 export async function registerUser(name: string, email: string, password: string) {
   const usersCollection = await getCollection('users');
@@ -86,7 +105,7 @@ export async function saveResume(resume: Omit<Resume, '_id' | 'createdAt' | 'upd
   };
   
   const result = await resumesCollection.insertOne(newResume);
-  return { ...newResume, _id: result.insertedId };
+  return { ...newResume, _id: result.insertedId.toString() };
 }
 
 export async function updateResume(id: string, updates: Partial<Omit<Resume, '_id' | 'createdAt'>>) {
@@ -105,14 +124,21 @@ export async function updateResume(id: string, updates: Partial<Omit<Resume, '_i
   return result.modifiedCount > 0;
 }
 
-export async function getResumesByUser(userId: string) {
+export async function getResumesByUser(userId: string): Promise<Resume[]> {
   const resumesCollection = await getCollection('resumes');
-  return resumesCollection.find({ userId }).toArray();
+  const docs = await resumesCollection.find({ userId }).toArray();
+  
+  // Transform MongoDB documents to Resume objects
+  return docs.map(doc => transformDocument<Resume>(doc));
 }
 
-export async function getResumeById(id: string) {
+export async function getResumeById(id: string): Promise<Resume | null> {
   const resumesCollection = await getCollection('resumes');
-  return resumesCollection.findOne({ _id: toObjectId(id) });
+  const doc = await resumesCollection.findOne({ _id: toObjectId(id) });
+  
+  if (!doc) return null;
+  
+  return transformDocument<Resume>(doc);
 }
 
 export async function deleteResume(id: string) {
@@ -128,7 +154,7 @@ export async function createUser(user: Omit<User, '_id' | 'createdAt'>) {
   // Check if user already exists
   const existingUser = await usersCollection.findOne({ email: user.email });
   if (existingUser) {
-    return existingUser;
+    return transformDocument<User>(existingUser);
   }
   
   const newUser = {
@@ -137,17 +163,25 @@ export async function createUser(user: Omit<User, '_id' | 'createdAt'>) {
   };
   
   const result = await usersCollection.insertOne(newUser);
-  return { ...newUser, _id: result.insertedId };
+  return transformDocument<User>({ ...newUser, _id: result.insertedId });
 }
 
-export async function getUserByEmail(email: string) {
+export async function getUserByEmail(email: string): Promise<User | null> {
   const usersCollection = await getCollection('users');
-  return usersCollection.findOne({ email });
+  const doc = await usersCollection.findOne({ email });
+  
+  if (!doc) return null;
+  
+  return transformDocument<User>(doc);
 }
 
-export async function getUserById(id: string) {
+export async function getUserById(id: string): Promise<User | null> {
   const usersCollection = await getCollection('users');
-  return usersCollection.findOne({ _id: toObjectId(id) });
+  const doc = await usersCollection.findOne({ _id: toObjectId(id) });
+  
+  if (!doc) return null;
+  
+  return transformDocument<User>(doc);
 }
 
 export async function updateUser(id: string, updates: Partial<Omit<User, '_id' | 'createdAt' | 'password'>>) {
