@@ -251,7 +251,10 @@ const Index = () => {
                     onError={(e) => {
                       // Fallback to initial if image fails to load
                       e.currentTarget.style.display = 'none';
-                      e.currentTarget.nextSibling.style.display = 'flex';
+                      // Type assertion to HTMLElement to fix the TypeScript error
+                      if (e.currentTarget.nextSibling) {
+                        (e.currentTarget.nextSibling as HTMLElement).style.display = 'flex';
+                      }
                     }}
                   />
                 ) : null}
