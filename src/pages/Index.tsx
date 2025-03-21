@@ -225,7 +225,7 @@ const Index = () => {
           {[
             { 
               name: 'Apple', 
-              logo: 'public/lovable-uploads/5853ed99-b2f4-4eab-98ab-137f929790d4.png' 
+              logo: '/lovable-uploads/5853ed99-b2f4-4eab-98ab-137f929790d4.png' 
             },
             { name: 'Microsoft' },
             { name: 'Amazon' },
