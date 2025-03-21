@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -28,7 +27,6 @@ const Index = () => {
   useEffect(() => {
     setIsLoaded(true);
     
-    // Create animated particles
     const createParticle = () => {
       const particle = document.createElement('div');
       particle.classList.add('particle');
@@ -223,9 +221,17 @@ const Index = () => {
         </motion.h3>
         
         <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
-          {['Microsoft', 'Apple', 'Amazon', 'Pinterest', 'YouTube', 'LinkedIn', 'Twitter'].map((company, index) => (
+          {[
+            { name: 'Microsoft', logo: '/microsoft-logo.png' },
+            { name: 'Apple', logo: '/apple-logo.png' },
+            { name: 'Amazon', logo: '/amazon-logo.png' },
+            { name: 'Pinterest', logo: '/pinterest-logo.png' },
+            { name: 'YouTube', logo: '/youtube-logo.png' },
+            { name: 'LinkedIn', logo: '/linkedin-logo.png' },
+            { name: 'Twitter', logo: '/twitter-logo.png' }
+          ].map((company, index) => (
             <motion.div 
-              key={company}
+              key={company.name}
               className="h-12 glassmorphism p-2 opacity-70 hover:opacity-100 transition-opacity duration-300"
               initial={{ y: 50, opacity: 0 }}
               animate={isTrustInView ? { y: 0, opacity: 0.7 } : {}}
@@ -233,8 +239,15 @@ const Index = () => {
               whileHover={{ scale: 1.1, y: -5 }}
             >
               <div className="flex items-center gap-2">
-                <img src={`https://via.placeholder.com/24x24?text=${company.charAt(0)}`} alt={company} className="h-8" />
-                <span className="text-white">{company}</span>
+                <img 
+                  src={company.logo} 
+                  alt={company.name} 
+                  className="h-8 w-auto object-contain" 
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+                <span className="text-white">{company.name}</span>
               </div>
             </motion.div>
           ))}
