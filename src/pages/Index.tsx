@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -7,6 +6,7 @@ import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Sparkles, Rocket, Star, Zap, Award, CheckCircle, ArrowRight } from 'lucide-react';
 import { Badge } from '../components/ui/badge';
 import { useToast } from '../hooks/use-toast';
+import { getCurrentUser } from '../services/api';
 
 const Index = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -30,7 +30,6 @@ const Index = () => {
   useEffect(() => {
     setIsLoaded(true);
     
-    // Particle animation effect
     const createParticle = () => {
       const particle = document.createElement('div');
       particle.classList.add('particle');
@@ -60,10 +59,8 @@ const Index = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Function to check if backend is available
   const checkBackendStatus = async () => {
     try {
-      // Attempt to connect to backend
       const user = await getCurrentUser();
       if (user) {
         toast({
@@ -83,11 +80,9 @@ const Index = () => {
   };
 
   useEffect(() => {
-    // Check backend connection when component loads
     checkBackendStatus();
   }, []);
 
-  // Company logos data with proper paths
   const companyLogos = [
     { 
       name: 'Apple', 
@@ -669,3 +664,4 @@ const Index = () => {
 };
 
 export default Index;
+
