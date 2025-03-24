@@ -278,3 +278,53 @@ export async function getUserById(id: string): Promise<User | null> {
   const user = users.find(u => u._id === id);
   return user || null;
 }
+
+// Add fallback for MongoDB connection
+let isMongoDatabaseConnected = false;
+
+// Check if MongoDB is connected
+export async function checkDatabaseConnection(): Promise<boolean> {
+  try {
+    // Try to import the database connection
+    const { getDatabase } = await import('../backend/db/connection');
+    
+    // Try to get the database
+    const db = await getDatabase();
+    const result = await db.admin().ping();
+    
+    isMongoDatabaseConnected = result.ok === 1;
+    return isMongoDatabaseConnected;
+  } catch (error) {
+    console.error('Failed to connect to MongoDB:', error);
+    isMongoDatabaseConnected = false;
+    return false;
+  }
+}
+
+// Check if backend API is available
+export async function checkBackendConnection(): Promise<boolean> {
+  try {
+    const response = await fetch('/api/health');
+    return response.status === 200;
+  } catch (error) {
+    console.error('Failed to connect to backend API:', error);
+    return false;
+  }
+}
+
+// Function to determine if we should use the backend API or local storage
+export async function shouldUseBackendAPI(): Promise<boolean> {
+  try {
+    const backendAvailable = await checkBackendConnection();
+    if (backendAvailable) {
+      console.log('Using backend API for data persistence');
+      return true;
+    } else {
+      console.log('Backend API not available, using local storage for data persistence');
+      return false;
+    }
+  } catch (error) {
+    console.error('Error checking backend availability:', error);
+    return false;
+  }
+}
