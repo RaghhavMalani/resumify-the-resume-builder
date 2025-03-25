@@ -90,7 +90,7 @@ const Index = () => {
     },
     { 
       name: 'Microsoft', 
-      logo: '/lovable-uploads/27dfb48f-326a-46b1-a85f-67c50df23e26.png'
+      logo: 'microsoft.png'
     },
     { 
       name: 'Amazon', 
