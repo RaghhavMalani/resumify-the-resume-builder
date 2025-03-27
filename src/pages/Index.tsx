@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -125,14 +124,12 @@ const Index = () => {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-b from-resumify-background via-resumify-dark-blue to-black">
-      {/* Enhanced Animated Background Elements */}
       <div className="fixed inset-0 z-0">
         <div className="absolute w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJncmlkIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxwYXRoIGQ9Ik0gNDAgMCBMIDAgMCAwIDQwIiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wNCkiIHN0cm9rZS13aWR0aD0iMC41Ii8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCBmaWxsPSJ1cmwoI2dyaWQpIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIi8+PC9zdmc+')]"></div>
         <div className="absolute inset-0 opacity-20 bg-gradient-to-b from-transparent to-resumify-brown/10"></div>
         
-        {/* Dynamic light effects */}
         <motion.div 
-          className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-blue-500/5 blur-3xl"
+          className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-resumify-brown/5 blur-3xl"
           animate={{ 
             scale: [1, 1.2, 1], 
             opacity: [0.1, 0.2, 0.1],
@@ -142,7 +139,7 @@ const Index = () => {
         />
         
         <motion.div 
-          className="absolute -top-20 right-1/4 w-64 h-64 rounded-full bg-teal-500/5 blur-3xl"
+          className="absolute -top-20 right-1/4 w-64 h-64 rounded-full bg-resumify-beige/5 blur-3xl"
           animate={{ 
             scale: [1, 1.3, 1], 
             opacity: [0.1, 0.2, 0.1],
@@ -152,7 +149,7 @@ const Index = () => {
         />
         
         <motion.div 
-          className="absolute bottom-1/4 right-10 w-80 h-80 rounded-full bg-purple-500/5 blur-3xl"
+          className="absolute bottom-1/4 right-10 w-80 h-80 rounded-full bg-resumify-brown/5 blur-3xl"
           animate={{ 
             scale: [1, 1.3, 1], 
             opacity: [0.1, 0.2, 0.1],
@@ -164,7 +161,6 @@ const Index = () => {
 
       <Navbar />
       
-      {/* Hero Section with Enhanced Futuristic Design */}
       <motion.section 
         ref={heroRef}
         className="relative z-10 container mx-auto py-8 md:py-16 px-4 min-h-[90vh] flex flex-col justify-center"
@@ -176,7 +172,6 @@ const Index = () => {
           animate={isHeroInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8 }}
         >
-          {/* Enhanced Text Content */}
           <div className="order-2 md:order-1 flex flex-col items-center md:items-start text-center md:text-left">
             <motion.div
               initial={{ opacity: 0 }}
@@ -189,8 +184,8 @@ const Index = () => {
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.7, delay: 0.3 }}
               >
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-teal-300 to-purple-400 block">Looking for</span>
-                <span className="text-resumify-white block">a new <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-500 inline-block">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-resumify-beige to-resumify-brown block">Looking for</span>
+                <span className="text-resumify-white block">a new <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-resumify-brown to-resumify-beige inline-block">
                   JOB?
                   <motion.span 
                     className="absolute -top-6 -right-6"
@@ -198,7 +193,7 @@ const Index = () => {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 1.8, duration: 0.5 }}
                   >
-                    <Sparkles className="text-yellow-400" size={24} />
+                    <Sparkles className="text-resumify-beige" size={24} />
                   </motion.span>
                 </span></span>
               </motion.h1>
@@ -210,7 +205,7 @@ const Index = () => {
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.7, delay: 0.9 }}
             >
-              You'll definitely need a <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-500">standout</span> Resume that makes hiring managers take notice.
+              You'll definitely need a <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-resumify-brown to-resumify-beige">standout</span> Resume that makes hiring managers take notice.
             </motion.p>
             
             <motion.div
@@ -220,7 +215,7 @@ const Index = () => {
               className="flex flex-col sm:flex-row gap-4 items-center"
             >
               <Link to="/templates">
-                <Button className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 group flex items-center gap-2 px-6 py-6 text-lg shadow-[0_0_15px_rgba(236,72,153,0.5)] transition-all duration-300 hover:shadow-[0_0_25px_rgba(236,72,153,0.7)]">
+                <Button className="bg-gradient-to-r from-resumify-brown to-resumify-brown-dark hover:from-resumify-brown-dark hover:to-resumify-brown-darker group flex items-center gap-2 px-6 py-6 text-lg shadow-[0_0_15px_rgba(166,115,96,0.5)] transition-all duration-300 hover:shadow-[0_0_25px_rgba(166,115,96,0.7)]">
                   <span>Build Your Resume</span>
                   <motion.div
                     animate={{ x: [0, 5, 0] }}
@@ -232,7 +227,7 @@ const Index = () => {
               </Link>
               
               <Link to="/hiring-templates">
-                <Button variant="outline" className="backdrop-blur-md bg-white/5 border-purple-500/60 text-white hover:bg-white/10 transition-all duration-300 px-6 py-6 text-lg">
+                <Button variant="outline" className="backdrop-blur-md bg-white/5 border-resumify-beige/60 text-white hover:bg-white/10 transition-all duration-300 px-6 py-6 text-lg">
                   Explore Templates
                 </Button>
               </Link>
@@ -244,19 +239,18 @@ const Index = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 1.4, duration: 0.5 }}
             >
-              <Badge variant="outline" className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 backdrop-blur-sm text-white border-white/20 px-3 py-1">
+              <Badge variant="outline" className="bg-gradient-to-r from-resumify-brown/10 to-resumify-beige/10 backdrop-blur-sm text-white border-white/20 px-3 py-1">
                 ATS-Optimized
               </Badge>
-              <Badge variant="outline" className="bg-gradient-to-r from-teal-500/10 to-blue-500/10 backdrop-blur-sm text-white border-white/20 px-3 py-1">
+              <Badge variant="outline" className="bg-gradient-to-r from-resumify-beige/10 to-resumify-brown/10 backdrop-blur-sm text-white border-white/20 px-3 py-1">
                 Modern Templates
               </Badge>
-              <Badge variant="outline" className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-sm text-white border-white/20 px-3 py-1">
+              <Badge variant="outline" className="bg-gradient-to-r from-resumify-brown/10 to-resumify-beige/10 backdrop-blur-sm text-white border-white/20 px-3 py-1">
                 Quick & Easy
               </Badge>
             </motion.div>
           </div>
           
-          {/* Enhanced Resume Preview */}
           <motion.div 
             ref={resumeRef}
             className="order-1 md:order-2 w-full max-w-md mx-auto"
@@ -268,7 +262,7 @@ const Index = () => {
               className="relative rounded-xl overflow-hidden"
               style={{ y, rotate, scale }}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-pink-500/30 to-purple-500/30 rounded-lg blur-xl opacity-50 group-hover:opacity-70 transition duration-1000"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-resumify-brown/30 to-resumify-beige/30 rounded-lg blur-xl opacity-50 group-hover:opacity-70 transition duration-1000"></div>
               <div className="absolute inset-0 border border-white/20 rounded-xl backdrop-blur-sm z-0"></div>
               <img 
                 src="/lovable-uploads/3657219f-7c45-408b-9819-751d9b931f2e.png" 
@@ -283,7 +277,7 @@ const Index = () => {
                 transition={{ delay: 1.5, duration: 0.8, type: "spring" }}
               >
                 <div className="flex items-center gap-2">
-                  <Sparkles className="text-yellow-400" size={16} />
+                  <Sparkles className="text-resumify-beige" size={16} />
                   <span className="text-white text-sm font-medium">AI-Powered</span>
                 </div>
               </motion.div>
@@ -307,7 +301,7 @@ const Index = () => {
                 transition={{ delay: 2.1, duration: 0.8, type: "spring" }}
                 whileHover={{ scale: 1.1, rotate: 0 }}
               >
-                <div className="bg-gradient-to-r from-pink-500 to-purple-600 text-white rounded-full p-3 shadow-lg shadow-purple-500/30 flex items-center justify-center transform rotate-12 hover:rotate-0 transition-all duration-300">
+                <div className="bg-gradient-to-r from-resumify-brown to-resumify-beige text-white rounded-full p-3 shadow-lg shadow-resumify-brown/30 flex items-center justify-center transform rotate-12 hover:rotate-0 transition-all duration-300">
                   <span className="font-bold text-sm">Try Now!</span>
                 </div>
               </motion.div>
@@ -316,38 +310,37 @@ const Index = () => {
         </motion.div>
       </motion.section>
 
-      {/* Enhanced Trusted By Section - Making it bigger and bolder as requested */}
       <section ref={trustRef} className="relative z-10 container mx-auto py-20 px-4 border-t border-white/5">
         <motion.h3 
-          className="text-center text-2xl md:text-3xl font-bold text-white mb-16"
+          className="text-center text-3xl md:text-4xl font-extrabold text-white mb-12 tracking-tight"
           initial={{ opacity: 0, y: 30 }}
           animate={isTrustInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
         >
-          <span className="flex items-center justify-center gap-3">
-            <Award size={30} className="text-pink-400" />
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-300 via-pink-300 to-purple-300">
-              Our customers have been <span className="font-extrabold underline decoration-pink-500/50 underline-offset-4">HIRED</span> at top companies:
+          <span className="flex flex-col md:flex-row items-center justify-center gap-3">
+            <Award size={40} className="text-resumify-beige mb-2 md:mb-0" />
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-resumify-beige via-resumify-brown to-resumify-beige">
+              Our customers have been <span className="font-black underline decoration-resumify-beige/70 underline-offset-8 text-resumify-beige">HIRED</span> at top companies:
             </span>
           </span>
         </motion.h3>
         
-        <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+        <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 mt-16">
           {companyLogos.map((company, index) => (
             <motion.div 
               key={company.name}
-              className="h-14 backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-2 px-4 hover:bg-white/10 transition-all duration-300"
+              className="h-16 backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-2 px-6 hover:bg-white/10 transition-all duration-300"
               initial={{ y: 50, opacity: 0 }}
               animate={isTrustInView ? { y: 0, opacity: 1 } : {}}
               transition={{ delay: 0.1 * index, duration: 0.5 }}
               whileHover={{ scale: 1.1, y: -5, boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)" }}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 {company.logo ? (
                   <img 
                     src={company.logo} 
                     alt={`${company.name} logo`}
-                    className="h-8 w-auto object-contain" 
+                    className="h-10 w-auto object-contain" 
                     onError={(e) => {
                       e.currentTarget.style.display = 'none';
                       const nextSibling = e.currentTarget.nextSibling;
@@ -358,19 +351,18 @@ const Index = () => {
                   />
                 ) : null}
                 <div 
-                  className="bg-gradient-to-r from-pink-500 to-purple-600 rounded-full h-8 w-8 flex items-center justify-center text-white font-bold"
+                  className="bg-gradient-to-r from-resumify-brown to-resumify-beige rounded-full h-10 w-10 flex items-center justify-center text-white font-bold"
                   style={{ display: company.logo ? 'none' : 'flex' }}
                 >
                   {company.name.charAt(0)}
                 </div>
-                <span className="text-white font-medium">{company.name}</span>
+                <span className="text-white font-medium text-lg">{company.name}</span>
               </div>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* Enhanced Features Section */}
       <section ref={featuresRef} className="relative z-10 container mx-auto py-24 px-4">
         <motion.h2 
           className="text-4xl font-bold text-white mb-12 text-center flex flex-col items-center justify-center gap-2"
@@ -378,8 +370,8 @@ const Index = () => {
           animate={isFeaturesInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
         >
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-teal-300 to-purple-400">Why choose Resumify?</span>
-          <div className="w-20 h-1 bg-gradient-to-r from-pink-500 to-purple-600 mt-2"></div>
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-resumify-beige via-resumify-brown to-resumify-beige">Why choose Resumify?</span>
+          <div className="w-20 h-1 bg-gradient-to-r from-resumify-brown to-resumify-beige mt-2"></div>
         </motion.h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -388,25 +380,25 @@ const Index = () => {
               icon: Zap, 
               title: "Fast & Efficient", 
               description: "Create a professional resume in minutes with our intuitive interface",
-              color: "text-blue-400",
-              gradient: "from-blue-500/20 to-blue-700/20",
-              shadowColor: "rgba(59, 130, 246, 0.5)"
+              color: "text-resumify-beige",
+              gradient: "from-resumify-brown/20 to-resumify-beige/20",
+              shadowColor: "rgba(166, 115, 96, 0.5)"
             },
             { 
               icon: Star, 
               title: "Premium Templates", 
               description: "Choose from dozens of ATS-optimized templates designed by career experts",
-              color: "text-pink-400",
-              gradient: "from-pink-500/20 to-pink-700/20",
-              shadowColor: "rgba(236, 72, 153, 0.5)"
+              color: "text-resumify-beige",
+              gradient: "from-resumify-beige/20 to-resumify-brown/20",
+              shadowColor: "rgba(192, 165, 149, 0.5)"
             },
             { 
               icon: Target, 
               title: "Career Boost", 
               description: "Stand out from the crowd with a resume that highlights your strengths",
-              color: "text-purple-400",
-              gradient: "from-purple-500/20 to-purple-700/20",
-              shadowColor: "rgba(168, 85, 247, 0.5)"
+              color: "text-resumify-beige",
+              gradient: "from-resumify-brown/20 to-resumify-beige/20",
+              shadowColor: "rgba(166, 115, 96, 0.5)"
             }
           ].map((feature, index) => (
             <motion.div 
@@ -437,26 +429,25 @@ const Index = () => {
           transition={{ delay: 1, duration: 0.5 }}
         >
           <Link to="/templates">
-            <Button variant="outline" className="backdrop-blur-md bg-white/5 border-purple-500/60 text-white hover:bg-white/10 transition-all duration-300 text-lg px-8 py-6">
+            <Button variant="outline" className="backdrop-blur-md bg-white/5 border-resumify-beige/60 text-white hover:bg-white/10 transition-all duration-300 text-lg px-8 py-6">
               Explore All Templates
             </Button>
           </Link>
         </motion.div>
       </section>
 
-      {/* Enhanced CTA Section */}
       <section 
         ref={ctaSectionRef}
         className="py-32 px-4 relative overflow-hidden"
       >
         <motion.div 
-          className="absolute -bottom-20 -right-20 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"
+          className="absolute -bottom-20 -right-20 w-96 h-96 bg-resumify-brown/20 rounded-full blur-3xl"
           animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
         
         <motion.div 
-          className="absolute -top-10 -left-10 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl"
+          className="absolute -top-10 -left-10 w-80 h-80 bg-resumify-beige/10 rounded-full blur-3xl"
           animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
           transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
         />
@@ -472,12 +463,12 @@ const Index = () => {
               <span className="text-white text-sm font-medium px-4 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-md">Trusted by professionals</span>
               <div className="flex">
                 {[1, 2, 3, 4, 5].map((_, index) => (
-                  <Star key={index} fill="#FFD700" className="text-yellow-400" size={16} />
+                  <Star key={index} fill="#c0a595" className="text-resumify-beige" size={16} />
                 ))}
               </div>
             </div>
             
-            <h2 className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-pink-300 to-purple-400 mt-8 mb-4">
+            <h2 className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-resumify-beige via-resumify-brown to-resumify-beige mt-8 mb-4">
               Ready to transform your career?
             </h2>
             
@@ -491,10 +482,10 @@ const Index = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={isCtaSectionInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5, delay: 0.2 }}
-            whileHover={{ boxShadow: "0 25px 50px rgba(168, 85, 247, 0.3)" }}
+            whileHover={{ boxShadow: "0 25px 50px rgba(166, 115, 96, 0.3)" }}
           >
             <motion.div 
-              className="absolute -top-10 -right-10 w-40 h-40 bg-pink-500/10 rounded-full blur-3xl"
+              className="absolute -top-10 -right-10 w-40 h-40 bg-resumify-beige/10 rounded-full blur-3xl"
               animate={{ scale: [1, 1.5, 1], opacity: [0.1, 0.3, 0.1] }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             />
@@ -510,7 +501,7 @@ const Index = () => {
             
             <div className="flex justify-center md:justify-start relative z-10">
               <Link to="/templates">
-                <Button className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white px-8 py-6 rounded-xl flex items-center gap-3 transition-all duration-500 text-lg shadow-[0_0_15px_rgba(236,72,153,0.5)] hover:shadow-[0_0_25px_rgba(236,72,153,0.7)]">
+                <Button className="bg-gradient-to-r from-resumify-brown to-resumify-brown-dark hover:from-resumify-brown-dark hover:to-resumify-brown-darker text-white px-8 py-6 rounded-xl flex items-center gap-3 transition-all duration-500 text-lg shadow-[0_0_15px_rgba(166,115,96,0.5)] hover:shadow-[0_0_25px_rgba(166,115,96,0.7)]">
                   <span>Select your template</span>
                   <motion.div
                     animate={{ x: [0, 5, 0] }}
@@ -525,7 +516,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Enhanced Reviews Section */}
       <section 
         ref={reviewsSectionRef}
         className="py-24 px-4 relative z-10"
@@ -537,8 +527,8 @@ const Index = () => {
             animate={isReviewsSectionInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.5 }}
           >
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-teal-300 to-purple-400">What our users are saying</span>
-            <div className="w-20 h-1 bg-gradient-to-r from-pink-500 to-purple-600 mt-4"></div>
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-resumify-beige via-resumify-brown to-resumify-beige">What our users are saying</span>
+            <div className="w-20 h-1 bg-gradient-to-r from-resumify-brown to-resumify-beige mt-4"></div>
           </motion.h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
@@ -572,14 +562,14 @@ const Index = () => {
                 transition={{ delay: 0.1 * index, duration: 0.5 }}
                 whileHover={{ 
                   y: -10,
-                  boxShadow: "0 20px 30px rgba(168, 85, 247, 0.3)",
+                  boxShadow: "0 20px 30px rgba(166, 115, 96, 0.3)",
                   transition: { duration: 0.3 }
                 }}
               >
                 <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 rounded-full border-2 border-pink-500/50 overflow-hidden bg-gradient-to-br from-pink-500/20 to-purple-600/20 flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full border-2 border-resumify-beige/50 overflow-hidden bg-gradient-to-br from-resumify-brown/20 to-resumify-beige/20 flex items-center justify-center">
                     <motion.span 
-                      className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-500"
+                      className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-resumify-beige to-resumify-brown"
                       whileHover={{ scale: 1.2 }}
                       transition={{ duration: 0.3 }}
                     >
@@ -681,4 +671,3 @@ const Index = () => {
 };
 
 export default Index;
-
