@@ -108,7 +108,7 @@
     height: 0;
     border-left: 50px solid transparent;
     border-right: 50px solid transparent;
-    border-bottom: 80px solid #B19F8E;
+    border-bottom: 80px solid #a67360;
     transform: rotate(30deg);
     opacity: 0.8;
     animation: float 6s ease-in-out infinite;
@@ -121,7 +121,7 @@
     height: 0;
     border-left: 40px solid transparent;
     border-right: 40px solid transparent;
-    border-top: 70px solid #B19F8E;
+    border-top: 70px solid #a67360;
     transform: rotate(-20deg);
     opacity: 0.8;
     animation: float 8s ease-in-out infinite reverse;
@@ -134,7 +134,7 @@
     height: 0;
     border-left: 35px solid transparent;
     border-right: 35px solid transparent;
-    border-top: 60px solid #D5B9A3;
+    border-top: 60px solid #c0a595;
     transform: rotate(15deg);
     opacity: 0.8;
     animation: float 7s ease-in-out infinite 1s;
@@ -145,23 +145,23 @@
   }
 
   .glassmorphism {
-    background: rgba(26, 38, 40, 0.7);
+    background: rgba(15, 23, 42, 0.7);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(177, 159, 142, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.1);
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   }
 
   .glass-button {
-    background: rgba(194, 167, 148, 0.2);
+    background: rgba(14, 165, 233, 0.2);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(194, 167, 148, 0.3);
+    border: 1px solid rgba(14, 165, 233, 0.3);
     transition: all 0.3s ease;
   }
   
   .glass-button:hover {
-    background: rgba(194, 167, 148, 0.3);
-    border: 1px solid rgba(194, 167, 148, 0.5);
+    background: rgba(14, 165, 233, 0.3);
+    border: 1px solid rgba(14, 165, 233, 0.5);
     transform: translateY(-2px);
   }
 
@@ -169,13 +169,13 @@
     position: relative;
     border-radius: 20px;
     padding: 4px;
-    background: linear-gradient(60deg, #D5B9A3, #B19F8E, #E0D9D0);
+    background: linear-gradient(60deg, #c0a595, #a67360, #e0e0e0);
     background-size: 300% 300%;
     animation: gradient-animation 5s ease infinite;
   }
 
   .gradient-text {
-    background: linear-gradient(90deg, #D5B9A3 0%, #B19F8E 100%);
+    background: linear-gradient(90deg, #c0a595 0%, #a67360 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;

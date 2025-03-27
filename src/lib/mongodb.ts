@@ -1,5 +1,5 @@
 
-import { MongoClient, ServerApiVersion, ObjectId } from 'mongodb';
+import { MongoClient, ServerApiVersion } from 'mongodb';
 
 const uri = "mongodb://localhost:27017/resumify-resume-builder";
 
@@ -38,9 +38,4 @@ export async function getDatabase() {
 export async function getCollection(collectionName: string) {
   const db = await getDatabase();
   return db.collection(collectionName);
-}
-
-// Helper to convert string ID to ObjectId
-export function toObjectId(id: string | ObjectId): ObjectId {
-  return typeof id === 'string' ? new ObjectId(id) : id;
 }

@@ -1,6 +1,6 @@
 
 import { v4 as uuidv4 } from 'uuid';
-import { getCollection, toObjectId } from '../db/connection';
+import { getCollection } from '../db/connection';
 import { Resume, ServerResponse } from '../models/types';
 import { ObjectId } from 'mongodb';
 
@@ -16,21 +16,14 @@ export async function createResume(resumeData: Omit<Resume, '_id' | 'createdAt' 
     const resumeCollection = await getCollection('resumes');
     const now = new Date();
     
-    // Use MongoDB ObjectId
     const newResume: Resume = {
       ...resumeData,
-      _id: new ObjectId(),
-      userId: resumeData.userId,
+      _id: uuidv4(),
       createdAt: now,
       updatedAt: now
     };
     
-    // Insert document without _id to let MongoDB generate it
-    const { _id, ...resumeWithoutId } = newResume;
-    const result = await resumeCollection.insertOne(resumeWithoutId);
-    
-    // Update the resume object with the generated _id
-    newResume._id = result.insertedId;
+    await resumeCollection.insertOne(newResume);
     
     return {
       success: true,
@@ -46,7 +39,7 @@ export async function createResume(resumeData: Omit<Resume, '_id' | 'createdAt' 
   }
 }
 
-export async function updateResume(id: string | ObjectId, updates: Partial<Omit<Resume, '_id' | 'createdAt'>>): Promise<ServerResponse<boolean>> {
+export async function updateResume(id: string, updates: Partial<Omit<Resume, '_id' | 'createdAt'>>): Promise<ServerResponse<boolean>> {
   try {
     if (!id) {
       return {
@@ -63,7 +56,7 @@ export async function updateResume(id: string | ObjectId, updates: Partial<Omit<
     };
     
     const result = await resumeCollection.updateOne(
-      { _id: toObjectId(id) },
+      { _id: id },
       { $set: updateData }
     );
     
@@ -88,7 +81,7 @@ export async function updateResume(id: string | ObjectId, updates: Partial<Omit<
   }
 }
 
-export async function getResumeById(id: string | ObjectId): Promise<ServerResponse<Resume>> {
+export async function getResumeById(id: string): Promise<ServerResponse<Resume>> {
   try {
     if (!id) {
       return {
@@ -98,7 +91,7 @@ export async function getResumeById(id: string | ObjectId): Promise<ServerRespon
     }
 
     const resumeCollection = await getCollection('resumes');
-    const resume = await resumeCollection.findOne({ _id: toObjectId(id) });
+    const resume = await resumeCollection.findOne({ _id: id });
     
     if (!resume) {
       return {
@@ -120,7 +113,7 @@ export async function getResumeById(id: string | ObjectId): Promise<ServerRespon
   }
 }
 
-export async function getResumesByUser(userId: string | ObjectId): Promise<ServerResponse<Resume[]>> {
+export async function getResumesByUser(userId: string): Promise<ServerResponse<Resume[]>> {
   try {
     if (!userId) {
       return {
@@ -130,7 +123,7 @@ export async function getResumesByUser(userId: string | ObjectId): Promise<Serve
     }
 
     const resumeCollection = await getCollection('resumes');
-    const resumes = await resumeCollection.find({ userId: toObjectId(userId) }).toArray();
+    const resumes = await resumeCollection.find({ userId }).toArray();
     
     return {
       success: true,
@@ -145,7 +138,7 @@ export async function getResumesByUser(userId: string | ObjectId): Promise<Serve
   }
 }
 
-export async function deleteResume(id: string | ObjectId): Promise<ServerResponse<boolean>> {
+export async function deleteResume(id: string): Promise<ServerResponse<boolean>> {
   try {
     if (!id) {
       return {
@@ -155,7 +148,7 @@ export async function deleteResume(id: string | ObjectId): Promise<ServerRespons
     }
 
     const resumeCollection = await getCollection('resumes');
-    const result = await resumeCollection.deleteOne({ _id: toObjectId(id) });
+    const result = await resumeCollection.deleteOne({ _id: id });
     
     if (result.deletedCount === 0) {
       return {

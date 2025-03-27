@@ -7,71 +7,39 @@ const router = Router();
 
 // Public routes
 router.post('/register', async (req, res) => {
-  try {
-    const result = await register(req.body);
-    if (result.success) {
-      return res.status(201).json(result);
-    } else {
-      return res.status(400).json(result);
-    }
-  } catch (error) {
-    console.error("Register route error:", error);
-    return res.status(500).json({
-      success: false,
-      error: "Server error processing registration"
-    });
+  const result = await register(req.body);
+  if (result.success) {
+    return res.status(201).json(result);
+  } else {
+    return res.status(400).json(result);
   }
 });
 
 router.post('/login', async (req, res) => {
-  try {
-    const result = await login(req.body);
-    if (result.success) {
-      return res.status(200).json(result);
-    } else {
-      return res.status(401).json(result);
-    }
-  } catch (error) {
-    console.error("Login route error:", error);
-    return res.status(500).json({
-      success: false,
-      error: "Server error processing login"
-    });
+  const result = await login(req.body);
+  if (result.success) {
+    return res.status(200).json(result);
+  } else {
+    return res.status(401).json(result);
   }
 });
 
 // Protected routes
 router.get('/me', authMiddleware, async (req, res) => {
-  try {
-    const result = await getUserById(req.userId!);
-    if (result.success) {
-      return res.status(200).json(result);
-    } else {
-      return res.status(404).json(result);
-    }
-  } catch (error) {
-    console.error("Get user route error:", error);
-    return res.status(500).json({
-      success: false,
-      error: "Server error fetching user"
-    });
+  const result = await getUserById(req.userId!);
+  if (result.success) {
+    return res.status(200).json(result);
+  } else {
+    return res.status(404).json(result);
   }
 });
 
 router.put('/me', authMiddleware, async (req, res) => {
-  try {
-    const result = await updateUser(req.userId!, req.body);
-    if (result.success) {
-      return res.status(200).json(result);
-    } else {
-      return res.status(400).json(result);
-    }
-  } catch (error) {
-    console.error("Update user route error:", error);
-    return res.status(500).json({
-      success: false,
-      error: "Server error updating user"
-    });
+  const result = await updateUser(req.userId!, req.body);
+  if (result.success) {
+    return res.status(200).json(result);
+  } else {
+    return res.status(400).json(result);
   }
 });
 

@@ -1,9 +1,8 @@
 
 import { v4 as uuidv4 } from 'uuid';
-import { getCollection, toObjectId } from '../db/connection';
+import { getCollection } from '../db/connection';
 import { User, ServerResponse, LoginRequest, RegisterRequest } from '../models/types';
 import { hashPassword, comparePassword } from '../utils/auth.utils';
-import { ObjectId } from 'mongodb';
 
 export async function register(data: RegisterRequest): Promise<ServerResponse<Omit<User, 'password'>>> {
   try {
@@ -37,9 +36,8 @@ export async function register(data: RegisterRequest): Promise<ServerResponse<Om
     const hashedPassword = await hashPassword(data.password);
     
     const now = new Date();
-    // Create user with MongoDB ObjectId
     const newUser: User = {
-      _id: new ObjectId(),
+      _id: uuidv4(),
       name: data.name,
       email: data.email,
       password: hashedPassword,
@@ -47,12 +45,7 @@ export async function register(data: RegisterRequest): Promise<ServerResponse<Om
       updatedAt: now
     };
     
-    // Insert document without _id to let MongoDB generate it
-    const { _id, ...userWithoutId } = newUser;
-    const result = await usersCollection.insertOne(userWithoutId);
-    
-    // Update the user object with the generated _id
-    newUser._id = result.insertedId;
+    await usersCollection.insertOne(newUser);
     
     // Don't return the password
     const { password, ...userWithoutPassword } = newUser;
@@ -122,10 +115,10 @@ export async function login(data: LoginRequest): Promise<ServerResponse<{ user: 
   }
 }
 
-export async function getUserById(id: string | ObjectId): Promise<ServerResponse<User>> {
+export async function getUserById(id: string): Promise<ServerResponse<User>> {
   try {
     const usersCollection = await getCollection('users');
-    const user = await usersCollection.findOne({ _id: toObjectId(id) });
+    const user = await usersCollection.findOne({ _id: id });
     
     if (!user) {
       return { 
@@ -150,7 +143,7 @@ export async function getUserById(id: string | ObjectId): Promise<ServerResponse
   }
 }
 
-export async function updateUser(id: string | ObjectId, updates: Partial<Omit<User, '_id' | 'createdAt' | 'password'>>): Promise<ServerResponse<boolean>> {
+export async function updateUser(id: string, updates: Partial<Omit<User, '_id' | 'createdAt' | 'password'>>): Promise<ServerResponse<boolean>> {
   try {
     const usersCollection = await getCollection('users');
     
@@ -160,7 +153,7 @@ export async function updateUser(id: string | ObjectId, updates: Partial<Omit<Us
     };
     
     const result = await usersCollection.updateOne(
-      { _id: toObjectId(id) },
+      { _id: id },
       { $set: updateData }
     );
     

@@ -32,26 +32,26 @@ const Navbar: React.FC = () => {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full bg-resumify-brown-dark text-resumify-white">
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full bg-gray-700 text-resumify-beige">
                   <span className="sr-only">Open user menu</span>
                   <User size={16} />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56 bg-resumify-background border-resumify-brown-dark text-resumify-white" align="end" forceMount>
+              <DropdownMenuContent className="w-56 bg-gray-800 border-gray-700 text-resumify-white" align="end" forceMount>
                 <div className="flex flex-col space-y-1 p-2">
                   <p className="text-sm font-medium text-resumify-beige">{user.name}</p>
-                  <p className="text-xs text-resumify-off-white truncate">{user.email}</p>
+                  <p className="text-xs text-gray-400 truncate">{user.email}</p>
                 </div>
-                <DropdownMenuSeparator className="bg-resumify-brown-dark" />
+                <DropdownMenuSeparator className="bg-gray-700" />
                 <DropdownMenuItem 
-                  className="cursor-pointer hover:bg-resumify-brown-darkest"
+                  className="cursor-pointer hover:bg-gray-700"
                   onClick={() => navigate('/dashboard')}
                 >
                   Dashboard
                 </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-resumify-brown-dark" />
+                <DropdownMenuSeparator className="bg-gray-700" />
                 <DropdownMenuItem 
-                  className="cursor-pointer text-red-400 hover:bg-resumify-brown-darkest"
+                  className="cursor-pointer text-red-400 hover:bg-gray-700"
                   onClick={logout}
                 >
                   <LogOut className="mr-2 h-4 w-4" />

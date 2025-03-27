@@ -63,16 +63,15 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				resumify: {
-					background: '#1A2628',
-					beige: '#D5B9A3',
-					brown: '#B19F8E',
-					'brown-dark': '#8A7A6D',
-					'brown-darker': '#675C53',
-					'brown-darkest': '#4A413B',
-					white: '#F5F2ED',
-					'off-white': '#E0D9D0',
-					'dark-blue': '#192228',
-					accent: '#C2A794'
+					background: '#1f2b32',
+					beige: '#c0a595',
+					brown: '#a67360',
+					'brown-dark': '#8e6352',
+					'brown-darker': '#70483b',
+					'brown-darkest': '#5a3a2f',
+					white: '#ffffff',
+					'off-white': '#e0e0e0',
+					'dark-blue': '#192228'
 				}
 			},
 			borderRadius: {
