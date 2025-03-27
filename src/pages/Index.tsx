@@ -1,671 +1,231 @@
-import React, { useEffect, useState, useRef } from 'react';
+
+import React from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { Button } from '../components/ui/button';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import { Sparkles, Rocket, Star, Zap, Award, CheckCircle, ArrowRight, ExternalLink, Shield, Target } from 'lucide-react';
-import { Badge } from '../components/ui/badge';
-import { useToast } from '../hooks/use-toast';
-import { getCurrentUser } from '../services/api';
+import { motion } from 'framer-motion';
+import { ChevronRight } from 'lucide-react';
 
-const Index = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const { scrollY } = useScroll();
-  const { toast } = useToast();
-  const heroRef = useRef(null);
-  const resumeRef = useRef(null);
-  const trustRef = useRef(null);
-  const featuresRef = useRef(null);
-  const ctaSectionRef = useRef(null);
-  const reviewsSectionRef = useRef(null);
-  
-  const isHeroInView = useInView(heroRef, { once: true, amount: 0.3 });
-  const isResumeInView = useInView(resumeRef, { once: true, amount: 0.3 });
-  const isTrustInView = useInView(trustRef, { once: true, amount: 0.3 });
-  const isFeaturesInView = useInView(featuresRef, { once: true, amount: 0.3 });
-  const isCtaSectionInView = useInView(ctaSectionRef, { once: true, amount: 0.3 });
-  const isReviewsSectionInView = useInView(reviewsSectionRef, { once: true, amount: 0.3 });
-
-  const y = useTransform(scrollY, [0, 800], [0, -200]);
-  const rotate = useTransform(scrollY, [0, 800], [0, 10]);
-  const scale = useTransform(scrollY, [0, 800], [1, 1.1]);
-  const heroOpacity = useTransform(scrollY, [0, 300], [1, 0.3]);
-
-  useEffect(() => {
-    setIsLoaded(true);
-    
-    const createParticle = () => {
-      const particle = document.createElement('div');
-      particle.classList.add('particle');
-      
-      const x = Math.random() * window.innerWidth;
-      const y = Math.random() * window.innerHeight;
-      const size = Math.random() * 5 + 1;
-      const opacity = Math.random() * 0.5 + 0.1;
-      
-      particle.style.left = `${x}px`;
-      particle.style.top = `${y}px`;
-      particle.style.width = `${size}px`;
-      particle.style.height = `${size}px`;
-      particle.style.opacity = `${opacity}`;
-      
-      document.body.appendChild(particle);
-      
-      setTimeout(() => {
-        particle.remove();
-      }, 10000);
-    };
-    
-    const interval = setInterval(() => {
-      createParticle();
-    }, 1000);
-    
-    return () => clearInterval(interval);
-  }, []);
-
-  const checkBackendStatus = async () => {
-    try {
-      const user = await getCurrentUser();
-      if (user) {
-        toast({
-          title: "Connected!",
-          description: "Successfully connected to backend services",
-          variant: "default",
-        });
-      }
-    } catch (error) {
-      console.error("Backend connection error:", error);
-      toast({
-        title: "Connection Issue",
-        description: "Unable to connect to backend services",
-        variant: "destructive",
-      });
-    }
-  };
-
-  useEffect(() => {
-    checkBackendStatus();
-  }, []);
-
-  const companyLogos = [
-    { 
-      name: 'Apple', 
-      logo: '/src/pages/apple.png'
-    },
-    { 
-      name: 'Microsoft', 
-      logo: '/src/pages/mircosoft.png'
-    },
-    { 
-      name: 'Amazon', 
-      logo: '/src/pages/amazon.png'
-    },
-    { 
-      name: 'Pinterest', 
-      logo: '/src/pages/pinterest.png'
-    },
-    { 
-      name: 'Google', 
-      logo: '/src/pages/google.png'
-    },
-    { 
-      name: 'LinkedIn', 
-      logo: '/src/pages/linkedin.png'
-    },
-    { 
-      name: 'X', 
-      logo: '/src/pages/x-twitter.png'
-    },
-    { 
-      name: 'Netflix', 
-      logo: '/src/pages/netflix.png'
-    }
-  ];
-
-  return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-b from-resumify-background via-resumify-dark-blue to-black">
-      <div className="fixed inset-0 z-0">
-        <div className="absolute w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJncmlkIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxwYXRoIGQ9Ik0gNDAgMCBMIDAgMCAwIDQwIiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wNCkiIHN0cm9rZS13aWR0aD0iMC41Ii8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCBmaWxsPSJ1cmwoI2dyaWQpIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIi8+PC9zdmc+')]"></div>
-        <div className="absolute inset-0 opacity-20 bg-gradient-to-b from-transparent to-resumify-brown/10"></div>
-        
-        <motion.div 
-          className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-resumify-brown/5 blur-3xl"
-          animate={{ 
-            scale: [1, 1.2, 1], 
-            opacity: [0.1, 0.2, 0.1],
-            y: [0, -20, 0]
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        />
-        
-        <motion.div 
-          className="absolute -top-20 right-1/4 w-64 h-64 rounded-full bg-resumify-beige/5 blur-3xl"
-          animate={{ 
-            scale: [1, 1.3, 1], 
-            opacity: [0.1, 0.2, 0.1],
-            y: [0, 30, 0]
-          }}
-          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-        />
-        
-        <motion.div 
-          className="absolute bottom-1/4 right-10 w-80 h-80 rounded-full bg-resumify-brown/5 blur-3xl"
-          animate={{ 
-            scale: [1, 1.3, 1], 
-            opacity: [0.1, 0.2, 0.1],
-            y: [0, 20, 0]
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        />
+const Testimonial = ({ text, author, role }: { text: string, author: string, role: string }) => (
+  <motion.div 
+    className="bg-resumify-background/50 border border-resumify-brown/30 p-6 rounded-lg max-w-md mx-auto"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5 }}
+  >
+    <p className="text-resumify-white mb-4 italic">{text}</p>
+    <div className="flex items-center">
+      <div className="w-10 h-10 rounded-full bg-resumify-brown flex items-center justify-center text-white font-bold">
+        {author[0]}
       </div>
+      <div className="ml-3">
+        <p className="text-resumify-beige font-semibold">{author}</p>
+        <p className="text-resumify-brown text-sm">{role}</p>
+      </div>
+    </div>
+  </motion.div>
+);
 
-      <Navbar />
-      
-      <motion.section 
-        ref={heroRef}
-        className="relative z-10 container mx-auto py-8 md:py-16 px-4 min-h-[90vh] flex flex-col justify-center"
-        style={{ opacity: heroOpacity }}
-      >
+const CompanyLogo = ({ src, alt }: { src: string, alt: string }) => (
+  <img 
+    src={src} 
+    alt={alt} 
+    className="h-10 w-auto object-contain filter brightness-90 opacity-80 hover:opacity-100 transition-opacity"
+  />
+);
+
+const HeroSection = () => (
+  <motion.section 
+    className="relative py-16 md:py-24 overflow-hidden"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.8 }}
+  >
+    <div className="triangle-1"></div>
+    <div className="triangle-2"></div>
+    <div className="triangle-3"></div>
+    
+    <div className="container mx-auto px-4">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-12">
+        {/* Left side with header text */}
+        <div className="md:w-1/2 text-left">
+          <motion.h1 
+            className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-resumify-white"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            Looking for a <span className="text-resumify-beige">new JOB?</span>
+          </motion.h1>
+          
+          <motion.p
+            className="text-xl md:text-2xl mb-8 text-resumify-white"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            You'll definitely need a standout <span className="font-bold text-resumify-beige">Resume!</span>
+          </motion.p>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            <Link to="/editor/professional">
+              <Button size="lg" className="bg-resumify-accent hover:bg-resumify-brown text-resumify-background rounded-lg px-8 py-6 text-lg font-medium">
+                Build Your Own Resume! <ChevronRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+          </motion.div>
+        </div>
+        
+        {/* Right side with resume preview */}
         <motion.div 
-          className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
-          initial={{ opacity: 0 }}
-          animate={isHeroInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.8 }}
+          className="md:w-1/2"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
         >
-          <div className="order-2 md:order-1 flex flex-col items-center md:items-start text-center md:text-left">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1 }}
-            >
-              <motion.h1 
-                className="text-5xl md:text-7xl font-bold mb-4 leading-tight"
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.7, delay: 0.3 }}
-              >
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-resumify-beige to-resumify-brown block">Looking for</span>
-                <span className="text-resumify-white block">a new <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-resumify-brown to-resumify-beige inline-block">
-                  JOB?
-                  <motion.span 
-                    className="absolute -top-6 -right-6"
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 1.8, duration: 0.5 }}
-                  >
-                    <Sparkles className="text-resumify-beige" size={24} />
-                  </motion.span>
-                </span></span>
-              </motion.h1>
-            </motion.div>
-            
-            <motion.p 
-              className="text-xl md:text-2xl text-resumify-off-white mb-8 max-w-lg backdrop-blur-sm"
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.7, delay: 0.9 }}
-            >
-              You'll definitely need a <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-resumify-brown to-resumify-beige">standout</span> Resume that makes hiring managers take notice.
-            </motion.p>
-            
-            <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.7, delay: 1.1 }}
-              className="flex flex-col sm:flex-row gap-4 items-center"
-            >
-              <Link to="/templates">
-                <Button className="bg-gradient-to-r from-resumify-brown to-resumify-brown-dark hover:from-resumify-brown-dark hover:to-resumify-brown-darker group flex items-center gap-2 px-6 py-6 text-lg shadow-[0_0_15px_rgba(166,115,96,0.5)] transition-all duration-300 hover:shadow-[0_0_25px_rgba(166,115,96,0.7)]">
-                  <span>Build Your Resume</span>
-                  <motion.div
-                    animate={{ x: [0, 5, 0] }}
-                    transition={{ repeat: Infinity, duration: 1.5 }}
-                  >
-                    <Rocket size={18} />
-                  </motion.div>
-                </Button>
-              </Link>
-              
-              <Link to="/hiring-templates">
-                <Button variant="outline" className="backdrop-blur-md bg-white/5 border-resumify-beige/60 text-white hover:bg-white/10 transition-all duration-300 px-6 py-6 text-lg">
-                  Explore Templates
-                </Button>
-              </Link>
-            </motion.div>
-            
-            <motion.div 
-              className="mt-6 flex flex-wrap gap-2 justify-center md:justify-start"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.4, duration: 0.5 }}
-            >
-              <Badge variant="outline" className="bg-gradient-to-r from-resumify-brown/10 to-resumify-beige/10 backdrop-blur-sm text-white border-white/20 px-3 py-1">
-                ATS-Optimized
-              </Badge>
-              <Badge variant="outline" className="bg-gradient-to-r from-resumify-beige/10 to-resumify-brown/10 backdrop-blur-sm text-white border-white/20 px-3 py-1">
-                Modern Templates
-              </Badge>
-              <Badge variant="outline" className="bg-gradient-to-r from-resumify-brown/10 to-resumify-beige/10 backdrop-blur-sm text-white border-white/20 px-3 py-1">
-                Quick & Easy
-              </Badge>
-            </motion.div>
+          <div className="relative">
+            <img 
+              src="public/lovable-uploads/72a2996d-976d-4b26-87fe-c6a5eaaeed0c.png" 
+              alt="Resume Template Preview" 
+              className="w-full max-w-md mx-auto rounded-lg shadow-2xl border border-resumify-brown/30"
+            />
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  </motion.section>
+);
+
+const CompaniesSection = () => (
+  <motion.section 
+    className="py-16 bg-resumify-background/90"
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5, delay: 0.2 }}
+  >
+    <div className="container mx-auto px-4">
+      <h2 className="text-3xl md:text-4xl font-bold mb-10 text-center text-resumify-beige">
+        Our customers have been hired at:
+      </h2>
+      
+      <div className="grid grid-cols-3 md:grid-cols-5 gap-8 justify-items-center items-center max-w-4xl mx-auto">
+        <CompanyLogo src="src/pages/microsoft.png" alt="Microsoft" />
+        <CompanyLogo src="src/pages/apple.png" alt="Apple" />
+        <CompanyLogo src="src/pages/amazon.png" alt="Amazon" />
+        <CompanyLogo src="src/pages/pinterest.png" alt="Pinterest" />
+        <CompanyLogo src="src/pages/youtube.png" alt="YouTube" />
+        <CompanyLogo src="src/pages/linkedin.png" alt="LinkedIn" />
+        <CompanyLogo src="src/pages/meta.png" alt="Meta" />
+        <CompanyLogo src="src/pages/google.png" alt="Google" />
+        <CompanyLogo src="src/pages/netflix.png" alt="Netflix" />
+        <CompanyLogo src="src/pages/x-twitter.png" alt="Twitter" />
+      </div>
+    </div>
+  </motion.section>
+);
+
+const FeaturesSection = () => (
+  <section className="py-16 relative overflow-hidden">
+    <motion.div 
+      className="container mx-auto px-4"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <h2 className="text-3xl font-bold mb-12 text-center text-resumify-beige">
+        Crafted by Experts to design your future
+      </h2>
+      
+      <div className="flex justify-center mb-6">
+        <div className="flex space-x-1">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <svg key={star} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+          ))}
+        </div>
+      </div>
+      <p className="text-center text-resumify-white mb-12">Trusted by professionals</p>
+      
+      <div className="max-w-5xl mx-auto bg-resumify-background/50 p-8 rounded-xl border border-resumify-brown/30 backdrop-blur-sm shadow-xl">
+        <h3 className="text-2xl md:text-3xl font-semibold mb-8 text-center text-resumify-beige">
+          Try out our ready to use templates
+        </h3>
+        
+        <div className="space-y-6">
+          <div className="flex items-start gap-4">
+            <div className="bg-resumify-accent w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-1">
+              <span className="text-resumify-background font-bold">1</span>
+            </div>
+            <p className="text-resumify-white">
+              <span className="font-semibold text-resumify-beige">Kickstart your career journey with ease!</span> Our expertly designed, ready-to-use templates help you craft professional resumes in minutes.
+            </p>
           </div>
           
-          <motion.div 
-            ref={resumeRef}
-            className="order-1 md:order-2 w-full max-w-md mx-auto"
-            initial={{ opacity: 0, x: 100 }}
-            animate={isResumeInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
-          >
-            <motion.div 
-              className="relative rounded-xl overflow-hidden"
-              style={{ y, rotate, scale }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-resumify-brown/30 to-resumify-beige/30 rounded-lg blur-xl opacity-50 group-hover:opacity-70 transition duration-1000"></div>
-              <div className="absolute inset-0 border border-white/20 rounded-xl backdrop-blur-sm z-0"></div>
-              <img 
-                src="/lovable-uploads/3657219f-7c45-408b-9819-751d9b931f2e.png" 
-                alt="Resume Preview" 
-                className="relative w-full shadow-2xl rounded-lg z-10 border border-white/10"
-              />
-              
-              <motion.div 
-                className="absolute -top-6 -right-6 backdrop-blur-xl bg-white/10 border border-white/20 rounded-lg py-2 px-4 z-20"
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.5, duration: 0.8, type: "spring" }}
-              >
-                <div className="flex items-center gap-2">
-                  <Sparkles className="text-resumify-beige" size={16} />
-                  <span className="text-white text-sm font-medium">AI-Powered</span>
-                </div>
-              </motion.div>
-              
-              <motion.div 
-                className="absolute -bottom-4 -left-4 backdrop-blur-xl bg-white/10 border border-white/20 rounded-lg p-3 z-20"
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.8, duration: 0.8, type: "spring" }}
-              >
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="text-green-400" size={16} />
-                  <span className="text-white text-sm font-medium">ATS-Friendly</span>
-                </div>
-              </motion.div>
-              
-              <motion.div 
-                className="absolute -bottom-4 -right-4 w-20 h-20"
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 2.1, duration: 0.8, type: "spring" }}
-                whileHover={{ scale: 1.1, rotate: 0 }}
-              >
-                <div className="bg-gradient-to-r from-resumify-brown to-resumify-beige text-white rounded-full p-3 shadow-lg shadow-resumify-brown/30 flex items-center justify-center transform rotate-12 hover:rotate-0 transition-all duration-300">
-                  <span className="font-bold text-sm">Try Now!</span>
-                </div>
-              </motion.div>
-            </motion.div>
-          </motion.div>
-        </motion.div>
-      </motion.section>
-
-      <section ref={trustRef} className="relative z-10 container mx-auto py-20 px-4 border-t border-white/5">
-        <motion.h3 
-          className="text-center text-3xl md:text-4xl font-extrabold text-white mb-12 tracking-tight"
-          initial={{ opacity: 0, y: 30 }}
-          animate={isTrustInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-        >
-          <span className="flex flex-col md:flex-row items-center justify-center gap-3">
-            <Award size={40} className="text-resumify-beige mb-2 md:mb-0" />
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-resumify-beige via-resumify-brown to-resumify-beige">
-              Our customers have been <span className="font-black underline decoration-resumify-beige/70 underline-offset-8 text-resumify-beige">HIRED</span> at top companies:
-            </span>
-          </span>
-        </motion.h3>
-        
-        <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12 mt-16">
-          {companyLogos.map((company, index) => (
-            <motion.div 
-              key={company.name}
-              className="h-16 backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-2 px-6 hover:bg-white/10 transition-all duration-300"
-              initial={{ y: 50, opacity: 0 }}
-              animate={isTrustInView ? { y: 0, opacity: 1 } : {}}
-              transition={{ delay: 0.1 * index, duration: 0.5 }}
-              whileHover={{ scale: 1.1, y: -5, boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)" }}
-            >
-              <div className="flex items-center gap-3">
-                {company.logo ? (
-                  <img 
-                    src={company.logo} 
-                    alt={`${company.name} logo`}
-                    className="h-10 w-auto object-contain" 
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                      const nextSibling = e.currentTarget.nextSibling;
-                      if (nextSibling) {
-                        (nextSibling as HTMLElement).style.display = 'flex';
-                      }
-                    }}
-                  />
-                ) : null}
-                <div 
-                  className="bg-gradient-to-r from-resumify-brown to-resumify-beige rounded-full h-10 w-10 flex items-center justify-center text-white font-bold"
-                  style={{ display: company.logo ? 'none' : 'flex' }}
-                >
-                  {company.name.charAt(0)}
-                </div>
-                <span className="text-white font-medium text-lg">{company.name}</span>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      <section ref={featuresRef} className="relative z-10 container mx-auto py-24 px-4">
-        <motion.h2 
-          className="text-4xl font-bold text-white mb-12 text-center flex flex-col items-center justify-center gap-2"
-          initial={{ opacity: 0, y: 30 }}
-          animate={isFeaturesInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-        >
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-resumify-beige via-resumify-brown to-resumify-beige">Why choose Resumify?</span>
-          <div className="w-20 h-1 bg-gradient-to-r from-resumify-brown to-resumify-beige mt-2"></div>
-        </motion.h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            { 
-              icon: Zap, 
-              title: "Fast & Efficient", 
-              description: "Create a professional resume in minutes with our intuitive interface",
-              color: "text-resumify-beige",
-              gradient: "from-resumify-brown/20 to-resumify-beige/20",
-              shadowColor: "rgba(166, 115, 96, 0.5)"
-            },
-            { 
-              icon: Star, 
-              title: "Premium Templates", 
-              description: "Choose from dozens of ATS-optimized templates designed by career experts",
-              color: "text-resumify-beige",
-              gradient: "from-resumify-beige/20 to-resumify-brown/20",
-              shadowColor: "rgba(192, 165, 149, 0.5)"
-            },
-            { 
-              icon: Target, 
-              title: "Career Boost", 
-              description: "Stand out from the crowd with a resume that highlights your strengths",
-              color: "text-resumify-beige",
-              gradient: "from-resumify-brown/20 to-resumify-beige/20",
-              shadowColor: "rgba(166, 115, 96, 0.5)"
-            }
-          ].map((feature, index) => (
-            <motion.div 
-              key={feature.title}
-              className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-8 h-full"
-              initial={{ y: 50, opacity: 0 }}
-              animate={isFeaturesInView ? { y: 0, opacity: 1 } : {}}
-              transition={{ delay: 0.2 * index, duration: 0.5 }}
-              whileHover={{ 
-                y: -10,
-                boxShadow: `0 20px 40px ${feature.shadowColor}`,
-                transition: { duration: 0.3 }
-              }}
-            >
-              <div className={`mb-6 bg-gradient-to-br ${feature.gradient} w-16 h-16 rounded-2xl flex items-center justify-center`}>
-                <feature.icon className={feature.color} size={28} />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4">{feature.title}</h3>
-              <p className="text-resumify-off-white text-lg">{feature.description}</p>
-            </motion.div>
-          ))}
+          <div className="flex items-start gap-4">
+            <div className="bg-resumify-accent w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-1">
+              <span className="text-resumify-background font-bold">2</span>
+            </div>
+            <p className="text-resumify-white">
+              <span className="font-semibold text-resumify-beige">Tailor them to showcase your unique skills and experiences,</span> and get one step closer to landing your dream job!
+            </p>
+          </div>
         </div>
         
-        <motion.div 
-          className="mt-16 text-center"
-          initial={{ opacity: 0 }}
-          animate={isFeaturesInView ? { opacity: 1 } : {}}
-          transition={{ delay: 1, duration: 0.5 }}
-        >
-          <Link to="/templates">
-            <Button variant="outline" className="backdrop-blur-md bg-white/5 border-resumify-beige/60 text-white hover:bg-white/10 transition-all duration-300 text-lg px-8 py-6">
-              Explore All Templates
+        <div className="mt-10 text-center">
+          <Link to="/hiring-templates">
+            <Button variant="outline" className="bg-resumify-accent hover:bg-resumify-brown text-resumify-background border-resumify-brown-dark px-6 py-5 rounded-lg">
+              Select your ready-to-use template
             </Button>
           </Link>
-        </motion.div>
-      </section>
-
-      <section 
-        ref={ctaSectionRef}
-        className="py-32 px-4 relative overflow-hidden"
-      >
-        <motion.div 
-          className="absolute -bottom-20 -right-20 w-96 h-96 bg-resumify-brown/20 rounded-full blur-3xl"
-          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        />
-        
-        <motion.div 
-          className="absolute -top-10 -left-10 w-80 h-80 bg-resumify-beige/10 rounded-full blur-3xl"
-          animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        />
-        
-        <div className="container mx-auto max-w-5xl relative z-10">
-          <motion.div 
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: 30 }}
-            animate={isCtaSectionInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="flex justify-center items-center gap-2 mb-4">
-              <span className="text-white text-sm font-medium px-4 py-1 rounded-full border border-white/10 bg-white/5 backdrop-blur-md">Trusted by professionals</span>
-              <div className="flex">
-                {[1, 2, 3, 4, 5].map((_, index) => (
-                  <Star key={index} fill="#c0a595" className="text-resumify-beige" size={16} />
-                ))}
-              </div>
-            </div>
-            
-            <h2 className="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-resumify-beige via-resumify-brown to-resumify-beige mt-8 mb-4">
-              Ready to transform your career?
-            </h2>
-            
-            <p className="text-xl text-resumify-off-white max-w-2xl mx-auto">
-              Try our professionally designed templates and stand out from the competition
-            </p>
-          </motion.div>
-          
-          <motion.div 
-            className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-8 md:p-12 mb-16 relative overflow-hidden"
-            initial={{ opacity: 0, y: 30 }}
-            animate={isCtaSectionInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            whileHover={{ boxShadow: "0 25px 50px rgba(166, 115, 96, 0.3)" }}
-          >
-            <motion.div 
-              className="absolute -top-10 -right-10 w-40 h-40 bg-resumify-beige/10 rounded-full blur-3xl"
-              animate={{ scale: [1, 1.5, 1], opacity: [0.1, 0.3, 0.1] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            />
-            
-            <p className="text-white text-xl mb-6 relative z-10 text-center md:text-left">
-              Kickstart your career journey with ease! Our expertly designed, ready-to-use templates
-              help you craft professional resumes in minutes.
-            </p>
-            <p className="text-white text-xl mb-8 relative z-10 text-center md:text-left">
-              Showcase your skills, qualifications, and work experiences, and get one step closer to
-              landing your dream job!
-            </p>
-            
-            <div className="flex justify-center md:justify-start relative z-10">
-              <Link to="/templates">
-                <Button className="bg-gradient-to-r from-resumify-brown to-resumify-brown-dark hover:from-resumify-brown-dark hover:to-resumify-brown-darker text-white px-8 py-6 rounded-xl flex items-center gap-3 transition-all duration-500 text-lg shadow-[0_0_15px_rgba(166,115,96,0.5)] hover:shadow-[0_0_25px_rgba(166,115,96,0.7)]">
-                  <span>Select your template</span>
-                  <motion.div
-                    animate={{ x: [0, 5, 0] }}
-                    transition={{ repeat: Infinity, duration: 1.5 }}
-                  >
-                    <ArrowRight size={20} />
-                  </motion.div>
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
         </div>
-      </section>
+      </div>
+    </motion.div>
+  </section>
+);
 
-      <section 
-        ref={reviewsSectionRef}
-        className="py-24 px-4 relative z-10"
-      >
-        <div className="container mx-auto max-w-6xl">
-          <motion.h2 
-            className="text-4xl font-bold text-white mb-8 text-center flex flex-col items-center"
-            initial={{ opacity: 0, y: 30 }}
-            animate={isReviewsSectionInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5 }}
-          >
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-resumify-beige via-resumify-brown to-resumify-beige">What our users are saying</span>
-            <div className="w-20 h-1 bg-gradient-to-r from-resumify-brown to-resumify-beige mt-4"></div>
-          </motion.h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-            {[
-              { 
-                name: 'Jane Jill', 
-                image: 'public/lovable-uploads/27dfb48f-326a-46b1-a85f-67c50df23e26.png',
-                text: 'Incredible resume builder! The templates are modern and professional. I received three interview calls within a week of submitting my resume.' 
-              },
-              { 
-                name: 'Tom Doodle', 
-                image: 'public/lovable-uploads/27dfb48f-326a-46b1-a85f-67c50df23e26.png',
-                text: 'Seeking a career change, I was unsure where to start. This tool guided me step by step, allowing me to showcase my transferable skills effectively.' 
-              },
-              { 
-                name: 'Sophia K.', 
-                image: 'public/lovable-uploads/27dfb48f-326a-46b1-a85f-67c50df23e26.png',
-                text: 'As a recent graduate with no experience, I found it hard to create a good resume. This platform helped me highlight my education and skills in a professional way.' 
-              },
-              { 
-                name: 'Rahul Sharma', 
-                image: 'public/lovable-uploads/27dfb48f-326a-46b1-a85f-67c50df23e26.png',
-                text: 'The ATS optimization feature is a game-changer! My resume now gets past screening systems, and I\'ve had more interview opportunities than ever before.' 
-              }
-            ].map((review, index) => (
-              <motion.div 
-                key={review.name}
-                className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-xl p-6 shadow-xl h-full"
-                initial={{ opacity: 0, y: 30 }}
-                animate={isReviewsSectionInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.1 * index, duration: 0.5 }}
-                whileHover={{ 
-                  y: -10,
-                  boxShadow: "0 20px 30px rgba(166, 115, 96, 0.3)",
-                  transition: { duration: 0.3 }
-                }}
-              >
-                <div className="flex justify-center mb-4">
-                  <div className="w-16 h-16 rounded-full border-2 border-resumify-beige/50 overflow-hidden bg-gradient-to-br from-resumify-brown/20 to-resumify-beige/20 flex items-center justify-center">
-                    <motion.span 
-                      className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-resumify-beige to-resumify-brown"
-                      whileHover={{ scale: 1.2 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      {review.name.charAt(0)}
-                    </motion.span>
-                  </div>
-                </div>
-                <h4 className="text-center font-bold text-lg text-white mb-3">{review.name}</h4>
-                <p className="text-resumify-off-white text-center">
-                  "{review.text}"
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+const TestimonialsSection = () => (
+  <section className="py-16 bg-resumify-background/95">
+    <div className="container mx-auto px-4">
+      <h2 className="text-3xl font-bold mb-12 text-center text-resumify-beige">What our users say</h2>
       
-      <style>
-        {`
-        .particle {
-          position: absolute;
-          border-radius: 50%;
-          background: linear-gradient(to right, #ec4899, #a855f7);
-          pointer-events: none;
-          z-index: -10;
-          animation: float 10s linear infinite;
-        }
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <Testimonial 
+          text="This resume builder transformed my job search. I received interview calls from 3 top companies within a week of updating my resume!"
+          author="Emily Chen"
+          role="Software Engineer"
+        />
         
-        @keyframes float {
-          0% {
-            transform: translateY(0) rotate(0deg);
-            opacity: 0;
-          }
-          10% {
-            opacity: var(--opacity);
-          }
-          90% {
-            opacity: var(--opacity);
-          }
-          100% {
-            transform: translateY(-100vh) rotate(360deg);
-            opacity: 0;
-          }
-        }
+        <Testimonial 
+          text="The templates look professional and were easy to customize. The ATS optimization feature gave me confidence that my resume would get past automated screens."
+          author="Michael Johnson"
+          role="Marketing Specialist"
+        />
         
-        .text-gradient-shimmer {
-          background: linear-gradient(to right, #ffffff, #c0a595, #ffffff);
-          background-size: 200% auto;
-          color: #000;
-          background-clip: text;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: shimmer 3s linear infinite;
-        }
-        
-        @keyframes shimmer {
-          to {
-            background-position: 200% center;
-          }
-        }
-        
-        .neo-blur {
-          background: rgba(31, 43, 50, 0.3);
-          backdrop-filter: blur(12px);
-          border: 1px solid rgba(255, 255, 255, 0.05);
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-        
-        .neo-card {
-          background: rgba(31, 43, 50, 0.3);
-          backdrop-filter: blur(12px);
-          border-radius: 16px;
-          border: 1px solid rgba(255, 255, 255, 0.05);
-          box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
-          transition: all 0.3s ease;
-        }
-        
-        .gradient-border {
-          position: relative;
-          border-radius: 12px;
-          padding: 0.1rem;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-        
-        .hoverable-card {
-          transition: all 0.5s ease;
-          transform-style: preserve-3d;
-          perspective: 1000px;
-        }
-        
-        .hoverable-card:hover {
-          transform: translateY(-5px) rotateX(5deg);
-          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-        `}
-      </style>
+        <Testimonial 
+          text="After struggling with my resume for months, this tool helped me create a standout document that truly showcased my skills. Landed my dream job!"
+          author="Sarah Williams"
+          role="UX Designer"
+        />
+      </div>
+    </div>
+  </section>
+);
+
+const Index: React.FC = () => {
+  return (
+    <div className="min-h-screen bg-resumify-background text-resumify-white">
+      <Navbar />
+      <main>
+        <HeroSection />
+        <CompaniesSection />
+        <FeaturesSection />
+        <TestimonialsSection />
+      </main>
     </div>
   );
 };
