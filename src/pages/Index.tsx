@@ -90,7 +90,7 @@ const Index = () => {
     },
     { 
       name: 'Microsoft', 
-      logo: 'microsoft.png'
+      logo: '/src/pages/mircosoft.png'
     },
     { 
       name: 'Amazon', 
@@ -664,4 +664,3 @@ const Index = () => {
 };
 
 export default Index;
-
