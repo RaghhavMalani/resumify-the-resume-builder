@@ -86,7 +86,7 @@ const Index = () => {
   const companyLogos = [
     { 
       name: 'Apple', 
-      logo: '/lovable-uploads/5853ed99-b2f4-4eab-98ab-137f929790d4.png'
+      logo: '/src/pages/apple.png'
     },
     { 
       name: 'Microsoft', 
@@ -94,23 +94,27 @@ const Index = () => {
     },
     { 
       name: 'Amazon', 
-      logo: null
+      logo: '/src/pages/amazon.png'
     },
     { 
       name: 'Pinterest', 
-      logo: null
+      logo: '/src/pages/pinterest.png'
     },
     { 
-      name: 'YouTube', 
-      logo: null
+      name: 'Google', 
+      logo: '/src/pages/google.png'
     },
     { 
       name: 'LinkedIn', 
-      logo: null
+      logo: '/src/pages/linkedin.png'
     },
     { 
-      name: 'Twitter', 
-      logo: null
+      name: 'X', 
+      logo: '/src/pages/x-twitter.png'
+    },
+    { 
+      name: 'Netflix', 
+      logo: '/src/pages/netlfix.png'
     }
   ];
 
