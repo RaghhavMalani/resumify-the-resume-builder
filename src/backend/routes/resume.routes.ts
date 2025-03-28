@@ -8,6 +8,7 @@ import {
   deleteResume 
 } from '../controllers/resume.controller';
 import { authMiddleware } from '../middleware/auth.middleware';
+import { ObjectId } from 'mongodb';
 
 const router = Router();
 

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useResume } from '../context/ResumeContext';
 import ProfessionalTemplate from './templates/ProfessionalTemplate';
@@ -18,7 +19,7 @@ import { toast } from 'sonner';
 
 const ResumePreview: React.FC = () => {
   const { templateId } = useResume();
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(0.8); // Default scale adjusted
   const [isRotating, setIsRotating] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showTooltip, setShowTooltip] = useState('');
@@ -37,12 +38,12 @@ const ResumePreview: React.FC = () => {
   }, [templateId]);
 
   const handleZoomIn = () => {
-    setScale(prev => Math.min(prev + 0.1, 1.5));
+    setScale(prev => Math.min(prev + 0.1, 1.2));
     toast.info(`Zoom: ${Math.round((scale + 0.1) * 100)}%`);
   };
 
   const handleZoomOut = () => {
-    setScale(prev => Math.max(prev - 0.1, 0.5));
+    setScale(prev => Math.max(prev - 0.1, 0.4));
     toast.info(`Zoom: ${Math.round((scale - 0.1) * 100)}%`);
   };
 
@@ -92,24 +93,20 @@ const ResumePreview: React.FC = () => {
         return <MinimalTemplate />;
       case 'executive':
         return <ExecutiveTemplate />;
+      // Map other templates to one of our defined templates
       case 'tech-startup':
-        return <ProfessionalTemplate />;
+      case 'engineering-professional':
       case 'data-science':
         return <ProfessionalTemplate />;
       case 'corporate-finance':
-        return <ExecutiveTemplate />;
       case 'legal-services':
         return <ExecutiveTemplate />;
       case 'marketing-creative':
-        return <CreativeTemplate />;
       case 'hospitality':
         return <CreativeTemplate />;
       case 'healthcare-professional':
-        return <MinimalTemplate />;
       case 'education-academic':
         return <MinimalTemplate />;
-      case 'engineering-professional':
-        return <ProfessionalTemplate />;
       default:
         return <ProfessionalTemplate />;
     }
@@ -117,13 +114,13 @@ const ResumePreview: React.FC = () => {
 
   return (
     <motion.div 
-      className="relative flex flex-col bg-white shadow-lg rounded-lg w-full overflow-hidden"
+      className="relative flex flex-col bg-white shadow-xl rounded-lg w-full overflow-hidden border border-gray-200"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="bg-gray-800 px-4 py-2 flex justify-between items-center border-b border-gray-700 text-white">
-        <div className="flex items-center space-x-2">
+      <div className="bg-gray-800 px-4 py-3 flex justify-between items-center border-b border-gray-700 text-white">
+        <div className="flex items-center space-x-3">
           <button 
             onClick={handleZoomIn}
             className="p-2 rounded-full hover:bg-gray-700 transition-colors flex items-center justify-center"
@@ -133,7 +130,7 @@ const ResumePreview: React.FC = () => {
           >
             <ZoomIn size={18} className="text-white" />
             {showTooltip === 'zoomIn' && (
-              <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded">
+              <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded z-50">
                 Zoom In
               </div>
             )}
@@ -147,7 +144,7 @@ const ResumePreview: React.FC = () => {
           >
             <ZoomOut size={18} className="text-white" />
             {showTooltip === 'zoomOut' && (
-              <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded">
+              <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded z-50">
                 Zoom Out
               </div>
             )}
@@ -167,7 +164,7 @@ const ResumePreview: React.FC = () => {
           >
             <RefreshCw size={18} className={`text-white ${isRotating ? 'animate-spin' : ''}`} />
             {showTooltip === 'refresh' && (
-              <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded">
+              <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded z-50">
                 Refresh
               </div>
             )}
@@ -184,7 +181,7 @@ const ResumePreview: React.FC = () => {
           >
             <Download size={18} className="text-white" />
             {showTooltip === 'download' && (
-              <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded">
+              <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded z-50">
                 Download
               </div>
             )}
@@ -201,7 +198,7 @@ const ResumePreview: React.FC = () => {
           >
             <Share2 size={18} className="text-white" />
             {showTooltip === 'share' && (
-              <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded">
+              <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded z-50">
                 Share
               </div>
             )}
@@ -218,7 +215,7 @@ const ResumePreview: React.FC = () => {
           >
             <Printer size={18} className="text-white" />
             {showTooltip === 'print' && (
-              <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded">
+              <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded z-50">
                 Print
               </div>
             )}
@@ -235,7 +232,7 @@ const ResumePreview: React.FC = () => {
           >
             <Heart size={18} fill={liked ? "currentColor" : "none"} />
             {showTooltip === 'like' && (
-              <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded">
+              <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded z-50">
                 {liked ? 'Unlike' : 'Like'}
               </div>
             )}
@@ -243,18 +240,18 @@ const ResumePreview: React.FC = () => {
         </div>
       </div>
       
-      <div className="relative flex-1 overflow-auto p-4 bg-gray-50 flex justify-center" ref={previewRef}>
+      <div className="relative flex-1 overflow-auto p-6 bg-gray-100 flex justify-center items-center" ref={previewRef}>
         <AnimatePresence mode="wait">
           {isLoading ? (
             <motion.div 
               key="loading"
-              className="w-full max-w-3xl h-[800px] bg-gray-200 rounded overflow-hidden"
+              className="w-full max-w-4xl h-[800px] bg-gray-200 rounded-lg overflow-hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="h-20 bg-gray-300 mb-4 animate-pulse"></div>
+              <div className="h-32 bg-gray-300 mb-4 animate-pulse"></div>
               <div className="h-10 bg-gray-300 mb-6 w-1/2 mx-auto animate-pulse"></div>
               <div className="h-40 bg-gray-300 mb-4 animate-pulse"></div>
               <div className="h-60 bg-gray-300 animate-pulse"></div>
@@ -270,13 +267,13 @@ const ResumePreview: React.FC = () => {
             <motion.div 
               key="template"
               className={`transition-all duration-300 ${isRotating ? 'animate-scale-in' : ''}`}
-              style={{ transform: `scale(${scale})` }}
+              style={{ transformOrigin: 'center' }}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: scale }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
-              <div className="w-full max-w-3xl h-[800px] overflow-hidden transition-shadow duration-300 hover:shadow-xl relative">
+              <div className="w-[210mm] h-[297mm] min-w-[210mm] max-h-[297mm] overflow-hidden shadow-2xl bg-white">
                 {renderTemplate()}
               </div>
             </motion.div>
@@ -285,7 +282,7 @@ const ResumePreview: React.FC = () => {
         
         {!isLoading && (
           <motion.div 
-            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-full shadow-lg text-sm"
+            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-800/90 text-white px-4 py-2 rounded-full shadow-lg text-sm"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, duration: 0.5 }}

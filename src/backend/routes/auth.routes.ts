@@ -2,6 +2,7 @@
 import { Router } from 'express';
 import { register, login, getUserById, updateUser } from '../controllers/auth.controller';
 import { authMiddleware } from '../middleware/auth.middleware';
+import { ObjectId } from 'mongodb';
 
 const router = Router();
 
