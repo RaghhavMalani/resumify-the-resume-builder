@@ -11,6 +11,7 @@ import Index from "./pages/Index";
 import HiringTemplates from "./pages/HiringTemplates";
 import ResumeEditor from "./pages/ResumeEditor";
 import Dashboard from "./pages/Dashboard";
+import MyResumes from "./pages/MyResumes";
 import NotFound from "./pages/NotFound";
 import LoginSignup from "./pages/LoginSignup";
 
@@ -44,6 +45,11 @@ const App = () => (
               <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/my-resumes" element={
+                <ProtectedRoute>
+                  <MyResumes />
                 </ProtectedRoute>
               } />
               <Route path="/login" element={<LoginSignup />} />

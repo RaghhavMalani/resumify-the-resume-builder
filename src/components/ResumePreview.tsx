@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useResume } from '../context/ResumeContext';
 import ProfessionalTemplate from './templates/ProfessionalTemplate';
@@ -12,19 +11,23 @@ import {
   RefreshCw, 
   Share2, 
   Printer, 
-  Heart 
+  Heart,
+  Loader2 
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
+import { exportElementAsPdf } from '../utils/pdfExport';
 
 const ResumePreview: React.FC = () => {
-  const { templateId } = useResume();
+  const { templateId, resumeData } = useResume();
   const [scale, setScale] = useState(0.8); // Default scale adjusted
   const [isRotating, setIsRotating] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showTooltip, setShowTooltip] = useState('');
   const [liked, setLiked] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
+  const templateRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 800);
@@ -53,11 +56,27 @@ const ResumePreview: React.FC = () => {
     setTimeout(() => setIsRotating(false), 1000);
   };
 
-  const handleDownload = () => {
-    toast.success("Preparing download...", {
-      description: "Your resume will be ready in a moment.",
-      duration: 3000,
-    });
+  const handleDownload = async () => {
+    if (!templateRef.current) {
+      toast.error("Preview not ready. Please try again.");
+      return;
+    }
+    
+    try {
+      setIsDownloading(true);
+      const fileName = `${resumeData.personalInfo.name.replace(/\s+/g, '_')}_Resume_${templateId}.pdf`;
+      
+      await exportElementAsPdf(templateRef.current, {
+        filename: fileName,
+        quality: 2,
+        scale: 2
+      });
+    } catch (error) {
+      console.error('Download error:', error);
+      toast.error("Failed to download resume");
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   const handleShare = () => {
@@ -70,8 +89,40 @@ const ResumePreview: React.FC = () => {
   const handlePrint = () => {
     toast.loading("Preparing print version...", { duration: 2000 });
     setTimeout(() => {
-      toast.success("Ready to print!", { duration: 3000 });
-    }, 2000);
+      if (templateRef.current) {
+        const printWindow = window.open('', '_blank');
+        if (printWindow) {
+          const documentContent = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <title>Print Resume</title>
+              <style>
+                @media print {
+                  body { margin: 0; }
+                  .resume-container { width: 100%; height: 100%; }
+                }
+              </style>
+            </head>
+            <body>
+              <div class="resume-container">
+                ${templateRef.current.outerHTML}
+              </div>
+              <script>
+                window.onload = function() { window.print(); window.close(); }
+              </script>
+            </body>
+            </html>
+          `;
+          printWindow.document.open();
+          printWindow.document.write(documentContent);
+          printWindow.document.close();
+          toast.success("Ready to print!", { duration: 3000 });
+        } else {
+          toast.error("Print window was blocked. Please allow popups.");
+        }
+      }
+    }, 1000);
   };
 
   const handleLike = () => {
@@ -93,7 +144,6 @@ const ResumePreview: React.FC = () => {
         return <MinimalTemplate />;
       case 'executive':
         return <ExecutiveTemplate />;
-      // Map other templates to one of our defined templates
       case 'tech-startup':
       case 'engineering-professional':
       case 'data-science':
@@ -161,6 +211,7 @@ const ResumePreview: React.FC = () => {
             whileTap={{ scale: 0.9 }}
             onMouseEnter={() => setShowTooltip('refresh')}
             onMouseLeave={() => setShowTooltip('')}
+            disabled={isDownloading}
           >
             <RefreshCw size={18} className={`text-white ${isRotating ? 'animate-spin' : ''}`} />
             {showTooltip === 'refresh' && (
@@ -178,11 +229,16 @@ const ResumePreview: React.FC = () => {
             whileTap={{ scale: 0.9 }}
             onMouseEnter={() => setShowTooltip('download')}
             onMouseLeave={() => setShowTooltip('')}
+            disabled={isDownloading}
           >
-            <Download size={18} className="text-white" />
+            {isDownloading ? (
+              <Loader2 size={18} className="text-white animate-spin" />
+            ) : (
+              <Download size={18} className="text-white" />
+            )}
             {showTooltip === 'download' && (
               <div className="absolute top-full mt-2 px-2 py-1 bg-black text-white text-xs rounded z-50">
-                Download
+                Download PDF
               </div>
             )}
           </motion.button>
@@ -273,7 +329,10 @@ const ResumePreview: React.FC = () => {
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
-              <div className="w-[210mm] h-[297mm] min-w-[210mm] max-h-[297mm] overflow-hidden shadow-2xl bg-white">
+              <div 
+                ref={templateRef}
+                className="w-[210mm] h-[297mm] min-w-[210mm] max-h-[297mm] overflow-hidden shadow-2xl bg-white"
+              >
                 {renderTemplate()}
               </div>
             </motion.div>

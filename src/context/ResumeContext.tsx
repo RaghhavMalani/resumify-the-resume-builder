@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 // Define resume data types
@@ -56,7 +57,7 @@ const defaultResumeData: ResumeData = {
     address: 'New York, NY',
     linkedin: 'linkedin.com/in/amanrajiv',
     website: 'amanrajiv.com',
-    photoUrl: 'public/lovable-uploads/862e82e3-5566-457a-94f0-5679526725a5.png',
+    // Removed default photoUrl
   },
   summary: 'Experienced software engineer with a passion for building innovative solutions.',
   education: [

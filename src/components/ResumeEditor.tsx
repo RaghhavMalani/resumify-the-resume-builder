@@ -1,13 +1,13 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { useResume } from '../context/ResumeContext';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Label } from './ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Button } from './ui/button';
-import { Plus, Trash2, Upload, Camera } from 'lucide-react';
+import { Plus, Trash2, Upload, Camera, Wand2 } from 'lucide-react';
 import { toast } from 'sonner';
+import AITextEnhancer from './AITextEnhancer';
 
 const ResumeEditor: React.FC = () => {
   const {
@@ -24,6 +24,10 @@ const ResumeEditor: React.FC = () => {
     updateSkill,
     removeSkill
   } = useResume();
+
+  const [showSummaryAI, setShowSummaryAI] = useState(false);
+  const [showExpAI, setShowExpAI] = useState<string | null>(null);
+  const [showEduAI, setShowEduAI] = useState<string | null>(null);
 
   // Handler for profile photo upload
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -196,13 +200,33 @@ const ResumeEditor: React.FC = () => {
           </div>
           
           <div className="space-y-2 mt-6">
-            <Label htmlFor="summary">Professional Summary</Label>
+            <div className="flex justify-between items-center">
+              <Label htmlFor="summary">Professional Summary</Label>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-resumify-beige hover:bg-resumify-brown/20"
+                onClick={() => setShowSummaryAI(!showSummaryAI)}
+              >
+                <Wand2 size={14} className="mr-1" />
+                {showSummaryAI ? 'Hide AI Help' : 'AI Enhance'}
+              </Button>
+            </div>
+            
             <Textarea
               id="summary"
               value={resumeData.summary}
               onChange={(e) => updateSummary(e.target.value)}
               className="min-h-[120px] bg-white bg-opacity-10 border-opacity-20 text-white"
             />
+            
+            {showSummaryAI && (
+              <AITextEnhancer 
+                initialText={resumeData.summary}
+                onApply={updateSummary}
+                type="summary"
+              />
+            )}
           </div>
         </TabsContent>
         
@@ -284,13 +308,33 @@ const ResumeEditor: React.FC = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor={`description-${edu.id}`}>Description (optional)</Label>
+                <div className="flex justify-between items-center">
+                  <Label htmlFor={`description-${edu.id}`}>Description (optional)</Label>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-resumify-beige hover:bg-resumify-brown/20"
+                    onClick={() => setShowEduAI(showEduAI === edu.id ? null : edu.id)}
+                  >
+                    <Wand2 size={14} className="mr-1" />
+                    {showEduAI === edu.id ? 'Hide AI Help' : 'AI Enhance'}
+                  </Button>
+                </div>
+                
                 <Textarea
                   id={`description-${edu.id}`}
                   value={edu.description || ''}
                   onChange={(e) => updateEducation(edu.id, { description: e.target.value })}
                   className="bg-white bg-opacity-10 border-opacity-20 text-white"
                 />
+                
+                {showEduAI === edu.id && (
+                  <AITextEnhancer 
+                    initialText={edu.description || ''}
+                    onApply={(text) => updateEducation(edu.id, { description: text })}
+                    type="education"
+                  />
+                )}
               </div>
               
               <Button
@@ -389,13 +433,33 @@ const ResumeEditor: React.FC = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor={`description-${exp.id}`}>Description</Label>
+                <div className="flex justify-between items-center">
+                  <Label htmlFor={`description-${exp.id}`}>Description</Label>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-resumify-beige hover:bg-resumify-brown/20"
+                    onClick={() => setShowExpAI(showExpAI === exp.id ? null : exp.id)}
+                  >
+                    <Wand2 size={14} className="mr-1" />
+                    {showExpAI === exp.id ? 'Hide AI Help' : 'AI Enhance'}
+                  </Button>
+                </div>
+                
                 <Textarea
                   id={`description-${exp.id}`}
                   value={exp.description}
                   onChange={(e) => updateWorkExperience(exp.id, { description: e.target.value })}
                   className="min-h-[100px] bg-white bg-opacity-10 border-opacity-20 text-white"
                 />
+                
+                {showExpAI === exp.id && (
+                  <AITextEnhancer 
+                    initialText={exp.description}
+                    onApply={(text) => updateWorkExperience(exp.id, { description: text })}
+                    type="experience"
+                  />
+                )}
               </div>
               
               <Button
