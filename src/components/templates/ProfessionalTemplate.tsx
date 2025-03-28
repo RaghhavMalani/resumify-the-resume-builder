@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useResume } from '../../context/ResumeContext';
-import { Mail, Phone, MapPin, Linkedin } from 'lucide-react';
+import { Mail, Phone, MapPin, Linkedin, Globe } from 'lucide-react';
 
 const ProfessionalTemplate: React.FC = () => {
   const { resumeData } = useResume();
@@ -9,40 +9,60 @@ const ProfessionalTemplate: React.FC = () => {
 
   return (
     <div className="w-full h-full bg-white text-gray-800 shadow-lg p-8 font-sans">
-      {/* Header */}
-      <header className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">{personalInfo.name}</h1>
-        <h2 className="text-xl text-gray-600">{personalInfo.title}</h2>
-        
-        <div className="flex flex-wrap mt-3 gap-4 text-sm">
-          {personalInfo.email && (
-            <div className="flex items-center">
-              <Mail size={14} className="mr-1" />
-              <span>{personalInfo.email}</span>
-            </div>
-          )}
+      {/* Header with optional photo */}
+      <header className="mb-6 flex justify-between items-start">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">{personalInfo.name}</h1>
+          <h2 className="text-xl text-gray-600">{personalInfo.title}</h2>
           
-          {personalInfo.phone && (
-            <div className="flex items-center">
-              <Phone size={14} className="mr-1" />
-              <span>{personalInfo.phone}</span>
-            </div>
-          )}
-          
-          {personalInfo.address && (
-            <div className="flex items-center">
-              <MapPin size={14} className="mr-1" />
-              <span>{personalInfo.address}</span>
-            </div>
-          )}
-          
-          {personalInfo.linkedin && (
-            <div className="flex items-center">
-              <Linkedin size={14} className="mr-1" />
-              <span>{personalInfo.linkedin}</span>
-            </div>
-          )}
+          <div className="flex flex-wrap mt-3 gap-4 text-sm">
+            {personalInfo.email && (
+              <div className="flex items-center">
+                <Mail size={14} className="mr-1" />
+                <span>{personalInfo.email}</span>
+              </div>
+            )}
+            
+            {personalInfo.phone && (
+              <div className="flex items-center">
+                <Phone size={14} className="mr-1" />
+                <span>{personalInfo.phone}</span>
+              </div>
+            )}
+            
+            {personalInfo.address && (
+              <div className="flex items-center">
+                <MapPin size={14} className="mr-1" />
+                <span>{personalInfo.address}</span>
+              </div>
+            )}
+            
+            {personalInfo.linkedin && (
+              <div className="flex items-center">
+                <Linkedin size={14} className="mr-1" />
+                <span>{personalInfo.linkedin}</span>
+              </div>
+            )}
+
+            {personalInfo.website && (
+              <div className="flex items-center">
+                <Globe size={14} className="mr-1" />
+                <span>{personalInfo.website}</span>
+              </div>
+            )}
+          </div>
         </div>
+        
+        {/* Optional profile photo */}
+        {personalInfo.photoUrl && (
+          <div className="h-24 w-24 rounded-full overflow-hidden border-2 border-gray-300">
+            <img 
+              src={personalInfo.photoUrl} 
+              alt={`${personalInfo.name}`} 
+              className="h-full w-full object-cover"
+            />
+          </div>
+        )}
       </header>
       
       {/* Summary */}

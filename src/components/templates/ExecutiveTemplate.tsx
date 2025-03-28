@@ -1,11 +1,11 @@
 
 import React from 'react';
 import { useResume } from '../../context/ResumeContext';
-import { MapPin, Phone, Mail, Briefcase } from 'lucide-react';
+import { MapPin, Phone, Mail, Briefcase, Globe, Star } from 'lucide-react';
 
 const ExecutiveTemplate: React.FC = () => {
   const { resumeData } = useResume();
-  const { personalInfo, summary, workExperience, skills } = resumeData;
+  const { personalInfo, summary, workExperience, education, skills } = resumeData;
 
   return (
     <div className="w-full h-full bg-gray-200 text-gray-800 shadow-lg font-sans">
@@ -13,12 +13,21 @@ const ExecutiveTemplate: React.FC = () => {
       <div className="flex bg-white border-b-2 border-gray-300">
         {/* Profile Picture */}
         <div className="w-1/3 p-5 flex justify-center items-center">
-          <div className="rounded-full overflow-hidden w-40 h-40 border-4 border-resumify-brown">
-            <img 
-              src="public/lovable-uploads/862e82e3-5566-457a-94f0-5679526725a5.png" 
-              alt="Profile" 
-              className="w-full h-full object-cover"
-            />
+          <div className="rounded-full overflow-hidden w-40 h-40 border-4 border-resumify-brown relative group">
+            {personalInfo.photoUrl ? (
+              <img 
+                src={personalInfo.photoUrl} 
+                alt="Profile" 
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              />
+            ) : (
+              <img 
+                src="public/lovable-uploads/862e82e3-5566-457a-94f0-5679526725a5.png" 
+                alt="Profile" 
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              />
+            )}
+            <div className="absolute inset-0 bg-resumify-brown/10 group-hover:bg-transparent transition-colors duration-500"></div>
           </div>
         </div>
         
@@ -49,6 +58,13 @@ const ExecutiveTemplate: React.FC = () => {
                 <span>{personalInfo.email}</span>
               </div>
             )}
+            
+            {personalInfo.website && (
+              <div className="flex items-center text-gray-700">
+                <Globe size={16} className="mr-2 text-resumify-brown" />
+                <span>{personalInfo.website}</span>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -57,14 +73,14 @@ const ExecutiveTemplate: React.FC = () => {
       <div className="grid grid-cols-1 gap-6 p-8 bg-gray-200">
         {/* Summary */}
         {summary && (
-          <section className="bg-white p-6 rounded-md shadow-sm animate-slide-in-right">
+          <section className="bg-white p-6 rounded-md shadow-sm animate-slide-in-right backdrop-blur-sm border border-gray-100">
             <p className="text-gray-700 italic">{summary}</p>
           </section>
         )}
 
         {/* Skills */}
         {skills.length > 0 && (
-          <section className="bg-white p-6 rounded-md shadow-sm animate-slide-in-right delay-100">
+          <section className="bg-white p-6 rounded-md shadow-sm animate-slide-in-right delay-100 backdrop-blur-sm border border-gray-100">
             <h3 className="text-xl font-bold text-resumify-brown border-b-2 border-gray-200 pb-2 mb-4">Skills</h3>
             <div className="flex flex-wrap gap-3">
               {skills.map((skill, index) => (
@@ -80,9 +96,33 @@ const ExecutiveTemplate: React.FC = () => {
           </section>
         )}
         
+        {/* Education */}
+        {education.length > 0 && (
+          <section className="bg-white p-6 rounded-md shadow-sm animate-slide-in-right delay-150 backdrop-blur-sm border border-gray-100">
+            <h3 className="text-xl font-bold text-resumify-brown border-b-2 border-gray-200 pb-2 mb-4">Education</h3>
+            
+            <div className="space-y-4">
+              {education.map((edu, index) => (
+                <div key={edu.id} className="animate-fade-in" style={{ animationDelay: `${300 + index * 200}ms` }}>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h4 className="font-semibold">{edu.degree}{edu.fieldOfStudy ? ` in ${edu.fieldOfStudy}` : ''}</h4>
+                      <p className="text-gray-600">{edu.institution}</p>
+                    </div>
+                    <span className="bg-gray-100 text-resumify-brown font-medium px-2 py-1 rounded text-sm">
+                      {edu.startDate} - {edu.endDate}
+                    </span>
+                  </div>
+                  {edu.description && <p className="text-gray-600 mt-2">{edu.description}</p>}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+        
         {/* Work Experience */}
         {workExperience.length > 0 && (
-          <section className="bg-white p-6 rounded-md shadow-sm animate-slide-in-right delay-200">
+          <section className="bg-white p-6 rounded-md shadow-sm animate-slide-in-right delay-200 backdrop-blur-sm border border-gray-100">
             <h3 className="text-xl font-bold text-resumify-brown border-b-2 border-gray-200 pb-2 mb-4">Work History</h3>
             
             <div className="space-y-4 relative">
@@ -94,10 +134,13 @@ const ExecutiveTemplate: React.FC = () => {
                   {/* Timeline dot */}
                   <div className="absolute -left-10 top-1.5 w-5 h-5 rounded-full bg-resumify-brown"></div>
                   
-                  <div className="flex flex-col mb-4">
+                  <div className="flex flex-col mb-4 relative">
+                    {/* Hover effect overlay */}
+                    <div className="absolute inset-0 bg-gray-100/0 hover:bg-gray-100/50 rounded transition-colors duration-300 -m-2 p-2 -z-10"></div>
+                    
                     <div className="flex justify-between items-start">
                       <h4 className="font-semibold text-lg">{exp.position}</h4>
-                      <span className="text-resumify-brown font-medium">
+                      <span className="text-resumify-brown font-medium bg-gray-100 px-2 py-0.5 rounded text-sm">
                         {exp.startDate} - {exp.endDate}
                       </span>
                     </div>

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { Button } from '../components/ui/button';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
-import { Sparkles, Rocket, Star, Zap, Award, CheckCircle, ArrowRight } from 'lucide-react';
+import { Sparkles, Rocket, Star, Zap, Award, CheckCircle, ArrowRight, Image } from 'lucide-react';
 import { Badge } from '../components/ui/badge';
 import { useToast } from '../hooks/use-toast';
 import { getCurrentUser } from '../services/api';
@@ -275,33 +275,33 @@ const Index = () => {
 
       <section ref={trustRef} className="container mx-auto py-16 px-4">
         <motion.h3 
-          className="text-center text-xl text-resumify-off-white mb-8"
+          className="text-center text-2xl font-bold text-resumify-beige mb-10"
           initial={{ opacity: 0, y: 30 }}
           animate={isTrustInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
         >
-          <span className="flex items-center justify-center gap-2">
-            <Award size={20} className="text-resumify-beige" />
-            Our customers have been hired at:
+          <span className="flex items-center justify-center gap-3">
+            <Award size={28} className="text-resumify-beige" />
+            OUR CUSTOMERS HAVE BEEN <span className="text-resumify-brown">HIRED</span> AT:
           </span>
         </motion.h3>
         
-        <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+        <div className="flex flex-wrap justify-center items-center gap-10 md:gap-14">
           {companyLogos.map((company, index) => (
             <motion.div 
               key={company.name}
-              className="h-12 glassmorphism p-2 px-4 opacity-70 hover:opacity-100 transition-opacity duration-300"
+              className="h-16 glassmorphism p-3 px-5 hover:bg-resumify-brown/20 transition-all duration-300"
               initial={{ y: 50, opacity: 0 }}
-              animate={isTrustInView ? { y: 0, opacity: 0.7 } : {}}
+              animate={isTrustInView ? { y: 0, opacity: 1 } : {}}
               transition={{ delay: 0.1 * index, duration: 0.5 }}
               whileHover={{ scale: 1.1, y: -5 }}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 {company.logo ? (
                   <img 
                     src={company.logo} 
                     alt={`${company.name} logo`}
-                    className="h-8 w-auto object-contain" 
+                    className="h-10 w-auto object-contain" 
                     onError={(e) => {
                       e.currentTarget.style.display = 'none';
                       const nextSibling = e.currentTarget.nextSibling;
@@ -312,12 +312,12 @@ const Index = () => {
                   />
                 ) : null}
                 <div 
-                  className="bg-white/10 rounded-full h-8 w-8 flex items-center justify-center text-white font-bold"
+                  className="bg-white/10 rounded-full h-10 w-10 flex items-center justify-center text-white font-bold"
                   style={{ display: company.logo ? 'none' : 'flex' }}
                 >
                   {company.name.charAt(0)}
                 </div>
-                <span className="text-white">{company.name}</span>
+                <span className="text-white font-bold text-lg">{company.name}</span>
               </div>
             </motion.div>
           ))}
