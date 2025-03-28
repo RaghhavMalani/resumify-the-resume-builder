@@ -6,7 +6,7 @@ import Editor from '../components/ResumeEditor';
 import Preview from '../components/ResumePreview';
 import { useResume } from '../context/ResumeContext';
 import { Button } from '../components/ui/button';
-import { Download, ArrowLeft, Sparkles } from 'lucide-react';
+import { Download, ArrowLeft, Sparkles, Camera } from 'lucide-react';
 import { toast } from '../components/ui/use-toast';
 import AIWritingAssistant from '../components/AIWritingAssistant';
 
@@ -75,6 +75,19 @@ const ResumeEditorPage: React.FC = () => {
               <h2 className="text-2xl font-bold text-resumify-beige">Edit Your Resume</h2>
               {selectedText && <AIWritingAssistant text={selectedText} />}
             </div>
+            
+            {/* New feature alert */}
+            <div className="bg-resumify-brown/20 border border-resumify-brown/40 rounded-lg p-4 mb-6 flex items-start gap-3">
+              <Camera size={24} className="text-resumify-beige mt-1" />
+              <div>
+                <h3 className="text-resumify-beige font-medium">New: Profile Photo Support</h3>
+                <p className="text-resumify-off-white text-sm mt-1">
+                  You can now add a profile photo to your resume in the Personal Info tab. 
+                  Photos help employers recognize you and add a professional touch to your resume.
+                </p>
+              </div>
+            </div>
+            
             <Editor />
             
             <div className="mt-6 p-4 bg-gray-800 rounded-lg border border-resumify-brown/30">

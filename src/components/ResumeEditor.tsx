@@ -6,7 +6,8 @@ import { Textarea } from './ui/textarea';
 import { Label } from './ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Button } from './ui/button';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Upload, Camera } from 'lucide-react';
+import { toast } from 'sonner';
 
 const ResumeEditor: React.FC = () => {
   const {
@@ -24,6 +25,41 @@ const ResumeEditor: React.FC = () => {
     removeSkill
   } = useResume();
 
+  // Handler for profile photo upload
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    // Check file size (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Photo size should be less than 2MB");
+      return;
+    }
+    
+    // Check file type
+    if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) {
+      toast.error("Only JPG and PNG images are supported");
+      return;
+    }
+    
+    // Convert to base64 for preview
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      updatePersonalInfo({ photoUrl: event.target?.result as string });
+      toast.success("Profile photo updated!");
+    };
+    reader.onerror = () => {
+      toast.error("Failed to upload image. Please try again.");
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Handler to remove profile photo
+  const removePhoto = () => {
+    updatePersonalInfo({ photoUrl: undefined });
+    toast.success("Profile photo removed");
+  };
+
   return (
     <div className="bg-white bg-opacity-5 rounded-lg p-6">
       <Tabs defaultValue="personal" className="w-full">
@@ -37,6 +73,53 @@ const ResumeEditor: React.FC = () => {
         {/* Personal Info Tab */}
         <TabsContent value="personal" className="space-y-4">
           <h3 className="text-xl font-semibold text-resumify-beige mb-4">Personal Information</h3>
+          
+          {/* Profile Photo Upload */}
+          <div className="mb-6 flex flex-col items-center sm:flex-row sm:items-start gap-6">
+            <div className="w-32 h-32 bg-white bg-opacity-10 border-2 border-dashed border-resumify-beige/40 rounded-lg flex flex-col items-center justify-center overflow-hidden relative">
+              {resumeData.personalInfo.photoUrl ? (
+                <>
+                  <img 
+                    src={resumeData.personalInfo.photoUrl} 
+                    alt="Profile" 
+                    className="w-full h-full object-cover"
+                  />
+                  <Button 
+                    variant="destructive" 
+                    size="icon" 
+                    className="absolute bottom-2 right-2 h-8 w-8 rounded-full opacity-90"
+                    onClick={removePhoto}
+                  >
+                    <Trash2 size={14} />
+                  </Button>
+                </>
+              ) : (
+                <label className="cursor-pointer w-full h-full flex flex-col items-center justify-center">
+                  <Camera size={24} className="text-resumify-beige mb-2" />
+                  <span className="text-sm text-resumify-off-white text-center px-2">Add Photo</span>
+                  <input 
+                    type="file" 
+                    accept="image/png, image/jpeg, image/jpg" 
+                    className="hidden" 
+                    onChange={handlePhotoUpload}
+                  />
+                </label>
+              )}
+            </div>
+            
+            <div className="flex-1 space-y-2">
+              <h4 className="text-lg font-medium text-resumify-beige">Profile Photo</h4>
+              <p className="text-sm text-resumify-off-white">
+                Add a professional photo to make your resume stand out. 
+                A headshot with a neutral background works best.
+              </p>
+              <ul className="text-xs text-resumify-off-white/80 list-disc pl-5 space-y-1">
+                <li>Square aspect ratio recommended</li>
+                <li>Maximum size: 2MB</li>
+                <li>Formats: JPG, PNG</li>
+              </ul>
+            </div>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -97,6 +180,16 @@ const ResumeEditor: React.FC = () => {
                 id="linkedin"
                 value={resumeData.personalInfo.linkedin || ''}
                 onChange={(e) => updatePersonalInfo({ linkedin: e.target.value })}
+                className="bg-white bg-opacity-10 border-opacity-20 text-white"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="website">Website (optional)</Label>
+              <Input
+                id="website"
+                value={resumeData.personalInfo.website || ''}
+                onChange={(e) => updatePersonalInfo({ website: e.target.value })}
                 className="bg-white bg-opacity-10 border-opacity-20 text-white"
               />
             </div>

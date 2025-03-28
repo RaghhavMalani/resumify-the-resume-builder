@@ -9,82 +9,104 @@ const CreativeTemplate: React.FC = () => {
 
   return (
     <div className="w-full h-full bg-white text-gray-800 shadow-lg font-sans overflow-hidden">
-      {/* Header - with accent color */}
-      <header className="bg-resumify-brown text-white p-8 relative overflow-hidden">
-        {/* Background decorative elements */}
-        <div className="absolute -top-10 -right-10 w-40 h-40 bg-resumify-brown-dark/30 rounded-full blur-2xl"></div>
-        <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-resumify-brown-dark/40 to-transparent"></div>
+      {/* Visually creative header with asymmetric design */}
+      <header className="relative bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-8 overflow-hidden">
+        {/* Abstract background elements */}
+        <div className="absolute -top-12 -right-12 w-48 h-48 bg-white opacity-10 rounded-full"></div>
+        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black/20 to-transparent"></div>
+        <div className="absolute top-8 left-1/3 w-12 h-12 bg-yellow-400 opacity-30 rounded-full"></div>
         
-        <div className="flex items-start">
+        <div className="flex items-start gap-8 relative z-10">
           <div className="flex-1">
-            <h1 className="text-3xl font-bold">{personalInfo.name}</h1>
-            <h2 className="text-xl mt-1 opacity-90">{personalInfo.title}</h2>
+            <h1 className="text-3xl font-bold tracking-tight">{personalInfo.name}</h1>
+            <h2 className="text-xl mt-1 text-purple-100">{personalInfo.title}</h2>
             
-            <div className="flex flex-wrap mt-4 gap-6 text-sm">
+            <div className="mt-6 max-w-lg">
+              {summary && (
+                <p className="italic text-purple-100">{summary}</p>
+              )}
+            </div>
+            
+            <div className="flex flex-wrap mt-6 gap-4 text-sm">
               {personalInfo.email && (
-                <div className="flex items-center">
-                  <Mail size={16} className="mr-2" />
+                <div className="flex items-center bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-md hover:bg-white/20 transition-colors">
+                  <Mail size={15} className="mr-2 text-purple-200" />
                   <span>{personalInfo.email}</span>
                 </div>
               )}
               
               {personalInfo.phone && (
-                <div className="flex items-center">
-                  <Phone size={16} className="mr-2" />
+                <div className="flex items-center bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-md hover:bg-white/20 transition-colors">
+                  <Phone size={15} className="mr-2 text-purple-200" />
                   <span>{personalInfo.phone}</span>
                 </div>
               )}
               
               {personalInfo.address && (
-                <div className="flex items-center">
-                  <MapPin size={16} className="mr-2" />
+                <div className="flex items-center bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-md hover:bg-white/20 transition-colors">
+                  <MapPin size={15} className="mr-2 text-purple-200" />
                   <span>{personalInfo.address}</span>
                 </div>
               )}
               
               {personalInfo.linkedin && (
-                <div className="flex items-center">
-                  <Linkedin size={16} className="mr-2" />
+                <div className="flex items-center bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-md hover:bg-white/20 transition-colors">
+                  <Linkedin size={15} className="mr-2 text-purple-200" />
                   <span>{personalInfo.linkedin}</span>
                 </div>
               )}
 
               {personalInfo.website && (
-                <div className="flex items-center">
-                  <Globe size={16} className="mr-2" />
+                <div className="flex items-center bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-md hover:bg-white/20 transition-colors">
+                  <Globe size={15} className="mr-2 text-purple-200" />
                   <span>{personalInfo.website}</span>
                 </div>
               )}
             </div>
           </div>
           
-          {/* Optional profile photo */}
+          {/* Profile photo with creative styling */}
           {personalInfo.photoUrl && (
-            <div className="h-32 w-32 rounded-full overflow-hidden border-4 border-white/30 shadow-lg">
+            <div className="h-36 w-36 rounded-xl overflow-hidden transform rotate-3 border-4 border-white/30 shadow-xl">
               <img 
                 src={personalInfo.photoUrl} 
                 alt={`${personalInfo.name}`} 
                 className="h-full w-full object-cover"
               />
+              {/* Decorative corner accent */}
+              <div className="absolute -bottom-1 -right-1 w-12 h-12 bg-yellow-400 z-[-1] rounded-tl-xl"></div>
             </div>
           )}
         </div>
       </header>
       
-      {/* Two-column layout */}
+      {/* Creative layout with asymmetric columns */}
       <div className="flex flex-col md:flex-row">
-        {/* Left column - Skills and Education */}
-        <div className="w-full md:w-1/3 bg-gray-100 p-6">
-          {/* Skills */}
+        {/* Left sidebar */}
+        <div className="w-full md:w-1/3 bg-gray-50 p-6 relative">
+          {/* Visual accent */}
+          <div className="absolute top-0 right-0 w-8 h-full bg-gradient-to-l from-gray-100 to-transparent"></div>
+          
+          {/* Skills with creative visualization */}
           {skills.length > 0 && (
-            <section className="mb-8">
-              <h3 className="text-lg font-semibold text-resumify-brown mb-3">SKILLS</h3>
+            <section className="mb-8 relative z-10">
+              <h3 className="text-lg font-semibold text-purple-700 mb-4 flex items-center">
+                <Star size={16} className="mr-2 text-yellow-500" fill="currentColor" />
+                SKILLS
+              </h3>
               
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {skills.map((skill) => (
-                  <div key={skill.id} className="flex items-center gap-2 group hover:translate-x-1 transition-transform">
-                    <div className="w-2 h-2 bg-resumify-brown rounded-full group-hover:scale-125 transition-transform"></div>
-                    <span>{skill.name}</span>
+                  <div key={skill.id} className="group">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="font-medium text-gray-700">{skill.name}</span>
+                    </div>
+                    <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full"
+                        style={{ width: `${(skill.level || 3) * 20}%` }}
+                      ></div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -93,17 +115,25 @@ const CreativeTemplate: React.FC = () => {
           
           {/* Education */}
           {education.length > 0 && (
-            <section>
-              <h3 className="text-lg font-semibold text-resumify-brown mb-3">EDUCATION</h3>
+            <section className="relative z-10">
+              <h3 className="text-lg font-semibold text-purple-700 mb-4">EDUCATION</h3>
               
               <div className="space-y-4">
                 {education.map((edu) => (
-                  <div key={edu.id} className="group hover:bg-white/80 p-2 rounded transition-colors">
-                    <p className="text-gray-500">{edu.startDate} - {edu.endDate}</p>
-                    <h4 className="font-semibold group-hover:text-resumify-brown transition-colors">{edu.degree}</h4>
-                    {edu.fieldOfStudy && <p className="text-gray-700">{edu.fieldOfStudy}</p>}
-                    <p className="text-gray-600">{edu.institution}</p>
-                    {edu.description && <p className="text-gray-600 text-sm mt-1">{edu.description}</p>}
+                  <div key={edu.id} className="group p-3 rounded-lg transition-colors">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h4 className="font-medium text-gray-800">{edu.degree}</h4>
+                        {edu.fieldOfStudy && <p className="text-purple-600">{edu.fieldOfStudy}</p>}
+                        <p className="text-gray-600 text-sm">{edu.institution}</p>
+                      </div>
+                      <div className="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs">
+                        {edu.startDate} - {edu.endDate}
+                      </div>
+                    </div>
+                    {edu.description && (
+                      <p className="text-gray-600 text-sm mt-2">{edu.description}</p>
+                    )}
                   </div>
                 ))}
               </div>
@@ -111,34 +141,36 @@ const CreativeTemplate: React.FC = () => {
           )}
         </div>
         
-        {/* Right column - Summary and Experience */}
+        {/* Right main content */}
         <div className="w-full md:w-2/3 p-6">
-          {/* Summary */}
-          {summary && (
-            <section className="mb-6">
-              <h3 className="text-lg font-semibold text-resumify-brown mb-3">PROFILE</h3>
-              <p className="text-gray-700">{summary}</p>
-            </section>
-          )}
-          
-          {/* Work Experience */}
+          {/* Work Experience with timeline design */}
           {workExperience.length > 0 && (
             <section>
-              <h3 className="text-lg font-semibold text-resumify-brown mb-3">EXPERIENCE</h3>
+              <h3 className="text-lg font-semibold text-purple-700 mb-6 pb-2 border-b border-gray-200">
+                EXPERIENCE
+              </h3>
               
-              <div className="space-y-6">
+              <div className="space-y-8 relative">
+                {/* Timeline line */}
+                <div className="absolute top-0 bottom-0 left-0 w-0.5 bg-purple-100"></div>
+                
                 {workExperience.map((exp) => (
-                  <div key={exp.id} className="group p-3 hover:bg-gray-50 rounded-lg transition-colors">
-                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-1">
-                      <div>
-                        <h4 className="font-semibold group-hover:text-resumify-brown transition-colors">{exp.position}</h4>
-                        <p className="text-gray-600">{exp.company}{exp.location ? `, ${exp.location}` : ''}</p>
+                  <div key={exp.id} className="relative pl-8">
+                    {/* Timeline dot */}
+                    <div className="absolute left-[-8px] top-1 w-4 h-4 rounded-full bg-purple-600 border-4 border-purple-100"></div>
+                    
+                    <div className="mb-4">
+                      <div className="flex flex-col md:flex-row md:justify-between md:items-start">
+                        <div>
+                          <h4 className="font-semibold text-lg text-gray-900">{exp.position}</h4>
+                          <p className="text-purple-600">{exp.company}{exp.location ? ` · ${exp.location}` : ''}</p>
+                        </div>
+                        <div className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm self-start mt-2 md:mt-0">
+                          {exp.startDate} - {exp.endDate}
+                        </div>
                       </div>
-                      <p className="text-gray-500 sm:text-right bg-gray-100 px-2 py-0.5 rounded">
-                        {exp.startDate} - {exp.endDate}
-                      </p>
+                      <p className="text-gray-600 mt-3">{exp.description}</p>
                     </div>
-                    <p className="text-gray-700 mt-1">{exp.description}</p>
                   </div>
                 ))}
               </div>

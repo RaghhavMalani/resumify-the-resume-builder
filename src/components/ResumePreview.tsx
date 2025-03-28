@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useResume } from '../context/ResumeContext';
 import ProfessionalTemplate from './templates/ProfessionalTemplate';
@@ -11,7 +10,6 @@ import {
   ZoomOut, 
   RefreshCw, 
   Share2, 
-  RotateCw, 
   Printer, 
   Heart 
 } from 'lucide-react';
@@ -27,13 +25,11 @@ const ResumePreview: React.FC = () => {
   const [liked, setLiked] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
 
-  // Simulate loading
   useEffect(() => {
     const timer = setTimeout(() => setIsLoading(false), 800);
     return () => clearTimeout(timer);
   }, [templateId]);
 
-  // Reset loading state when template changes
   useEffect(() => {
     setIsLoading(true);
     const timer = setTimeout(() => setIsLoading(false), 800);
@@ -86,7 +82,6 @@ const ResumePreview: React.FC = () => {
     }
   };
 
-  // Helper function to determine which template to render
   const renderTemplate = () => {
     switch(templateId) {
       case 'professional':
@@ -97,17 +92,23 @@ const ResumePreview: React.FC = () => {
         return <MinimalTemplate />;
       case 'executive':
         return <ExecutiveTemplate />;
-      // Handle all new template IDs
       case 'tech-startup':
-      case 'corporate-finance':
-      case 'healthcare-professional':
-      case 'marketing-creative':
-      case 'education-academic':
-      case 'engineering-professional':
-      case 'legal-services':
+        return <ProfessionalTemplate />;
       case 'data-science':
+        return <ProfessionalTemplate />;
+      case 'corporate-finance':
+        return <ExecutiveTemplate />;
+      case 'legal-services':
+        return <ExecutiveTemplate />;
+      case 'marketing-creative':
+        return <CreativeTemplate />;
       case 'hospitality':
-        // Default to professional for new templates until they're implemented
+        return <CreativeTemplate />;
+      case 'healthcare-professional':
+        return <MinimalTemplate />;
+      case 'education-academic':
+        return <MinimalTemplate />;
+      case 'engineering-professional':
         return <ProfessionalTemplate />;
       default:
         return <ProfessionalTemplate />;
@@ -121,7 +122,6 @@ const ResumePreview: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Controls - Darkened background and controls for better visibility */}
       <div className="bg-gray-800 px-4 py-2 flex justify-between items-center border-b border-gray-700 text-white">
         <div className="flex items-center space-x-2">
           <button 
@@ -243,7 +243,6 @@ const ResumePreview: React.FC = () => {
         </div>
       </div>
       
-      {/* Template display area with loading skeleton */}
       <div className="relative flex-1 overflow-auto p-4 bg-gray-50 flex justify-center" ref={previewRef}>
         <AnimatePresence mode="wait">
           {isLoading ? (
@@ -284,7 +283,6 @@ const ResumePreview: React.FC = () => {
           )}
         </AnimatePresence>
         
-        {/* Quick tips that appear at the bottom - Darkened background for better visibility */}
         {!isLoading && (
           <motion.div 
             className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-full shadow-lg text-sm"

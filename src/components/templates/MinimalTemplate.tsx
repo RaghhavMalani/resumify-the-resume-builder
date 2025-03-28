@@ -9,10 +9,10 @@ const MinimalTemplate: React.FC = () => {
 
   return (
     <div className="w-full h-full bg-white text-gray-800 shadow-lg p-10 font-sans">
-      {/* Header - Minimalist style */}
-      <header className="mb-8 text-center border-b border-gray-200 pb-6 relative">
+      {/* Header - Ultra minimal style with monochromatic scheme */}
+      <header className="mb-10 text-center relative">
         {personalInfo.photoUrl && (
-          <div className="mx-auto h-20 w-20 rounded-full overflow-hidden border border-gray-200 mb-4">
+          <div className="mx-auto h-24 w-24 rounded-full overflow-hidden border border-gray-100 mb-4 shadow-sm">
             <img 
               src={personalInfo.photoUrl} 
               alt={`${personalInfo.name}`} 
@@ -21,72 +21,72 @@ const MinimalTemplate: React.FC = () => {
           </div>
         )}
         
-        <h1 className="text-3xl font-bold tracking-wide text-gray-900">{personalInfo.name}</h1>
-        <h2 className="text-lg text-gray-600 mt-1">{personalInfo.title}</h2>
+        <h1 className="text-3xl font-light tracking-wide text-gray-900">{personalInfo.name}</h1>
+        <h2 className="text-lg text-gray-500 mt-1 font-light tracking-wider uppercase">{personalInfo.title}</h2>
         
-        <div className="flex flex-wrap justify-center mt-4 gap-3 text-sm text-gray-600">
+        <div className="flex flex-wrap justify-center mt-6 gap-4 text-xs text-gray-500">
           {personalInfo.email && (
-            <div className="flex items-center backdrop-blur-sm bg-gray-50/30 shadow-sm px-2 py-1 rounded">
+            <div className="flex items-center">
               <Mail size={12} className="mr-1" />
               <span>{personalInfo.email}</span>
             </div>
           )}
           
           {personalInfo.phone && (
-            <div className="flex items-center backdrop-blur-sm bg-gray-50/30 shadow-sm px-2 py-1 rounded">
+            <div className="flex items-center">
               <Phone size={12} className="mr-1" />
               <span>{personalInfo.phone}</span>
             </div>
           )}
           
           {personalInfo.address && (
-            <div className="flex items-center backdrop-blur-sm bg-gray-50/30 shadow-sm px-2 py-1 rounded">
+            <div className="flex items-center">
               <MapPin size={12} className="mr-1" />
               <span>{personalInfo.address}</span>
             </div>
           )}
           
           {personalInfo.linkedin && (
-            <div className="flex items-center backdrop-blur-sm bg-gray-50/30 shadow-sm px-2 py-1 rounded">
+            <div className="flex items-center">
               <Linkedin size={12} className="mr-1" />
               <span>{personalInfo.linkedin}</span>
             </div>
           )}
 
           {personalInfo.website && (
-            <div className="flex items-center backdrop-blur-sm bg-gray-50/30 shadow-sm px-2 py-1 rounded">
+            <div className="flex items-center">
               <Globe size={12} className="mr-1" />
               <span>{personalInfo.website}</span>
             </div>
           )}
         </div>
+        
+        {/* Minimal divider */}
+        <div className="mx-auto mt-6 w-16 h-px bg-gray-300"></div>
       </header>
       
       {/* Summary */}
       {summary && (
-        <section className="mb-6">
-          <p className="text-gray-700 text-center italic">{summary}</p>
+        <section className="mb-10">
+          <p className="text-gray-600 text-center max-w-2xl mx-auto">{summary}</p>
         </section>
       )}
       
-      {/* Main Content */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10">
-        {/* Left Column - Work Experience */}
+      {/* Main Content in a clean grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+        {/* Left Column */}
         <div>
           {workExperience.length > 0 && (
-            <section className="mb-6">
-              <h3 className="text-sm tracking-widest font-bold uppercase border-b border-gray-300 pb-1 mb-3">Experience</h3>
+            <section className="mb-8">
+              <h3 className="text-sm tracking-widest uppercase font-semibold text-gray-400 mb-4">Experience</h3>
               
               <div className="space-y-6">
                 {workExperience.map((exp) => (
                   <div key={exp.id} className="group">
-                    <h4 className="font-semibold group-hover:text-gray-900 transition-colors">{exp.position}</h4>
-                    <div className="flex justify-between text-gray-600 text-sm">
-                      <span>{exp.company}</span>
-                      <span className="bg-gray-100 px-2 py-0.5 rounded-full text-xs">{exp.startDate} - {exp.endDate}</span>
-                    </div>
-                    {exp.location && <p className="text-gray-600 text-sm italic">{exp.location}</p>}
-                    <p className="text-gray-700 text-sm mt-2">{exp.description}</p>
+                    <h4 className="font-medium text-gray-900">{exp.position}</h4>
+                    <p className="text-gray-500 text-sm">{exp.company}{exp.location ? ` · ${exp.location}` : ''}</p>
+                    <p className="text-gray-400 text-xs mt-1">{exp.startDate} — {exp.endDate}</p>
+                    <p className="text-gray-600 text-sm mt-2">{exp.description}</p>
                   </div>
                 ))}
               </div>
@@ -94,22 +94,20 @@ const MinimalTemplate: React.FC = () => {
           )}
         </div>
         
-        {/* Right Column - Education and Skills */}
+        {/* Right Column */}
         <div>
           {/* Education */}
           {education.length > 0 && (
-            <section className="mb-6">
-              <h3 className="text-sm tracking-widest font-bold uppercase border-b border-gray-300 pb-1 mb-3">Education</h3>
+            <section className="mb-8">
+              <h3 className="text-sm tracking-widest uppercase font-semibold text-gray-400 mb-4">Education</h3>
               
               <div className="space-y-4">
                 {education.map((edu) => (
                   <div key={edu.id} className="group">
-                    <h4 className="font-semibold group-hover:text-gray-900 transition-colors">{edu.degree}{edu.fieldOfStudy ? ` in ${edu.fieldOfStudy}` : ''}</h4>
-                    <div className="flex justify-between text-gray-600 text-sm">
-                      <span>{edu.institution}</span>
-                      <span className="bg-gray-100 px-2 py-0.5 rounded-full text-xs">{edu.startDate} - {edu.endDate}</span>
-                    </div>
-                    {edu.description && <p className="text-gray-700 text-sm mt-2">{edu.description}</p>}
+                    <h4 className="font-medium text-gray-900">{edu.degree}{edu.fieldOfStudy ? ` in ${edu.fieldOfStudy}` : ''}</h4>
+                    <p className="text-gray-500 text-sm">{edu.institution}</p>
+                    <p className="text-gray-400 text-xs mt-1">{edu.startDate} — {edu.endDate}</p>
+                    {edu.description && <p className="text-gray-600 text-sm mt-2">{edu.description}</p>}
                   </div>
                 ))}
               </div>
@@ -119,13 +117,13 @@ const MinimalTemplate: React.FC = () => {
           {/* Skills */}
           {skills.length > 0 && (
             <section>
-              <h3 className="text-sm tracking-widest font-bold uppercase border-b border-gray-300 pb-1 mb-3">Skills</h3>
+              <h3 className="text-sm tracking-widest uppercase font-semibold text-gray-400 mb-4">Skills</h3>
               
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-2">
                 {skills.map((skill) => (
                   <span 
                     key={skill.id}
-                    className="text-sm border border-gray-300 bg-gray-50 hover:bg-gray-100 transition-colors px-2 py-1 rounded"
+                    className="text-xs text-gray-600 border border-gray-200 px-2 py-1 rounded-sm"
                   >
                     {skill.name}
                   </span>
