@@ -16,7 +16,7 @@ export async function createResume(resumeData: Omit<Resume, '_id' | 'createdAt' 
     const resumeCollection = await getCollection('resumes');
     const now = new Date();
     
-    const newResume: Resume = {
+    const newResume = {
       ...resumeData,
       _id: uuidv4(),
       createdAt: now,
@@ -27,7 +27,7 @@ export async function createResume(resumeData: Omit<Resume, '_id' | 'createdAt' 
     
     return {
       success: true,
-      data: newResume,
+      data: newResume as unknown as Resume,
       message: 'Resume created successfully'
     };
   } catch (error) {

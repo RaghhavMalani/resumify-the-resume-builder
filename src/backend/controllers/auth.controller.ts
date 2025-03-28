@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { getCollection } from '../db/connection';
 import { User, ServerResponse, LoginRequest, RegisterRequest } from '../models/types';
 import { hashPassword, comparePassword } from '../utils/auth.utils';
+import { ObjectId } from 'mongodb';
 
 export async function register(data: RegisterRequest): Promise<ServerResponse<Omit<User, 'password'>>> {
   try {
@@ -36,7 +37,7 @@ export async function register(data: RegisterRequest): Promise<ServerResponse<Om
     const hashedPassword = await hashPassword(data.password);
     
     const now = new Date();
-    const newUser: User = {
+    const newUser = {
       _id: uuidv4(),
       name: data.name,
       email: data.email,
@@ -52,7 +53,7 @@ export async function register(data: RegisterRequest): Promise<ServerResponse<Om
     
     return { 
       success: true, 
-      data: userWithoutPassword,
+      data: userWithoutPassword as Omit<User, 'password'>,
       message: 'User registered successfully'
     };
   } catch (error) {
