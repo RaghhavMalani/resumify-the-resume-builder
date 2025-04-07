@@ -1,6 +1,6 @@
 
 import { v4 as uuidv4 } from 'uuid';
-import { getCollection } from '../db/connection';
+import { getCollection, convertToObjectId } from '../../lib/mongodb';
 import { User, ServerResponse, LoginRequest, RegisterRequest } from '../models/types';
 import { hashPassword, comparePassword } from '../utils/auth.utils';
 import { ObjectId } from 'mongodb';
@@ -37,8 +37,9 @@ export async function register(data: RegisterRequest): Promise<ServerResponse<Om
     const hashedPassword = await hashPassword(data.password);
     
     const now = new Date();
+    const userId = new ObjectId();
     const newUser = {
-      _id: uuidv4(),
+      _id: userId,
       name: data.name,
       email: data.email,
       password: hashedPassword,
@@ -119,7 +120,17 @@ export async function login(data: LoginRequest): Promise<ServerResponse<{ user: 
 export async function getUserById(id: string): Promise<ServerResponse<User>> {
   try {
     const usersCollection = await getCollection('users');
-    const user = await usersCollection.findOne({ _id: id });
+    let query = {};
+    
+    // Check if id is a valid ObjectId
+    try {
+      query = { _id: new ObjectId(id) };
+    } catch (error) {
+      // If not a valid ObjectId, try as string ID
+      query = { _id: id };
+    }
+    
+    const user = await usersCollection.findOne(query);
     
     if (!user) {
       return { 
@@ -148,13 +159,23 @@ export async function updateUser(id: string, updates: Partial<Omit<User, '_id' |
   try {
     const usersCollection = await getCollection('users');
     
+    let query = {};
+    
+    // Check if id is a valid ObjectId
+    try {
+      query = { _id: new ObjectId(id) };
+    } catch (error) {
+      // If not a valid ObjectId, try as string ID
+      query = { _id: id };
+    }
+    
     const updateData = {
       ...updates,
       updatedAt: new Date()
     };
     
     const result = await usersCollection.updateOne(
-      { _id: id },
+      query,
       { $set: updateData }
     );
     

@@ -1,6 +1,5 @@
-
 import { v4 as uuidv4 } from 'uuid';
-import { getCollection } from '../db/connection';
+import { getCollection } from '../../lib/mongodb';
 import { Resume, ServerResponse } from '../models/types';
 import { ObjectId } from 'mongodb';
 
@@ -16,9 +15,19 @@ export async function createResume(resumeData: Omit<Resume, '_id' | 'createdAt' 
     const resumeCollection = await getCollection('resumes');
     const now = new Date();
     
+    let userId = resumeData.userId;
+    if (typeof userId === 'string') {
+      try {
+        userId = new ObjectId(userId);
+      } catch (error) {
+        // Keep as string if not a valid ObjectId
+      }
+    }
+    
     const newResume = {
       ...resumeData,
-      _id: uuidv4(),
+      userId,
+      _id: new ObjectId(),
       createdAt: now,
       updatedAt: now
     };
@@ -50,13 +59,21 @@ export async function updateResume(id: string, updates: Partial<Omit<Resume, '_i
 
     const resumeCollection = await getCollection('resumes');
     
+    let query = {};
+    
+    try {
+      query = { _id: new ObjectId(id) };
+    } catch (error) {
+      query = { _id: id };
+    }
+    
     const updateData = {
       ...updates,
       updatedAt: new Date()
     };
     
     const result = await resumeCollection.updateOne(
-      { _id: id },
+      query,
       { $set: updateData }
     );
     
@@ -91,7 +108,16 @@ export async function getResumeById(id: string): Promise<ServerResponse<Resume>>
     }
 
     const resumeCollection = await getCollection('resumes');
-    const resume = await resumeCollection.findOne({ _id: id });
+    
+    let query = {};
+    
+    try {
+      query = { _id: new ObjectId(id) };
+    } catch (error) {
+      query = { _id: id };
+    }
+    
+    const resume = await resumeCollection.findOne(query);
     
     if (!resume) {
       return {
@@ -123,7 +149,16 @@ export async function getResumesByUser(userId: string): Promise<ServerResponse<R
     }
 
     const resumeCollection = await getCollection('resumes');
-    const resumes = await resumeCollection.find({ userId }).toArray();
+    
+    let query = {};
+    
+    try {
+      query = { userId: new ObjectId(userId) };
+    } catch (error) {
+      query = { userId: userId };
+    }
+    
+    const resumes = await resumeCollection.find(query).toArray();
     
     return {
       success: true,
@@ -148,7 +183,16 @@ export async function deleteResume(id: string): Promise<ServerResponse<boolean>>
     }
 
     const resumeCollection = await getCollection('resumes');
-    const result = await resumeCollection.deleteOne({ _id: id });
+    
+    let query = {};
+    
+    try {
+      query = { _id: new ObjectId(id) };
+    } catch (error) {
+      query = { _id: id };
+    }
+    
+    const result = await resumeCollection.deleteOne(query);
     
     if (result.deletedCount === 0) {
       return {

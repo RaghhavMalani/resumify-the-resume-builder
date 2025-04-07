@@ -61,7 +61,10 @@ router.get('/:id', async (req, res) => {
     }
     
     // Check if resume belongs to authenticated user
-    if (result.data?.userId.toString() !== req.userId) {
+    const resumeUserId = result.data?.userId.toString();
+    const requestUserId = req.userId?.toString();
+    
+    if (resumeUserId !== requestUserId) {
       return res.status(403).json({
         success: false,
         error: 'You do not have permission to access this resume'
@@ -88,7 +91,10 @@ router.put('/:id', async (req, res) => {
     }
     
     // Check if resume belongs to authenticated user
-    if (checkResult.data?.userId.toString() !== req.userId) {
+    const resumeUserId = checkResult.data?.userId.toString();
+    const requestUserId = req.userId?.toString();
+    
+    if (resumeUserId !== requestUserId) {
       return res.status(403).json({
         success: false,
         error: 'You do not have permission to modify this resume'
@@ -116,7 +122,10 @@ router.delete('/:id', async (req, res) => {
     }
     
     // Check if resume belongs to authenticated user
-    if (checkResult.data?.userId.toString() !== req.userId) {
+    const resumeUserId = checkResult.data?.userId.toString();
+    const requestUserId = req.userId?.toString();
+    
+    if (resumeUserId !== requestUserId) {
       return res.status(403).json({
         success: false,
         error: 'You do not have permission to delete this resume'
