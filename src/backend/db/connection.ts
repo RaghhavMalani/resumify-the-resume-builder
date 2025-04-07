@@ -1,7 +1,7 @@
 
 // Re-export from the main mongodb.ts file for easier imports
 export { 
-  default as clientPromise,
+  clientPromise,
   getDatabase,
   getCollection,
   convertToObjectId,

@@ -1,13 +1,12 @@
 
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { register, login, getUserById, updateUser } from '../controllers/auth.controller';
 import { authMiddleware } from '../middleware/auth.middleware';
-import { ObjectId } from 'mongodb';
 
 const router = Router();
 
 // Public routes
-router.post('/register', async (req, res) => {
+router.post('/register', async (req: Request, res: Response) => {
   try {
     const result = await register(req.body);
     if (result.success) {
@@ -23,7 +22,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login', async (req: Request, res: Response) => {
   try {
     const result = await login(req.body);
     if (result.success) {
@@ -40,7 +39,7 @@ router.post('/login', async (req, res) => {
 });
 
 // Protected routes
-router.get('/me', authMiddleware, async (req, res) => {
+router.get('/me', authMiddleware, async (req: Request, res: Response) => {
   try {
     const result = await getUserById(req.userId!);
     if (result.success) {
@@ -56,7 +55,7 @@ router.get('/me', authMiddleware, async (req, res) => {
   }
 });
 
-router.put('/me', authMiddleware, async (req, res) => {
+router.put('/me', authMiddleware, async (req: Request, res: Response) => {
   try {
     const result = await updateUser(req.userId!, req.body);
     if (result.success) {

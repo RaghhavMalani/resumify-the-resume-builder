@@ -1,5 +1,5 @@
 
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { 
   createResume, 
   updateResume, 
@@ -8,7 +8,6 @@ import {
   deleteResume 
 } from '../controllers/resume.controller';
 import { authMiddleware } from '../middleware/auth.middleware';
-import { ObjectId } from 'mongodb';
 
 const router = Router();
 
@@ -16,7 +15,7 @@ const router = Router();
 router.use(authMiddleware);
 
 // Create a new resume
-router.post('/', async (req, res) => {
+router.post('/', async (req: Request, res: Response) => {
   try {
     // Make sure userId matches authenticated user
     const resumeData = {
@@ -39,7 +38,7 @@ router.post('/', async (req, res) => {
 });
 
 // Get all resumes for the authenticated user
-router.get('/', async (req, res) => {
+router.get('/', async (req: Request, res: Response) => {
   try {
     const result = await getResumesByUser(req.userId!);
     return res.status(result.success ? 200 : 400).json(result);
@@ -52,7 +51,7 @@ router.get('/', async (req, res) => {
 });
 
 // Get a specific resume by ID
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req: Request, res: Response) => {
   try {
     const result = await getResumeById(req.params.id);
     
@@ -81,7 +80,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update a resume
-router.put('/:id', async (req, res) => {
+router.put('/:id', async (req: Request, res: Response) => {
   try {
     // First get the resume to check ownership
     const checkResult = await getResumeById(req.params.id);
@@ -112,7 +111,7 @@ router.put('/:id', async (req, res) => {
 });
 
 // Delete a resume
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req: Request, res: Response) => {
   try {
     // First get the resume to check ownership
     const checkResult = await getResumeById(req.params.id);
