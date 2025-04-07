@@ -12,8 +12,8 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { Sparkles, CheckCircle2, X, ExternalLink } from 'lucide-react';
-import { toast } from '@/components/ui/use-toast';
+import { Sparkles, CheckCircle2, X, ExternalLink, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface AIWritingAssistantProps {
   text: string;
@@ -24,29 +24,59 @@ const AIWritingAssistant: React.FC<AIWritingAssistantProps> = ({ text, onSuggest
   const [suggestion, setSuggestion] = useState('');
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<'grammar' | 'professional' | 'keywords'>('grammar');
 
   // This would be connected to a real AI service in production
   const generateSuggestion = () => {
     setLoading(true);
     // Simulate API call
     setTimeout(() => {
-      // Mock improved text
-      const improved = text
-        .replace(/i /g, 'I ')
-        .replace(/dont/g, "don't")
-        .replace(/(\w)$/, '$1.')
-        .replace(/(\w)([,.!?:;])(\w)/g, '$1$2 $3');
+      // Generate suggestions based on the active tab
+      let enhancedText = '';
+      
+      if (activeTab === 'grammar') {
+        // Grammar corrections
+        enhancedText = text
+          .replace(/i /g, 'I ')
+          .replace(/dont/g, "don't")
+          .replace(/(\w)$/, '$1.')
+          .replace(/(\w)([,.!?:;])(\w)/g, '$1$2 $3');
+      } else if (activeTab === 'professional') {
+        // Professional language improvements
+        enhancedText = text;
+        if (text.includes('good at')) {
+          enhancedText = enhancedText.replace('good at', 'proficient in');
+        }
+        if (text.includes('worked on')) {
+          enhancedText = enhancedText.replace('worked on', 'spearheaded');
+        }
+        if (text.includes('helped')) {
+          enhancedText = enhancedText.replace('helped', 'collaborated on');
+        }
+        if (text.includes('did')) {
+          enhancedText = enhancedText.replace('did', 'executed');
+        }
+        if (text.includes('made')) {
+          enhancedText = enhancedText.replace('made', 'developed');
+        }
+      } else {
+        // Resume keywords optimization
+        enhancedText = text;
+        // Add industry keywords if they don't exist
+        const keywords = ['implemented', 'optimized', 'managed', 'achieved', 'increased', 'decreased'];
+        const addedWords = [];
         
-      // Add professional language improvements
-      let enhancedText = improved;
-      if (text.includes('good at')) {
-        enhancedText = enhancedText.replace('good at', 'proficient in');
-      }
-      if (text.includes('worked on')) {
-        enhancedText = enhancedText.replace('worked on', 'spearheaded');
-      }
-      if (text.includes('helped')) {
-        enhancedText = enhancedText.replace('helped', 'collaborated on');
+        for (const keyword of keywords) {
+          if (!enhancedText.toLowerCase().includes(keyword) && addedWords.length < 2) {
+            enhancedText = `${keyword} ${enhancedText.toLowerCase()}`;
+            addedWords.push(keyword);
+          }
+        }
+        
+        // Add a quantifiable result if not present
+        if (!enhancedText.includes('%') && !enhancedText.includes('increased')) {
+          enhancedText += ' Increased efficiency by 20% through process optimization.';
+        }
       }
       
       setSuggestion(enhancedText);
@@ -57,11 +87,7 @@ const AIWritingAssistant: React.FC<AIWritingAssistantProps> = ({ text, onSuggest
   const handleApplySuggestion = () => {
     if (onSuggest && suggestion) {
       onSuggest(suggestion);
-      toast({
-        title: "Suggestion applied",
-        description: "The AI-enhanced text has been applied to your resume.",
-        duration: 3000,
-      });
+      toast.success("AI suggestion applied successfully");
     }
     setOpen(false);
   };
@@ -81,7 +107,7 @@ const AIWritingAssistant: React.FC<AIWritingAssistantProps> = ({ text, onSuggest
             generateSuggestion();
           }}
         >
-          <Sparkles size={16} /> Enhance with AI
+          <Sparkles size={16} className="text-yellow-400" /> Enhance with AI
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent className="bg-gray-900 border-resumify-brown text-resumify-white">
@@ -91,9 +117,48 @@ const AIWritingAssistant: React.FC<AIWritingAssistantProps> = ({ text, onSuggest
             AI Writing Enhancement
           </AlertDialogTitle>
           <AlertDialogDescription className="text-resumify-off-white">
-            The AI assistant can help improve your text to make it more professional and error-free.
+            Get intelligent suggestions to enhance your resume content and make it stand out.
           </AlertDialogDescription>
         </AlertDialogHeader>
+        
+        <div className="flex border-b border-gray-700 mb-4">
+          <button
+            className={`px-4 py-2 text-sm font-medium ${activeTab === 'grammar' ? 'text-resumify-beige border-b-2 border-resumify-brown' : 'text-gray-400 hover:text-gray-300'}`}
+            onClick={() => {
+              setActiveTab('grammar');
+              setLoading(true);
+              setTimeout(() => {
+                generateSuggestion();
+              }, 500);
+            }}
+          >
+            Grammar
+          </button>
+          <button
+            className={`px-4 py-2 text-sm font-medium ${activeTab === 'professional' ? 'text-resumify-beige border-b-2 border-resumify-brown' : 'text-gray-400 hover:text-gray-300'}`}
+            onClick={() => {
+              setActiveTab('professional');
+              setLoading(true);
+              setTimeout(() => {
+                generateSuggestion();
+              }, 500);
+            }}
+          >
+            Professional
+          </button>
+          <button
+            className={`px-4 py-2 text-sm font-medium ${activeTab === 'keywords' ? 'text-resumify-beige border-b-2 border-resumify-brown' : 'text-gray-400 hover:text-gray-300'}`}
+            onClick={() => {
+              setActiveTab('keywords');
+              setLoading(true);
+              setTimeout(() => {
+                generateSuggestion();
+              }, 500);
+            }}
+          >
+            Keywords
+          </button>
+        </div>
         
         <div className="my-4">
           <div className="mb-4">
@@ -104,14 +169,17 @@ const AIWritingAssistant: React.FC<AIWritingAssistantProps> = ({ text, onSuggest
           </div>
           
           <div>
-            <h4 className="text-sm font-medium mb-2 text-resumify-beige">AI Suggestion:</h4>
+            <h4 className="text-sm font-medium mb-2 text-resumify-beige">
+              AI Suggestion 
+              <span className="text-xs text-gray-400 ml-2">
+                {activeTab === 'grammar' && '(Grammar & Clarity)'}
+                {activeTab === 'professional' && '(Professional Language)'}
+                {activeTab === 'keywords' && '(Resume Keywords)'}
+              </span>
+            </h4>
             {loading ? (
               <div className="p-3 bg-gray-800 rounded-md h-20 flex items-center justify-center">
-                <div className="animate-pulse flex gap-1">
-                  <div className="h-2 w-2 bg-resumify-beige rounded-full"></div>
-                  <div className="h-2 w-2 bg-resumify-beige rounded-full animation-delay-200"></div>
-                  <div className="h-2 w-2 bg-resumify-beige rounded-full animation-delay-400"></div>
-                </div>
+                <Loader2 size={24} className="animate-spin text-resumify-beige opacity-70" />
               </div>
             ) : (
               <div className="p-3 bg-gray-800 rounded-md text-resumify-white">
@@ -124,15 +192,15 @@ const AIWritingAssistant: React.FC<AIWritingAssistantProps> = ({ text, onSuggest
         <div className="flex flex-col space-y-2 mt-2">
           <div className="flex items-center text-xs text-resumify-off-white">
             <CheckCircle2 size={14} className="text-green-400 mr-2" /> 
-            Grammar and spelling checked
+            Optimized for ATS (Applicant Tracking Systems)
           </div>
           <div className="flex items-center text-xs text-resumify-off-white">
             <CheckCircle2 size={14} className="text-green-400 mr-2" /> 
-            Professional language enhanced
+            Industry-standard terminology
           </div>
           <div className="flex items-center text-xs text-resumify-off-white">
             <CheckCircle2 size={14} className="text-green-400 mr-2" /> 
-            Resume-optimized phrasing
+            Improved readability and professionalism
           </div>
         </div>
         
