@@ -25,12 +25,12 @@ router.post('/', async (req: Request, res: Response) => {
     
     const result = await createResume(resumeData);
     if (result.success) {
-      return res.status(201).json(result);
+      res.status(201).json(result);
     } else {
-      return res.status(400).json(result);
+      res.status(400).json(result);
     }
   } catch (error) {
-    return res.status(500).json({ 
+    res.status(500).json({ 
       success: false, 
       error: 'Server error while creating resume' 
     });
@@ -41,9 +41,9 @@ router.post('/', async (req: Request, res: Response) => {
 router.get('/', async (req: Request, res: Response) => {
   try {
     const result = await getResumesByUser(req.userId!);
-    return res.status(result.success ? 200 : 400).json(result);
+    res.status(result.success ? 200 : 400).json(result);
   } catch (error) {
-    return res.status(500).json({ 
+    res.status(500).json({ 
       success: false, 
       error: 'Server error while fetching resumes' 
     });
@@ -56,7 +56,8 @@ router.get('/:id', async (req: Request, res: Response) => {
     const result = await getResumeById(req.params.id);
     
     if (!result.success) {
-      return res.status(404).json(result);
+      res.status(404).json(result);
+      return;
     }
     
     // Check if resume belongs to authenticated user
@@ -64,15 +65,16 @@ router.get('/:id', async (req: Request, res: Response) => {
     const requestUserId = req.userId?.toString();
     
     if (resumeUserId !== requestUserId) {
-      return res.status(403).json({
+      res.status(403).json({
         success: false,
         error: 'You do not have permission to access this resume'
       });
+      return;
     }
     
-    return res.status(200).json(result);
+    res.status(200).json(result);
   } catch (error) {
-    return res.status(500).json({ 
+    res.status(500).json({ 
       success: false, 
       error: 'Server error while fetching resume' 
     });
@@ -86,7 +88,8 @@ router.put('/:id', async (req: Request, res: Response) => {
     const checkResult = await getResumeById(req.params.id);
     
     if (!checkResult.success) {
-      return res.status(404).json(checkResult);
+      res.status(404).json(checkResult);
+      return;
     }
     
     // Check if resume belongs to authenticated user
@@ -94,16 +97,17 @@ router.put('/:id', async (req: Request, res: Response) => {
     const requestUserId = req.userId?.toString();
     
     if (resumeUserId !== requestUserId) {
-      return res.status(403).json({
+      res.status(403).json({
         success: false,
         error: 'You do not have permission to modify this resume'
       });
+      return;
     }
     
     const result = await updateResume(req.params.id, req.body);
-    return res.status(result.success ? 200 : 400).json(result);
+    res.status(result.success ? 200 : 400).json(result);
   } catch (error) {
-    return res.status(500).json({ 
+    res.status(500).json({ 
       success: false, 
       error: 'Server error while updating resume' 
     });
@@ -117,7 +121,8 @@ router.delete('/:id', async (req: Request, res: Response) => {
     const checkResult = await getResumeById(req.params.id);
     
     if (!checkResult.success) {
-      return res.status(404).json(checkResult);
+      res.status(404).json(checkResult);
+      return;
     }
     
     // Check if resume belongs to authenticated user
@@ -125,16 +130,17 @@ router.delete('/:id', async (req: Request, res: Response) => {
     const requestUserId = req.userId?.toString();
     
     if (resumeUserId !== requestUserId) {
-      return res.status(403).json({
+      res.status(403).json({
         success: false,
         error: 'You do not have permission to delete this resume'
       });
+      return;
     }
     
     const result = await deleteResume(req.params.id);
-    return res.status(result.success ? 200 : 400).json(result);
+    res.status(result.success ? 200 : 400).json(result);
   } catch (error) {
-    return res.status(500).json({ 
+    res.status(500).json({ 
       success: false, 
       error: 'Server error while deleting resume' 
     });

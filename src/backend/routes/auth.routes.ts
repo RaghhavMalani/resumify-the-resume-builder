@@ -43,12 +43,12 @@ router.get('/me', authMiddleware, async (req: Request, res: Response) => {
   try {
     const result = await getUserById(req.userId!);
     if (result.success) {
-      return res.status(200).json(result);
+      res.status(200).json(result);
     } else {
-      return res.status(404).json(result);
+      res.status(404).json(result);
     }
   } catch (error) {
-    return res.status(500).json({ 
+    res.status(500).json({ 
       success: false, 
       error: 'Server error while fetching user' 
     });
@@ -59,12 +59,12 @@ router.put('/me', authMiddleware, async (req: Request, res: Response) => {
   try {
     const result = await updateUser(req.userId!, req.body);
     if (result.success) {
-      return res.status(200).json(result);
+      res.status(200).json(result);
     } else {
-      return res.status(400).json(result);
+      res.status(400).json(result);
     }
   } catch (error) {
-    return res.status(500).json({ 
+    res.status(500).json({ 
       success: false, 
       error: 'Server error while updating user' 
     });
