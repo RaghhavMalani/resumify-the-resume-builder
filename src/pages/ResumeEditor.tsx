@@ -9,15 +9,12 @@ import { Button } from '../components/ui/button';
 import { 
   Download, 
   ArrowLeft, 
-  Sparkles, 
-  Camera, 
   Save, 
   Share2,
   PanelLeftClose,
   Info
 } from 'lucide-react';
 import { toast } from 'sonner';
-import AIWritingAssistant from '../components/AIWritingAssistant';
 import { exportElementAsPdf } from '../utils/pdfExport';
 import BackendService from '../services/BackendService';
 import {
@@ -30,7 +27,6 @@ const ResumeEditorPage: React.FC = () => {
   const { templateId } = useParams<{ templateId: string }>();
   const { setTemplateId, resumeData } = useResume();
   const navigate = useNavigate();
-  const [selectedText, setSelectedText] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
@@ -40,19 +36,6 @@ const ResumeEditorPage: React.FC = () => {
       setTemplateId(templateId);
     }
   }, [templateId, setTemplateId]);
-  
-  // Example of how to capture selected text from fields
-  useEffect(() => {
-    const handleSelection = () => {
-      const selection = window.getSelection();
-      if (selection && selection.toString().trim().length > 0) {
-        setSelectedText(selection.toString());
-      }
-    };
-    
-    document.addEventListener('mouseup', handleSelection);
-    return () => document.removeEventListener('mouseup', handleSelection);
-  }, []);
 
   const handleDownload = async () => {
     if (!previewRef.current) {
@@ -175,19 +158,6 @@ const ResumeEditorPage: React.FC = () => {
           <div className="order-2 lg:order-1">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-bold text-resumify-beige">Edit Your Resume</h2>
-              {selectedText && <AIWritingAssistant text={selectedText} />}
-            </div>
-            
-            {/* New feature alert */}
-            <div className="bg-resumify-brown/20 border border-resumify-brown/40 rounded-lg p-4 mb-6 flex items-start gap-3">
-              <Sparkles size={24} className="text-resumify-beige mt-1" />
-              <div>
-                <h3 className="text-resumify-beige font-medium">New: ATS-Optimized Templates</h3>
-                <p className="text-resumify-off-white text-sm mt-1">
-                  All our templates are now ATS-proof, ensuring your resume gets past automated screening systems.
-                  Use our enhanced PDF export for high-quality, professional results.
-                </p>
-              </div>
             </div>
             
             <Editor />

@@ -194,6 +194,35 @@ const ResumePreview: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
+      {/* Popup Tip - Moved outside the preview area to appear as a floating popup */}
+      <AnimatePresence>
+        {showTipPopup && !isLoading && (
+          <motion.div 
+            className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-900/95 text-white px-5 py-3 rounded-full shadow-lg z-50"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="flex items-center space-x-2">
+              <Info size={18} className="text-blue-400 flex-shrink-0" />
+              <span className="text-sm font-medium whitespace-nowrap">
+                Tip: Use the controls above to zoom, print or download your resume
+              </span>
+              <button 
+                onClick={handleCloseTip}
+                className="ml-2 rounded-full hover:bg-gray-700 p-1 text-gray-300 hover:text-white transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
       <div className="bg-gray-800 px-4 py-3 flex justify-between items-center border-b border-gray-700 text-white">
         <div className="flex items-center space-x-3">
           <TooltipProvider>
@@ -376,35 +405,6 @@ const ResumePreview: React.FC = () => {
                 className="w-[210mm] h-[297mm] min-w-[210mm] max-h-[297mm] overflow-hidden shadow-2xl bg-white"
               >
                 {renderTemplate()}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-        
-        {/* Popup Tip */}
-        <AnimatePresence>
-          {showTipPopup && !isLoading && (
-            <motion.div 
-              className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-900/95 text-white px-5 py-3 rounded-full shadow-lg"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="flex items-center space-x-2">
-                <Info size={18} className="text-blue-400 flex-shrink-0" />
-                <span className="text-sm font-medium whitespace-nowrap">
-                  Tip: Use the controls above to zoom, print or download your resume
-                </span>
-                <button 
-                  onClick={handleCloseTip}
-                  className="ml-2 rounded-full hover:bg-gray-700 p-1 text-gray-300 hover:text-white transition-colors"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                  </svg>
-                </button>
               </div>
             </motion.div>
           )}
