@@ -12,14 +12,19 @@ import {
   Sparkles, 
   Camera, 
   Save, 
-  Save as Save2,
   Share2,
-  PanelLeftClose 
+  PanelLeftClose,
+  Info
 } from 'lucide-react';
 import { toast } from 'sonner';
 import AIWritingAssistant from '../components/AIWritingAssistant';
 import { exportElementAsPdf } from '../utils/pdfExport';
 import BackendService from '../services/BackendService';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '../components/ui/popover';
 
 const ResumeEditorPage: React.FC = () => {
   const { templateId } = useParams<{ templateId: string }>();
@@ -59,8 +64,11 @@ const ResumeEditorPage: React.FC = () => {
       toast.info('Preparing your resume for download...', { duration: 3000 });
       const success = await exportElementAsPdf(previewRef.current, {
         filename: `${resumeData.personalInfo.name.replace(/\s+/g, '_')}_Resume.pdf`,
-        quality: 2,
-        scale: 2
+        quality: 4, // Increased quality
+        scale: 3, // Better resolution
+        pdfOptions: {
+          compress: true
+        }
       });
       
       if (success) {
@@ -129,12 +137,36 @@ const ResumeEditorPage: React.FC = () => {
               )}
             </Button>
             
-            <Button
-              onClick={handleDownload}
-              className="bg-resumify-brown hover:bg-resumify-brown-dark text-white"
-            >
-              <Download size={16} className="mr-2" /> Download PDF
-            </Button>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  onClick={handleDownload}
+                  className="bg-resumify-brown hover:bg-resumify-brown-dark text-white relative group"
+                >
+                  <Download size={16} className="mr-2" /> Download PDF
+                  <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center animate-pulse">!</span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 bg-gray-800 text-white border-gray-700">
+                <div className="space-y-2">
+                  <h4 className="font-medium flex items-center">
+                    <Info size={16} className="mr-2 text-blue-400" />
+                    ATS-Optimized Templates
+                  </h4>
+                  <p className="text-sm text-gray-300">
+                    All our templates are ATS-proof and optimized for applicant tracking systems. 
+                    Your resume will be properly parsed by hiring software.
+                  </p>
+                  <h4 className="font-medium mt-2 flex items-center">
+                    <Info size={16} className="mr-2 text-blue-400" />
+                    High Quality PDF
+                  </h4>
+                  <p className="text-sm text-gray-300">
+                    We've enhanced PDF quality to ensure your resume looks crisp and professional when printed or shared.
+                  </p>
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
         
@@ -150,10 +182,10 @@ const ResumeEditorPage: React.FC = () => {
             <div className="bg-resumify-brown/20 border border-resumify-brown/40 rounded-lg p-4 mb-6 flex items-start gap-3">
               <Sparkles size={24} className="text-resumify-beige mt-1" />
               <div>
-                <h3 className="text-resumify-beige font-medium">New: AI-Enhanced Text</h3>
+                <h3 className="text-resumify-beige font-medium">New: ATS-Optimized Templates</h3>
                 <p className="text-resumify-off-white text-sm mt-1">
-                  Use our new AI text enhancement powered by ChatGPT and Grammarly to make your resume stand out.
-                  Click on the "AI Enhance" button in each section to transform your content.
+                  All our templates are now ATS-proof, ensuring your resume gets past automated screening systems.
+                  Use our enhanced PDF export for high-quality, professional results.
                 </p>
               </div>
             </div>
