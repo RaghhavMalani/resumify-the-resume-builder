@@ -45,9 +45,10 @@ export const exportElementAsPdf = async (
           if (el instanceof HTMLElement) {
             // Ensure text is rendered at full quality
             if (window.getComputedStyle(el).fontSize) {
-              el.style.fontSmoothing = 'antialiased';
-              el.style.webkitFontSmoothing = 'antialiased';
-              el.style.MozOsxFontSmoothing = 'grayscale';
+              // Using setAttribute instead of directly setting properties that don't exist on CSSStyleDeclaration
+              el.style.setProperty('font-smoothing', 'antialiased');
+              el.style.setProperty('-webkit-font-smoothing', 'antialiased');
+              el.style.setProperty('-moz-osx-font-smoothing', 'grayscale');
             }
           }
           
