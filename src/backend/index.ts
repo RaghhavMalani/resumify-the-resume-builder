@@ -1,7 +1,7 @@
 
 import express from 'express';
 import { SERVER_CONFIG } from './config/server.config';
-import { clientPromise } from './db/connection';
+import clientPromise from './db/connection';
 import app from './server';
 
 // Connect to MongoDB and start server
