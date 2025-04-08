@@ -16,7 +16,8 @@ import {
   Wrench,
   AlertCircle,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Sparkles
 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -32,6 +33,7 @@ import {
   TooltipTrigger,
 } from './ui/tooltip';
 import { motion, AnimatePresence } from 'framer-motion';
+import AIWritingAssistant from './AIWritingAssistant';
 
 const ResumeEditor: React.FC = () => {
   const {
@@ -58,6 +60,9 @@ const ResumeEditor: React.FC = () => {
     experience: true,
     skills: true
   });
+  
+  // State to track text fields that might need AI enhancement
+  const [activeEnhancement, setActiveEnhancement] = useState<string | null>(null);
 
   // Handler for profile photo upload
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -109,6 +114,22 @@ const ResumeEditor: React.FC = () => {
       ...prev,
       [section]: !prev[section]
     }));
+  };
+  
+  // Handle AI suggestions
+  const handleSuggest = (fieldId: string, suggestion: string) => {
+    // Apply different suggestions based on which field is being enhanced
+    if (fieldId === 'summary') {
+      updateSummary(suggestion);
+    } else if (fieldId.startsWith('exp-')) {
+      const expId = fieldId.replace('exp-', '');
+      updateWorkExperience(expId, { description: suggestion });
+    } else if (fieldId.startsWith('edu-')) {
+      const eduId = fieldId.replace('edu-', '');
+      updateEducation(eduId, { description: suggestion });
+    }
+    
+    toast.success("AI suggestion applied successfully!");
   };
 
   return (
@@ -317,14 +338,25 @@ const ResumeEditor: React.FC = () => {
           <div className="space-y-2 mt-2">
             <div className="flex justify-between items-center">
               <Label htmlFor="summary" className="text-resumify-beige">Professional Summary</Label>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => toggleTips('summary')}
-                className="text-resumify-off-white"
-              >
-                {showTips.summary ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => toggleTips('summary')}
+                  className="text-resumify-off-white"
+                >
+                  {showTips.summary ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="bg-gray-800 border-resumify-brown text-resumify-beige hover:bg-gray-700 hover:text-white gap-2"
+                  onClick={() => setActiveEnhancement('summary')}
+                >
+                  <Sparkles size={16} className="text-yellow-400" /> Enhance with AI
+                </Button>
+              </div>
             </div>
             
             <AnimatePresence>
@@ -355,6 +387,14 @@ const ResumeEditor: React.FC = () => {
               className="min-h-[120px] bg-white bg-opacity-10 border-opacity-20 text-white"
               placeholder="A brief overview of your professional background, key skills, and career goals."
             />
+            
+            {/* AI Enhancement Dialog for Summary */}
+            {activeEnhancement === 'summary' && (
+              <AIWritingAssistant 
+                text={resumeData.summary} 
+                onSuggest={(suggestion) => handleSuggest('summary', suggestion)}
+              />
+            )}
           </div>
         </TabsContent>
         
@@ -521,7 +561,17 @@ const ResumeEditor: React.FC = () => {
                       </div>
                       
                       <div className="space-y-2">
-                        <Label htmlFor={`description-${exp.id}`} className="text-resumify-beige">Description</Label>
+                        <div className="flex justify-between items-center">
+                          <Label htmlFor={`description-${exp.id}`} className="text-resumify-beige">Description</Label>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="bg-gray-800 border-resumify-brown text-resumify-beige hover:bg-gray-700 hover:text-white gap-2"
+                            onClick={() => setActiveEnhancement(`exp-${exp.id}`)}
+                          >
+                            <Sparkles size={16} className="text-yellow-400" /> Enhance with AI
+                          </Button>
+                        </div>
                         <Textarea
                           id={`description-${exp.id}`}
                           value={exp.description}
@@ -529,6 +579,14 @@ const ResumeEditor: React.FC = () => {
                           className="min-h-[100px] bg-white bg-opacity-10 border-opacity-20 text-white"
                           placeholder="Describe your responsibilities and achievements. Use bullet points by starting lines with • or -"
                         />
+                        
+                        {/* AI Enhancement Dialog for Work Experience */}
+                        {activeEnhancement === `exp-${exp.id}` && (
+                          <AIWritingAssistant 
+                            text={exp.description} 
+                            onSuggest={(suggestion) => handleSuggest(`exp-${exp.id}`, suggestion)}
+                          />
+                        )}
                       </div>
                       
                       <div className="mt-4 flex justify-end">
@@ -709,7 +767,17 @@ const ResumeEditor: React.FC = () => {
                       </div>
                       
                       <div className="space-y-2">
-                        <Label htmlFor={`description-${edu.id}`} className="text-resumify-beige">Description (optional)</Label>
+                        <div className="flex justify-between items-center">
+                          <Label htmlFor={`description-${edu.id}`} className="text-resumify-beige">Description (optional)</Label>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="bg-gray-800 border-resumify-brown text-resumify-beige hover:bg-gray-700 hover:text-white gap-2"
+                            onClick={() => setActiveEnhancement(`edu-${edu.id}`)}
+                          >
+                            <Sparkles size={16} className="text-yellow-400" /> Enhance with AI
+                          </Button>
+                        </div>
                         <Textarea
                           id={`description-${edu.id}`}
                           value={edu.description || ''}
@@ -717,6 +785,14 @@ const ResumeEditor: React.FC = () => {
                           className="min-h-[100px] bg-white bg-opacity-10 border-opacity-20 text-white"
                           placeholder="Add relevant coursework, achievements, or activities (optional)"
                         />
+                        
+                        {/* AI Enhancement Dialog for Education */}
+                        {activeEnhancement === `edu-${edu.id}` && (
+                          <AIWritingAssistant 
+                            text={edu.description || ''} 
+                            onSuggest={(suggestion) => handleSuggest(`edu-${edu.id}`, suggestion)}
+                          />
+                        )}
                       </div>
                       
                       <div className="mt-4 flex justify-end">

@@ -18,8 +18,8 @@ export const exportElementAsPdf = async (
   try {
     const { 
       filename = 'resume.pdf',
-      quality = 4, // Higher quality (increased from 2)
-      scale = 3, // Better resolution for retina displays (increased from 2)
+      quality = 4, // Higher quality
+      scale = 4, // Better resolution for retina displays (increased from 3)
       format = 'a4',
       pdfOptions = {}
     } = options;
@@ -40,12 +40,22 @@ export const exportElementAsPdf = async (
       windowWidth: element.scrollWidth,
       windowHeight: element.scrollHeight,
       onclone: (document, clonedElement) => {
+        // Remove any popups or tooltips from the clone
+        const popups = clonedElement.querySelectorAll('.popup, .tooltip, [role="tooltip"]');
+        popups.forEach(popup => {
+          if (popup.parentNode) {
+            popup.parentNode.removeChild(popup);
+          }
+        });
+        
+        // Add a white background to ensure it prints properly
+        clonedElement.style.backgroundColor = '#ffffff';
+        
         // Make adjustments to the clone for better printing
         const adjustStyles = (el: Element) => {
           if (el instanceof HTMLElement) {
             // Ensure text is rendered at full quality
             if (window.getComputedStyle(el).fontSize) {
-              // Using setAttribute instead of directly setting properties
               el.style.setProperty('font-smoothing', 'antialiased');
               el.style.setProperty('-webkit-font-smoothing', 'antialiased');
               el.style.setProperty('-moz-osx-font-smoothing', 'grayscale');
@@ -58,11 +68,6 @@ export const exportElementAsPdf = async (
               // Fix text overlap by enforcing line height
               el.style.setProperty('line-height', '1.5');
               el.style.setProperty('letter-spacing', '0.02em');
-              
-              // Ensure all text elements have proper padding
-              if (['P', 'H1', 'H2', 'H3', 'H4', 'SPAN'].includes(el.tagName)) {
-                el.style.setProperty('padding', '2px 0');
-              }
             }
           }
           
@@ -110,7 +115,7 @@ export const exportElementAsPdf = async (
       title: filename.replace('.pdf', ''),
       subject: 'Professional Resume',
       creator: 'Resumify',
-      keywords: 'resume, curriculum vitae, professional',
+      keywords: 'resume, curriculum vitae, professional, career, job application',
       author: 'Resumify Resume Builder'
     });
     

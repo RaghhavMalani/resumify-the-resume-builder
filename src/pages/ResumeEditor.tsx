@@ -46,8 +46,8 @@ const ResumeEditorPage: React.FC = () => {
       toast.info('Preparing your resume for download...', { duration: 3000 });
       const success = await exportElementAsPdf(previewRef.current, {
         filename: `${resumeData.personalInfo.name.replace(/\s+/g, '_')}_Resume.pdf`,
-        quality: 4, // Increased quality
-        scale: 3, // Better resolution
+        quality: 5, // Increased quality
+        scale: 4, // Better resolution
         pdfOptions: {
           compress: true
         }

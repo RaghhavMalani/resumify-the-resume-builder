@@ -24,14 +24,13 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '../components/ui/tooltip';
+} from './ui/tooltip';
 
 const ResumePreview: React.FC = () => {
   const { templateId, resumeData } = useResume();
-  const [scale, setScale] = useState(0.8); // Default scale adjusted
+  const [scale, setScale] = useState(0.8);
   const [isRotating, setIsRotating] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [showTooltip, setShowTooltip] = useState('');
   const [liked, setLiked] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [showTipPopup, setShowTipPopup] = useState(true);
@@ -86,8 +85,8 @@ const ResumePreview: React.FC = () => {
       
       await exportElementAsPdf(templateRef.current, {
         filename: fileName,
-        quality: 4, // Increased quality for better results
-        scale: 3,   // Higher scale for better resolution
+        quality: 5, // Increased quality for better results
+        scale: 4,   // Higher scale for better resolution
         pdfOptions: {
           compress: true
         }
@@ -194,7 +193,7 @@ const ResumePreview: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Popup Tip - Moved outside the preview area to appear as a floating popup */}
+      {/* Fixed position tip popup - positioned at the bottom of the viewport, not overlapping the resume */}
       <AnimatePresence>
         {showTipPopup && !isLoading && (
           <motion.div 
@@ -223,7 +222,8 @@ const ResumePreview: React.FC = () => {
         )}
       </AnimatePresence>
       
-      <div className="bg-gray-800 px-4 py-3 flex justify-between items-center border-b border-gray-700 text-white">
+      {/* Controls positioned above the resume */}
+      <div className="sticky top-0 z-10 bg-gray-800 px-4 py-3 flex justify-between items-center border-b border-gray-700 text-white">
         <div className="flex items-center space-x-3">
           <TooltipProvider>
             <Tooltip>
@@ -307,7 +307,6 @@ const ResumePreview: React.FC = () => {
             </Tooltip>
           </TooltipProvider>
           
-          {/* Additional buttons */}
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -393,8 +392,8 @@ const ResumePreview: React.FC = () => {
           ) : (
             <motion.div 
               key="template"
-              className={`transition-all duration-300 ${isRotating ? 'animate-scale-in' : ''}`}
-              style={{ transformOrigin: 'center' }}
+              className="transition-all duration-300"
+              style={{ transformOrigin: 'center', transform: `scale(${scale})` }}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: scale }}
               exit={{ opacity: 0, scale: 0.9 }}
