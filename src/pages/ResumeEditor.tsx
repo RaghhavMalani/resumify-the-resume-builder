@@ -10,7 +10,6 @@ import {
   Download, 
   ArrowLeft, 
   Save, 
-  Share2,
   PanelLeftClose,
   Info
 } from 'lucide-react';
@@ -95,7 +94,7 @@ const ResumeEditorPage: React.FC = () => {
       <Navbar />
       
       <main className="container mx-auto py-6 px-4">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6">
           <Button
             variant="outline"
             size="sm"
@@ -153,18 +152,19 @@ const ResumeEditorPage: React.FC = () => {
           </div>
         </div>
         
-        <div className={`grid grid-cols-1 ${isCollapsed ? 'lg:grid-cols-1' : 'lg:grid-cols-2'} gap-8`}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Editor Column */}
           <div className="order-2 lg:order-1">
-            <div className="flex justify-between items-center mb-4">
+            <div className="mb-4">
               <h2 className="text-2xl font-bold text-resumify-beige">Edit Your Resume</h2>
+              <p className="text-resumify-off-white text-sm">Complete all sections for the best results</p>
             </div>
             
             <Editor />
           </div>
           
           {/* Preview Column */}
-          {!isCollapsed && (
+          {!isCollapsed ? (
             <div className="order-1 lg:order-2 relative">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-2xl font-bold text-resumify-beige">Preview</h2>
@@ -183,9 +183,7 @@ const ResumeEditorPage: React.FC = () => {
                 </div>
               </div>
             </div>
-          )}
-          
-          {isCollapsed && (
+          ) : (
             <div className="fixed bottom-6 right-6">
               <Button
                 className="bg-resumify-brown hover:bg-resumify-brown-dark text-white rounded-full h-12 w-12 shadow-lg"

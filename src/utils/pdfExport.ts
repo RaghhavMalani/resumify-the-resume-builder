@@ -45,10 +45,24 @@ export const exportElementAsPdf = async (
           if (el instanceof HTMLElement) {
             // Ensure text is rendered at full quality
             if (window.getComputedStyle(el).fontSize) {
-              // Using setAttribute instead of directly setting properties that don't exist on CSSStyleDeclaration
+              // Using setAttribute instead of directly setting properties
               el.style.setProperty('font-smoothing', 'antialiased');
               el.style.setProperty('-webkit-font-smoothing', 'antialiased');
               el.style.setProperty('-moz-osx-font-smoothing', 'grayscale');
+              
+              // Add extra spacing to prevent text overlap
+              if (el.tagName === 'DIV' && el.classList.contains('resume-section')) {
+                el.style.setProperty('margin-bottom', '15px');
+              }
+              
+              // Fix text overlap by enforcing line height
+              el.style.setProperty('line-height', '1.5');
+              el.style.setProperty('letter-spacing', '0.02em');
+              
+              // Ensure all text elements have proper padding
+              if (['P', 'H1', 'H2', 'H3', 'H4', 'SPAN'].includes(el.tagName)) {
+                el.style.setProperty('padding', '2px 0');
+              }
             }
           }
           
