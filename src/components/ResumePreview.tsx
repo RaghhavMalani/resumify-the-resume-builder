@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useResume } from '../context/ResumeContext';
 import ProfessionalTemplate from './templates/ProfessionalTemplate';
@@ -186,6 +185,111 @@ const ResumePreview: React.FC = () => {
     }
   };
 
+  const ActionButtons = () => (
+    <div className="flex items-center space-x-2 mb-4 bg-gray-800 rounded-lg p-2">
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <motion.button 
+              onClick={handleRotate}
+              className="p-2 rounded-full hover:bg-gray-700 transition-colors"
+              aria-label="Refresh template"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              disabled={isDownloading}
+            >
+              <RefreshCw size={18} className={`text-white ${isRotating ? 'animate-spin' : ''}`} />
+            </motion.button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Refresh</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <motion.button 
+              onClick={handleDownload}
+              className="p-2 rounded-full hover:bg-gray-700 transition-colors"
+              aria-label="Download resume"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              disabled={isDownloading}
+            >
+              {isDownloading ? (
+                <Loader2 size={18} className="text-white animate-spin" />
+              ) : (
+                <Download size={18} className="text-white" />
+              )}
+            </motion.button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Download PDF</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <motion.button 
+              onClick={handleShare}
+              className="p-2 rounded-full hover:bg-gray-700 transition-colors"
+              aria-label="Share resume"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <Share2 size={18} className="text-white" />
+            </motion.button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Share</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <motion.button 
+              onClick={handlePrint}
+              className="p-2 rounded-full hover:bg-gray-700 transition-colors"
+              aria-label="Print resume"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <Printer size={18} className="text-white" />
+            </motion.button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Print</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <motion.button 
+              onClick={handleLike}
+              className={`p-2 rounded-full hover:bg-gray-700 transition-colors ${liked ? 'text-red-500' : 'text-white'}`}
+              aria-label="Like resume"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <Heart size={18} fill={liked ? "currentColor" : "none"} />
+            </motion.button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{liked ? 'Unlike' : 'Like'}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    </div>
+  );
+
   return (
     <motion.div 
       className="relative flex flex-col bg-white shadow-xl rounded-lg w-full overflow-hidden border border-gray-200"
@@ -222,7 +326,13 @@ const ResumePreview: React.FC = () => {
         )}
       </AnimatePresence>
       
-      {/* Controls positioned above the resume */}
+      {/* Action buttons above the preview */}
+      <div className="flex justify-between items-center mb-2">
+        <h2 className="text-2xl font-bold text-resumify-beige">Preview</h2>
+        <ActionButtons />
+      </div>
+      
+      {/* Controls positioned at the top of the preview - ONLY ZOOM CONTROLS */}
       <div className="sticky top-0 z-10 bg-gray-800 px-4 py-3 flex justify-between items-center border-b border-gray-700 text-white">
         <div className="flex items-center space-x-3">
           <TooltipProvider>
@@ -260,109 +370,6 @@ const ResumePreview: React.FC = () => {
           </TooltipProvider>
           
           <span className="text-sm text-white">{Math.round(scale * 100)}%</span>
-        </div>
-        
-        <div className="flex items-center space-x-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <motion.button 
-                  onClick={handleRotate}
-                  className="p-2 rounded-full hover:bg-gray-700 transition-colors"
-                  aria-label="Refresh template"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  disabled={isDownloading}
-                >
-                  <RefreshCw size={18} className={`text-white ${isRotating ? 'animate-spin' : ''}`} />
-                </motion.button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Refresh</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <motion.button 
-                  onClick={handleDownload}
-                  className="p-2 rounded-full hover:bg-gray-700 transition-colors"
-                  aria-label="Download resume"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  disabled={isDownloading}
-                >
-                  {isDownloading ? (
-                    <Loader2 size={18} className="text-white animate-spin" />
-                  ) : (
-                    <Download size={18} className="text-white" />
-                  )}
-                </motion.button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Download PDF</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <motion.button 
-                  onClick={handleShare}
-                  className="p-2 rounded-full hover:bg-gray-700 transition-colors"
-                  aria-label="Share resume"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <Share2 size={18} className="text-white" />
-                </motion.button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Share</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <motion.button 
-                  onClick={handlePrint}
-                  className="p-2 rounded-full hover:bg-gray-700 transition-colors"
-                  aria-label="Print resume"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <Printer size={18} className="text-white" />
-                </motion.button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Print</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <motion.button 
-                  onClick={handleLike}
-                  className={`p-2 rounded-full hover:bg-gray-700 transition-colors ${liked ? 'text-red-500' : 'text-white'}`}
-                  aria-label="Like resume"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <Heart size={18} fill={liked ? "currentColor" : "none"} />
-                </motion.button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{liked ? 'Unlike' : 'Like'}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
         </div>
       </div>
       
