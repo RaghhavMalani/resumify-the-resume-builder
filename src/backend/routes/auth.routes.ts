@@ -1,12 +1,12 @@
 
 import express from 'express';
 import { 
-  loginUser, 
-  registerUser, 
-  checkAuthStatus,
-  refreshToken
+  login, 
+  register, 
+  checkAuth,
+  refresh
 } from '../controllers/auth.controller';
-import { authenticateJWT } from '../middleware/auth.middleware';
+import { authenticate } from '../middleware/auth.middleware';
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ const router = express.Router();
  */
 router.post('/register', (req, res, next) => {
   try {
-    registerUser(req, res);
+    register(req, res);
   } catch (error) {
     next(error);
   }
@@ -30,7 +30,7 @@ router.post('/register', (req, res, next) => {
  */
 router.post('/login', (req, res, next) => {
   try {
-    loginUser(req, res);
+    login(req, res);
   } catch (error) {
     next(error);
   }
@@ -41,9 +41,9 @@ router.post('/login', (req, res, next) => {
  * @desc Check if user is authenticated
  * @access Private
  */
-router.get('/status', authenticateJWT, (req, res, next) => {
+router.get('/status', authenticate, (req, res, next) => {
   try {
-    checkAuthStatus(req, res);
+    checkAuth(req, res);
   } catch (error) {
     next(error);
   }
@@ -56,7 +56,7 @@ router.get('/status', authenticateJWT, (req, res, next) => {
  */
 router.post('/refresh', (req, res, next) => {
   try {
-    refreshToken(req, res);
+    refresh(req, res);
   } catch (error) {
     next(error);
   }

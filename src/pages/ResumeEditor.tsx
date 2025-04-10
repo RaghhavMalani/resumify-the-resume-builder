@@ -29,6 +29,7 @@ const ResumeEditorPage: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
+  const resumeDocumentRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     if (templateId) {
@@ -37,14 +38,17 @@ const ResumeEditorPage: React.FC = () => {
   }, [templateId, setTemplateId]);
 
   const handleDownload = async () => {
-    if (!previewRef.current) {
-      toast.error("Could not generate PDF. Please try again.");
+    // Find the actual resume document element inside the preview container
+    const resumeDocument = previewRef.current?.querySelector('.resume-document') as HTMLElement;
+    
+    if (!resumeDocument) {
+      toast.error("Could not find resume content. Please try again.");
       return;
     }
 
     try {
       toast.info('Preparing your resume for download...', { duration: 3000 });
-      const success = await exportElementAsPdf(previewRef.current, {
+      const success = await exportElementAsPdf(resumeDocument, {
         filename: `${resumeData.personalInfo.name.replace(/\s+/g, '_')}_Resume.pdf`,
         quality: 5, // Increased quality
         scale: 4, // Better resolution

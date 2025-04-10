@@ -1,23 +1,23 @@
 
 import express from 'express';
 import { 
-  getUserResumes, 
-  getResumeById, 
+  getResumes, 
+  getResume, 
   createResume,
   updateResume, 
   deleteResume 
 } from '../controllers/resume.controller';
-import { authenticateJWT } from '../middleware/auth.middleware';
+import { authenticate } from '../middleware/auth.middleware';
 
 const router = express.Router();
 
 // Apply authentication middleware to all resume routes
-router.use(authenticateJWT);
+router.use(authenticate);
 
 // Get all resumes for a user
 router.get('/', (req, res, next) => {
   try {
-    getUserResumes(req, res);
+    getResumes(req, res);
   } catch (error) {
     next(error);
   }
@@ -26,7 +26,7 @@ router.get('/', (req, res, next) => {
 // Get a specific resume by ID
 router.get('/:id', (req, res, next) => {
   try {
-    getResumeById(req, res);
+    getResume(req, res);
   } catch (error) {
     next(error);
   }

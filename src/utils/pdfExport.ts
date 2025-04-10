@@ -26,54 +26,68 @@ export const exportElementAsPdf = async (
     
     toast.info('Preparing your resume for download...', { duration: 3000 });
     
-    // Wait a moment for any rendering to complete
+    // Wait for rendering to complete
     await new Promise(resolve => setTimeout(resolve, 500));
     
-    // Hide any tooltips or popups before capturing
-    const tooltips = document.querySelectorAll('.tooltip, [role="tooltip"], [data-radix-popper-content-wrapper]');
-    tooltips.forEach(tooltip => {
-      if (tooltip instanceof HTMLElement) {
-        tooltip.style.display = 'none';
+    // Hide all UI controls, tooltips, and non-resume elements before capturing
+    const elementsToHide = element.querySelectorAll('.resume-controls, button, .tooltip, [role="tooltip"], [data-radix-popper-content-wrapper], .ai-enhancer, .popup');
+    
+    // Save original display states
+    const originalDisplayStates = new Map<HTMLElement, string>();
+    elementsToHide.forEach(el => {
+      if (el instanceof HTMLElement) {
+        originalDisplayStates.set(el, el.style.display);
+        el.style.display = 'none';
       }
     });
     
-    // Create canvas from the element with improved settings
+    // Create canvas with improved settings
     const canvas = await html2canvas(element, {
       scale,
       logging: false,
       useCORS: true,
       allowTaint: true,
       backgroundColor: '#ffffff',
-      imageTimeout: 15000, // Increased timeout for better image rendering
+      imageTimeout: 15000,
       windowWidth: element.scrollWidth,
       windowHeight: element.scrollHeight,
       onclone: (document, clonedElement) => {
-        // Remove any popups or tooltips from the clone
-        const popups = clonedElement.querySelectorAll('.popup, .tooltip, [role="tooltip"], [data-radix-popper-content-wrapper]');
-        popups.forEach(popup => {
-          if (popup.parentNode) {
-            popup.parentNode.removeChild(popup);
+        // In the clone, remove any UI elements that shouldn't be in the PDF
+        const elementsToRemove = clonedElement.querySelectorAll(
+          '.controls, .action-buttons, .zoom-controls, button, .tooltip, ' +
+          '[role="tooltip"], [data-radix-popper-content-wrapper], .ai-enhancer, ' +
+          '.popup, .preview-header, .preview-controls'
+        );
+        
+        elementsToRemove.forEach(el => {
+          if (el.parentNode) {
+            el.parentNode.removeChild(el);
           }
         });
         
-        // Add a white background to ensure it prints properly
+        // Make sure the resume has proper styling
         clonedElement.style.backgroundColor = '#ffffff';
         
-        // Make adjustments to the clone for better printing
+        // Find the actual resume document in the clone
+        const resumeDocument = clonedElement.querySelector('.resume-document');
+        if (resumeDocument instanceof HTMLElement) {
+          // Ensure the resume document takes up the full page
+          resumeDocument.style.width = '100%';
+          resumeDocument.style.height = 'auto';
+          resumeDocument.style.margin = '0';
+          resumeDocument.style.padding = '0';
+          resumeDocument.style.overflow = 'hidden';
+        }
+        
+        // Adjust text styling for better quality
         const adjustStyles = (el: Element) => {
           if (el instanceof HTMLElement) {
-            // Ensure text is rendered at full quality
             if (window.getComputedStyle(el).fontSize) {
               el.style.setProperty('font-smoothing', 'antialiased');
               el.style.setProperty('-webkit-font-smoothing', 'antialiased');
               el.style.setProperty('-moz-osx-font-smoothing', 'grayscale');
               
-              // Add extra spacing to prevent text overlap
-              if (el.tagName === 'DIV' && el.classList.contains('resume-section')) {
-                el.style.setProperty('margin-bottom', '15px');
-              }
-              
-              // Fix text overlap by enforcing line height
+              // Ensure proper text rendering
               el.style.setProperty('line-height', '1.5');
               el.style.setProperty('letter-spacing', '0.02em');
             }
@@ -87,20 +101,18 @@ export const exportElementAsPdf = async (
       }
     });
     
-    // Restore any hidden tooltips
-    tooltips.forEach(tooltip => {
-      if (tooltip instanceof HTMLElement) {
-        tooltip.style.display = '';
-      }
+    // Restore original display states
+    originalDisplayStates.forEach((display, element) => {
+      element.style.display = display;
     });
     
-    // Get dimensions for PDF
-    const imgData = canvas.toDataURL('image/jpeg', quality / 10); // Normalize quality to be between 0-1
+    // Calculate dimensions for PDF
+    const imgData = canvas.toDataURL('image/jpeg', quality / 10);
     const imgWidth = 210; // A4 width in mm
     const pageHeight = 297; // A4 height in mm
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     
-    // Create PDF with specified dimensions and improved settings
+    // Create PDF with specified dimensions
     const pdf = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
@@ -134,15 +146,7 @@ export const exportElementAsPdf = async (
       author: 'Resumify Resume Builder'
     });
     
-    // Add custom ATS-friendly metadata
-    pdf.setDocumentProperties({
-      title: filename.replace('.pdf', ''),
-      subject: 'Professional Resume',
-      creator: 'Resumify',
-      author: 'Resumify Resume Builder'
-    });
-    
-    // Save the PDF with enhanced quality
+    // Save the PDF
     pdf.save(filename);
     toast.success('Resume downloaded successfully!');
     return true;

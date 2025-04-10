@@ -85,8 +85,8 @@ const ResumePreview: React.FC = () => {
       
       await exportElementAsPdf(templateRef.current, {
         filename: fileName,
-        quality: 5, // Increased quality for better results
-        scale: 4,   // Higher scale for better resolution
+        quality: 5,
+        scale: 4,
         pdfOptions: {
           compress: true
         }
@@ -186,7 +186,7 @@ const ResumePreview: React.FC = () => {
     }
   };
 
-  // Action buttons are now separated from the preview component
+  // Action buttons are separated from the preview component
   const ActionButtons = () => (
     <div className="flex items-center space-x-2 mb-4 bg-gray-800 rounded-lg p-2">
       <TooltipProvider>
@@ -299,7 +299,7 @@ const ResumePreview: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Fixed position tip popup - positioned at the bottom of the viewport, not overlapping the resume */}
+      {/* Fixed position tip popup */}
       <AnimatePresence>
         {showTipPopup && !isLoading && (
           <motion.div 
@@ -328,15 +328,15 @@ const ResumePreview: React.FC = () => {
         )}
       </AnimatePresence>
       
-      {/* Action buttons now appear ABOVE the preview title */}
+      {/* Action buttons above the preview title */}
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-2xl font-bold text-resumify-beige">Preview</h2>
         <ActionButtons />
       </div>
       
       {/* Only zoom controls remain in the preview header */}
-      <div className="sticky top-0 z-10 bg-gray-800 px-4 py-3 flex justify-between items-center border-b border-gray-700 text-white">
-        <div className="flex items-center space-x-3">
+      <div className="sticky top-0 z-10 bg-gray-800 px-4 py-3 flex justify-between items-center border-b border-gray-700 text-white preview-header">
+        <div className="flex items-center space-x-3 zoom-controls">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -410,7 +410,7 @@ const ResumePreview: React.FC = () => {
             >
               <div 
                 ref={templateRef}
-                className="w-[210mm] h-[297mm] min-w-[210mm] max-h-[297mm] overflow-hidden shadow-2xl bg-white"
+                className="w-[210mm] h-[297mm] min-w-[210mm] max-h-[297mm] overflow-hidden shadow-2xl bg-white resume-document"
               >
                 {renderTemplate()}
               </div>
