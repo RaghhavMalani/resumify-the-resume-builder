@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useResume } from '../context/ResumeContext';
 import ProfessionalTemplate from './templates/ProfessionalTemplate';
@@ -185,6 +186,7 @@ const ResumePreview: React.FC = () => {
     }
   };
 
+  // Action buttons are now separated from the preview component
   const ActionButtons = () => (
     <div className="flex items-center space-x-2 mb-4 bg-gray-800 rounded-lg p-2">
       <TooltipProvider>
@@ -326,13 +328,13 @@ const ResumePreview: React.FC = () => {
         )}
       </AnimatePresence>
       
-      {/* Action buttons above the preview */}
+      {/* Action buttons now appear ABOVE the preview title */}
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-2xl font-bold text-resumify-beige">Preview</h2>
         <ActionButtons />
       </div>
       
-      {/* Controls positioned at the top of the preview - ONLY ZOOM CONTROLS */}
+      {/* Only zoom controls remain in the preview header */}
       <div className="sticky top-0 z-10 bg-gray-800 px-4 py-3 flex justify-between items-center border-b border-gray-700 text-white">
         <div className="flex items-center space-x-3">
           <TooltipProvider>

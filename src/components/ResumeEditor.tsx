@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useResume } from '../context/ResumeContext';
 import { Input } from './ui/input';
@@ -61,27 +60,22 @@ const ResumeEditor: React.FC = () => {
     skills: true
   });
   
-  // State to track text fields that might need AI enhancement
   const [activeEnhancement, setActiveEnhancement] = useState<string | null>(null);
 
-  // Handler for profile photo upload
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     
-    // Check file size (max 2MB)
     if (file.size > 2 * 1024 * 1024) {
       toast.error("Photo size should be less than 2MB");
       return;
     }
     
-    // Check file type
     if (!['image/jpeg', 'image/png', 'image/jpg'].includes(file.type)) {
       toast.error("Only JPG and PNG images are supported");
       return;
     }
     
-    // Convert to base64 for preview
     const reader = new FileReader();
     reader.onload = (event) => {
       updatePersonalInfo({ photoUrl: event.target?.result as string });
@@ -93,13 +87,11 @@ const ResumeEditor: React.FC = () => {
     reader.readAsDataURL(file);
   };
 
-  // Handler to remove profile photo
   const removePhoto = () => {
     updatePersonalInfo({ photoUrl: undefined });
     toast.success("Profile photo removed");
   };
 
-  // Toggle expanded sections
   const toggleExpanded = (section: 'exp' | 'edu', id: string) => {
     if (section === 'exp') {
       setExpandedExp(expandedExp === id ? null : id);
@@ -108,7 +100,6 @@ const ResumeEditor: React.FC = () => {
     }
   };
 
-  // Toggle tips visibility
   const toggleTips = (section: keyof typeof showTips) => {
     setShowTips(prev => ({
       ...prev,
@@ -116,9 +107,7 @@ const ResumeEditor: React.FC = () => {
     }));
   };
   
-  // Handle AI suggestions
   const handleSuggest = (fieldId: string, suggestion: string) => {
-    // Apply different suggestions based on which field is being enhanced
     if (fieldId === 'summary') {
       updateSummary(suggestion);
     } else if (fieldId.startsWith('exp-')) {
@@ -166,7 +155,6 @@ const ResumeEditor: React.FC = () => {
           </TabsTrigger>
         </TabsList>
         
-        {/* Personal Info Tab */}
         <TabsContent value="personal" className="px-6 py-5 space-y-5">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-xl font-semibold text-resumify-beige">Personal Information</h3>
@@ -201,7 +189,6 @@ const ResumeEditor: React.FC = () => {
             )}
           </AnimatePresence>
           
-          {/* Profile Photo Upload */}
           <div className="p-5 rounded-lg bg-gray-800/20 flex flex-col sm:flex-row gap-6 items-center sm:items-start">
             <div className="relative">
               <div className="w-28 h-28 bg-white bg-opacity-10 border-2 border-dashed border-resumify-beige/40 rounded-lg flex flex-col items-center justify-center overflow-hidden">
@@ -348,14 +335,11 @@ const ResumeEditor: React.FC = () => {
                   {showTips.summary ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                 </Button>
                 
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="bg-gray-800 border-resumify-brown text-resumify-beige hover:bg-gray-700 hover:text-white gap-2"
-                  onClick={() => setActiveEnhancement('summary')}
-                >
-                  <Sparkles size={16} className="text-yellow-400" /> Enhance with AI
-                </Button>
+                <AIWritingAssistant 
+                  text={resumeData.summary} 
+                  onSuggest={(suggestion) => handleSuggest('summary', suggestion)}
+                  context="professional summary"
+                />
               </div>
             </div>
             
@@ -387,18 +371,9 @@ const ResumeEditor: React.FC = () => {
               className="min-h-[120px] bg-white bg-opacity-10 border-opacity-20 text-white"
               placeholder="A brief overview of your professional background, key skills, and career goals."
             />
-            
-            {/* AI Enhancement Dialog for Summary */}
-            {activeEnhancement === 'summary' && (
-              <AIWritingAssistant 
-                text={resumeData.summary} 
-                onSuggest={(suggestion) => handleSuggest('summary', suggestion)}
-              />
-            )}
           </div>
         </TabsContent>
         
-        {/* Work Experience Tab */}
         <TabsContent value="experience" className="px-6 py-5 space-y-5">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-xl font-semibold text-resumify-beige">Work Experience</h3>
@@ -580,7 +555,6 @@ const ResumeEditor: React.FC = () => {
                           placeholder="Describe your responsibilities and achievements. Use bullet points by starting lines with • or -"
                         />
                         
-                        {/* AI Enhancement Dialog for Work Experience */}
                         {activeEnhancement === `exp-${exp.id}` && (
                           <AIWritingAssistant 
                             text={exp.description} 
@@ -607,7 +581,6 @@ const ResumeEditor: React.FC = () => {
           </div>
         </TabsContent>
         
-        {/* Education Tab */}
         <TabsContent value="education" className="px-6 py-5 space-y-5">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-xl font-semibold text-resumify-beige">Education</h3>
@@ -786,7 +759,6 @@ const ResumeEditor: React.FC = () => {
                           placeholder="Add relevant coursework, achievements, or activities (optional)"
                         />
                         
-                        {/* AI Enhancement Dialog for Education */}
                         {activeEnhancement === `edu-${edu.id}` && (
                           <AIWritingAssistant 
                             text={edu.description || ''} 
@@ -813,7 +785,6 @@ const ResumeEditor: React.FC = () => {
           </div>
         </TabsContent>
         
-        {/* Skills Tab */}
         <TabsContent value="skills" className="px-6 py-5 space-y-5">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-xl font-semibold text-resumify-beige">Skills</h3>

@@ -18,8 +18,8 @@ export const exportElementAsPdf = async (
   try {
     const { 
       filename = 'resume.pdf',
-      quality = 4, // Higher quality
-      scale = 4, // Better resolution for retina displays (increased from 3)
+      quality = 5, // Higher quality
+      scale = 4, // Better resolution for retina displays
       format = 'a4',
       pdfOptions = {}
     } = options;
@@ -28,6 +28,14 @@ export const exportElementAsPdf = async (
     
     // Wait a moment for any rendering to complete
     await new Promise(resolve => setTimeout(resolve, 500));
+    
+    // Hide any tooltips or popups before capturing
+    const tooltips = document.querySelectorAll('.tooltip, [role="tooltip"], [data-radix-popper-content-wrapper]');
+    tooltips.forEach(tooltip => {
+      if (tooltip instanceof HTMLElement) {
+        tooltip.style.display = 'none';
+      }
+    });
     
     // Create canvas from the element with improved settings
     const canvas = await html2canvas(element, {
@@ -41,7 +49,7 @@ export const exportElementAsPdf = async (
       windowHeight: element.scrollHeight,
       onclone: (document, clonedElement) => {
         // Remove any popups or tooltips from the clone
-        const popups = clonedElement.querySelectorAll('.popup, .tooltip, [role="tooltip"]');
+        const popups = clonedElement.querySelectorAll('.popup, .tooltip, [role="tooltip"], [data-radix-popper-content-wrapper]');
         popups.forEach(popup => {
           if (popup.parentNode) {
             popup.parentNode.removeChild(popup);
@@ -79,8 +87,15 @@ export const exportElementAsPdf = async (
       }
     });
     
+    // Restore any hidden tooltips
+    tooltips.forEach(tooltip => {
+      if (tooltip instanceof HTMLElement) {
+        tooltip.style.display = '';
+      }
+    });
+    
     // Get dimensions for PDF
-    const imgData = canvas.toDataURL('image/jpeg', quality);
+    const imgData = canvas.toDataURL('image/jpeg', quality / 10); // Normalize quality to be between 0-1
     const imgWidth = 210; // A4 width in mm
     const pageHeight = 297; // A4 height in mm
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
@@ -116,6 +131,14 @@ export const exportElementAsPdf = async (
       subject: 'Professional Resume',
       creator: 'Resumify',
       keywords: 'resume, curriculum vitae, professional, career, job application',
+      author: 'Resumify Resume Builder'
+    });
+    
+    // Add custom ATS-friendly metadata
+    pdf.setDocumentProperties({
+      title: filename.replace('.pdf', ''),
+      subject: 'Professional Resume',
+      creator: 'Resumify',
       author: 'Resumify Resume Builder'
     });
     

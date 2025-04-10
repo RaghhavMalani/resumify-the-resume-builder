@@ -1,73 +1,64 @@
 
-import { Router, Request, Response } from 'express';
-import { register, login, getUserById, updateUser } from '../controllers/auth.controller';
-import { authMiddleware } from '../middleware/auth.middleware';
+import express from 'express';
+import { 
+  loginUser, 
+  registerUser, 
+  checkAuthStatus,
+  refreshToken
+} from '../controllers/auth.controller';
+import { authenticateJWT } from '../middleware/auth.middleware';
 
-const router = Router();
+const router = express.Router();
 
-// Public routes
-router.post('/register', async (req: Request, res: Response) => {
+/**
+ * @route POST /api/auth/register
+ * @desc Register a new user
+ * @access Public
+ */
+router.post('/register', (req, res, next) => {
   try {
-    const result = await register(req.body);
-    if (result.success) {
-      res.status(201).json(result);
-    } else {
-      res.status(400).json(result);
-    }
+    registerUser(req, res);
   } catch (error) {
-    res.status(500).json({ 
-      success: false, 
-      error: 'Server error during registration' 
-    });
+    next(error);
   }
 });
 
-router.post('/login', async (req: Request, res: Response) => {
+/**
+ * @route POST /api/auth/login
+ * @desc Login user and get token
+ * @access Public
+ */
+router.post('/login', (req, res, next) => {
   try {
-    const result = await login(req.body);
-    if (result.success) {
-      res.status(200).json(result);
-    } else {
-      res.status(401).json(result);
-    }
+    loginUser(req, res);
   } catch (error) {
-    res.status(500).json({ 
-      success: false, 
-      error: 'Server error during login' 
-    });
+    next(error);
   }
 });
 
-// Protected routes
-router.get('/me', authMiddleware, async (req: Request, res: Response) => {
+/**
+ * @route GET /api/auth/status
+ * @desc Check if user is authenticated
+ * @access Private
+ */
+router.get('/status', authenticateJWT, (req, res, next) => {
   try {
-    const result = await getUserById(req.userId!);
-    if (result.success) {
-      res.status(200).json(result);
-    } else {
-      res.status(404).json(result);
-    }
+    checkAuthStatus(req, res);
   } catch (error) {
-    res.status(500).json({ 
-      success: false, 
-      error: 'Server error while fetching user' 
-    });
+    next(error);
   }
 });
 
-router.put('/me', authMiddleware, async (req: Request, res: Response) => {
+/**
+ * @route POST /api/auth/refresh
+ * @desc Refresh access token using refresh token
+ * @access Public
+ */
+router.post('/refresh', (req, res, next) => {
   try {
-    const result = await updateUser(req.userId!, req.body);
-    if (result.success) {
-      res.status(200).json(result);
-    } else {
-      res.status(400).json(result);
-    }
+    refreshToken(req, res);
   } catch (error) {
-    res.status(500).json({ 
-      success: false, 
-      error: 'Server error while updating user' 
-    });
+    next(error);
   }
 });
 
