@@ -1,11 +1,10 @@
-
 # Resumify - AI-Enhanced Resume Builder
 
 ## Overview
 
 Resumify is a comprehensive, full-stack resume building application designed to streamline the job application process. Built with modern web technologies, it offers an intuitive interface for creating, editing, and managing professional resumes with multiple template options.
 
-**Live Demo:** [Resumify on Vercel](https://resumify-the-resume-builder-1vtatf6ld-flash2404s-projects.vercel.app)
+**Live Demo:** https://resumify-the-resume-builder-1vtatf6ld-flash2404s-projects.vercel.app
 
 ## Key Features
 
