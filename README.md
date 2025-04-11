@@ -1,12 +1,9 @@
-# Welcome to your Lovable project
+# Resumify - AI-Enhanced Resume Builder
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/4b21d764-734d-4e6b-802c-a2e5a8d28c4d
+Developed a modern, responsive resume builder application that streamlines the job application process. This full-stack web application allows users to create, edit, and manage professional resumes with multiple template options
 
-## How can I edit this code?
-
-There are several ways of editing your application.
 
 **Use Lovable**
 
