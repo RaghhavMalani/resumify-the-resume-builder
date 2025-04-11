@@ -43,3 +43,6 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
   req.userId = userId;
   next();
 }
+
+// For backward compatibility, alias authMiddleware as authenticate
+export const authenticate = authMiddleware;

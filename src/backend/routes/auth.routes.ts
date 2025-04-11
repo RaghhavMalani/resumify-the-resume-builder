@@ -2,11 +2,9 @@
 import express from 'express';
 import { 
   login, 
-  register, 
-  checkAuth,
-  refresh
+  register
 } from '../controllers/auth.controller';
-import { authenticate } from '../middleware/auth.middleware';
+import { authMiddleware } from '../middleware/auth.middleware';
 
 const router = express.Router();
 
@@ -15,11 +13,15 @@ const router = express.Router();
  * @desc Register a new user
  * @access Public
  */
-router.post('/register', (req, res, next) => {
+router.post('/register', (req, res) => {
   try {
     register(req, res);
   } catch (error) {
-    next(error);
+    console.error('Register error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Server error during registration' 
+    });
   }
 });
 
@@ -28,11 +30,15 @@ router.post('/register', (req, res, next) => {
  * @desc Login user and get token
  * @access Public
  */
-router.post('/login', (req, res, next) => {
+router.post('/login', (req, res) => {
   try {
     login(req, res);
   } catch (error) {
-    next(error);
+    console.error('Login error:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Server error during login' 
+    });
   }
 });
 
@@ -41,24 +47,17 @@ router.post('/login', (req, res, next) => {
  * @desc Check if user is authenticated
  * @access Private
  */
-router.get('/status', authenticate, (req, res, next) => {
+router.get('/status', authMiddleware, (req, res) => {
   try {
-    checkAuth(req, res);
+    res.status(200).json({
+      success: true,
+      data: { isAuthenticated: true, userId: req.userId }
+    });
   } catch (error) {
-    next(error);
-  }
-});
-
-/**
- * @route POST /api/auth/refresh
- * @desc Refresh access token using refresh token
- * @access Public
- */
-router.post('/refresh', (req, res, next) => {
-  try {
-    refresh(req, res);
-  } catch (error) {
-    next(error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'Server error checking authentication status'
+    });
   }
 });
 
